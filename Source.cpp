@@ -13,9 +13,11 @@
 
 int main(int argc, char** argv) {
 	Wonderland::initEnviroment();
+	std::vector <Object> objects;
 
 	std::shared_ptr<Shader> shader_ptr = std::make_shared<Shader>(".\\shaders\\vertex_shader.txt", ".\\shaders\\fragment_shader.txt");
 	Object obj(cube_vertices, shader_ptr);
+	objects.push_back(obj);
 
 	// uniforms
 	unsigned int texture1, texture2;
@@ -34,7 +36,7 @@ int main(int argc, char** argv) {
 		glClearColor(0.5f, 0.2f, 0.4f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		obj.Draw();
+		obj.DrawPrep();
 		
 		shader_ptr->use();
 
@@ -45,10 +47,9 @@ int main(int argc, char** argv) {
 		glm::mat4 view = Wonderland::camera.GetViewMatrix();
 		shader_ptr->setMat4("view", view);
 
-		glBindVertexArray(obj.VAO);
+		//glBindVertexArray(obj.VAO);
 
 		for (unsigned int i = 0; i < 10; i++) {
-
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, cubePositions[i]);
 			float angle = 20.0f * i;
@@ -57,8 +58,7 @@ int main(int argc, char** argv) {
 			}
 			else model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
-			glUniformMatrix4fv(glGetUniformLocation(shader_ptr->ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			obj.Draw(model, 36);
 		}
 
 		glfwSwapBuffers(w);

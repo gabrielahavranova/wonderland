@@ -25,11 +25,16 @@ public:
 	}
 
 	void Update() {}
-	void Draw() {
+	void DrawPrep() {
 		for (size_t i = 0; i < textures.size(); i++) {
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, textures[i]);
 		}
+		glBindVertexArray(VAO);
+	}
+	void Draw(const glm::mat4 model, unsigned int size) {
+		shader->setMat4("model", model);
+		glDrawArrays(GL_TRIANGLES, 0, size);
 	}
 
 
