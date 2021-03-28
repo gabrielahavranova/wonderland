@@ -2,6 +2,7 @@
 #include "stb_image.h"
 #include "Shader.h"
 #include "VerticesLib.h"
+#include <vector>
 
 class Object {
 public:
@@ -24,10 +25,16 @@ public:
 	}
 
 	void Update() {}
-	void Draw() {}
+	void Draw() {
+		for (size_t i = 0; i < textures.size(); i++) {
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, textures[i]);
+		}
+	}
 
 
 	std::shared_ptr<Shader> shader;
+	std::vector <unsigned int> textures;
 	unsigned int VBO, VAO;
 	int texture_cnt = 0; 
 
@@ -57,8 +64,8 @@ public:
 		stbi_image_free(data);
 		shader->use();
 		std::string texture_name = std::string("texture") + std::to_string(texture_cnt);
-		std::cout << "setting tex name: " << texture_name << ", with value: " << texture_cnt << std::endl;
 		shader->setInt(texture_name.c_str(), texture_cnt++);
+		textures.push_back(texture);
 		return 1;
 	}
 };
