@@ -4,6 +4,7 @@
 #include "ConstsAndTypes.h"
 #include <iostream>
 #include "Camera.h"
+#include "Object.h"
 
 namespace Wonderland {
 	Camera camera;
@@ -13,6 +14,33 @@ namespace Wonderland {
 	float delta_time;
 	float last_frame;
 	GLFWwindow* win;
+	std::vector <Object> objects;
+
+	void createBoxes();
+
+	void createObjects() {
+		createBoxes();
+	}
+
+	void createBoxes() {
+		std::shared_ptr<Shader> shader_ptr = std::make_shared<Shader>(".\\shaders\\vertex_shader.txt", ".\\shaders\\fragment_shader.txt");
+		size_t index = objects.size();
+		objects.emplace_back(cube_vertices, shader_ptr);
+
+		// uniforms
+		unsigned int texture1, texture2;
+		objects[index].createTexture("container.jpg", texture1);
+		objects[index].createTexture("awesomeface.png", texture2, true);
+	}
+
+	void setViewAndProjection(std::shared_ptr <Shader> shader) {
+		glm::mat4 projection = glm::perspective(glm::radians(Wonderland::camera.Zoom), (float)800 / (float)600, 0.1f, 100.0f);
+		shader->setMat4("projection", projection);
+
+		// camera/view transformation
+		glm::mat4 view = Wonderland::camera.GetViewMatrix();
+		shader->setMat4("view", view);
+	}
 
 	void mouseCallback(GLFWwindow* window, double xpos, double ypos) {
 		if (firstMouse)

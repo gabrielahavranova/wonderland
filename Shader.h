@@ -87,6 +87,10 @@ public:
 	
 	}
 
+	~Shader() {
+		glDeleteProgram(ID);
+	}
+
 	// use/activate the shader
 	void use() { glUseProgram(ID); }
 

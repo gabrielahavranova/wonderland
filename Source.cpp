@@ -13,17 +13,7 @@
 
 int main(int argc, char** argv) {
 	Wonderland::initEnviroment();
-	std::vector <Object> objects;
-
-	std::shared_ptr<Shader> shader_ptr = std::make_shared<Shader>(".\\shaders\\vertex_shader.txt", ".\\shaders\\fragment_shader.txt");
-	Object obj(cube_vertices, shader_ptr);
-	objects.push_back(obj);
-
-	// uniforms
-	unsigned int texture1, texture2;
-	obj.createTexture("container.jpg", texture1);
-	obj.createTexture("awesomeface.png", texture2, true);
-
+	Wonderland::createObjects();
 
 	GLFWwindow* w = Wonderland::win;
 	while (!glfwWindowShouldClose( w ) ) {
@@ -36,41 +26,34 @@ int main(int argc, char** argv) {
 		glClearColor(0.5f, 0.2f, 0.4f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		obj.DrawPrep();
-		
-		shader_ptr->use();
+		for (auto & object : Wonderland::objects) {
+			object.DrawPrep();
+			object.shader->use();
+			
+			glm::mat4 projection = glm::perspective(glm::radians(Wonderland::camera.Zoom), (float)800 / (float)600, 0.1f, 100.0f);
+			object.shader->setMat4("projection", projection);
 
-		glm::mat4 projection = glm::perspective(glm::radians(Wonderland::camera.Zoom), (float)800 / (float)600, 0.1f, 100.0f);
-		shader_ptr->setMat4("projection", projection);
+			// camera/view transformation
+			glm::mat4 view = Wonderland::camera.GetViewMatrix();
+			object.shader->setMat4("view", view);
 
-		// camera/view transformation
-		glm::mat4 view = Wonderland::camera.GetViewMatrix();
-		shader_ptr->setMat4("view", view);
+			for (unsigned int i = 0; i < 10; i++) {
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, cubePositions[i]);
+				float angle = 20.0f * i;
+				if (i < 5) {
+					model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+				}
+				else model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
-		//glBindVertexArray(obj.VAO);
-
-		for (unsigned int i = 0; i < 10; i++) {
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, cubePositions[i]);
-			float angle = 20.0f * i;
-			if (i < 5) {
-				model = glm::rotate(model, (float)glfwGetTime() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+				object.Draw(model, 36);
 			}
-			else model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			//object.Draw((float)glfwGetTime());
 
-			obj.Draw(model, 36);
 		}
-
 		glfwSwapBuffers(w);
 		glfwPollEvents();
 	}
-
-	glDeleteVertexArrays(1, &obj.VAO);
-
-	glDeleteBuffers(1, &obj.VBO);
-	glDeleteProgram(shader_ptr->ID);
-
-
 	glfwTerminate();
 
 	return 0;

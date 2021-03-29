@@ -38,6 +38,11 @@ public:
 	}
 
 
+	~Object() {
+		glDeleteVertexArrays(1, &VAO);
+		glDeleteBuffers(1, &VBO);
+	}
+
 	std::shared_ptr<Shader> shader;
 	std::vector <unsigned int> textures;
 	unsigned int VBO, VAO;
