@@ -18,23 +18,35 @@ public:
 		return res;
 	}
 
-	Object(const float * vertices, const int vertices_cnt, std::shared_ptr <Shader> shader, const std::string & name): shader(shader) {
+	Object(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+			std::shared_ptr <Shader> shader, const std::string& name) : shader(shader) {
 		this->name = name;
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
+		glGenBuffers(1, &EBO);
 		
 		glBindVertexArray(VAO);
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices)*vertices_cnt, vertices, GL_STATIC_DRAW); //puts vertices data into our vertex buffer object
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float)*vertices_cnt, vertices, GL_STATIC_DRAW); //puts vertices data into our vertex buffer object
 
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_cnt * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 		// position attributes
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+
 
 		// texture coord attribute
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+
+		// texture coord attribute
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		
+		glBindVertexArray(0);
 	}
 
 	void Update() {}
@@ -45,36 +57,29 @@ public:
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, textures[i]);
 		}
-		//glBindVertexArray(VAO);
-		//shader->use();
-	}
-
-	void DrawB() {
-		glm::mat4 model1 = glm::mat4(1.0f);
-		model1 = glm::translate(model1, glm::vec3(0.0f, 0.0f, 0.0f));
-		shader->setMat4("model", model1);
-		glDrawArrays(GL_TRIANGLES, 0, torusNVertices);
 	}
 
 	void DrawBoxes() {
-		for (unsigned int i = 0; i < 10; i++) {
+		std::cout << "drawboxes called " << std::endl;
+		//for (unsigned int i = 0; i < 10; i++) {
 			float s = (float)getTimeSeed();
 			glm::mat4 model1 = glm::mat4(1.0f);
-			model1 = glm::translate(model1, cubePositions[i]);
-			float angle = 20.0f * i;
-			if (i < 5) {
+			model1 = glm::translate(model1, glm::vec3(1.0f, 1.0f, 1.0f));
+			float angle = 20.0f;
+			//if (i < 5) {
 				model1 = glm::rotate(model1, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-			}
-			else model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			//}
+			//else model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
 			shader->setMat4("model", model1);
-			glDrawArrays(GL_TRIANGLES, 0, CVNVertices);
-		}
+			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
+			glBindVertexArray(VAO);
+			glDrawElements(GL_TRIANGLES, kukuTriCNT, GL_UNSIGNED_INT, 0);
+		//}
 	}
 
 	void Draw() {
 		DrawPrep();
-		if (name == "torus") DrawB();
 		if (name == "box") DrawBoxes();
 		//DrawB();
 	}
@@ -87,7 +92,7 @@ public:
 
 	std::shared_ptr<Shader> shader;
 	std::vector <unsigned int> textures;
-	unsigned int VBO, VAO;
+	unsigned int VBO, VAO, EBO;
 	int texture_cnt = 0; 
 	std::string name;
 

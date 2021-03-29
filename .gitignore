@@ -3,6 +3,7 @@ glm/**
 x64/**
 assets/**
 assimp/**
+blender/**
 
 # Prerequisites
 *.d

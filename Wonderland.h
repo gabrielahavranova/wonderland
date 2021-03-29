@@ -19,33 +19,39 @@ namespace Wonderland {
 	std::vector <Object> objects;
 	std::map <std::string, std::shared_ptr<Shader>> shaders;
 
-	void createBoxes();
-	void createB() {
+	void createBoxes() {
 		size_t index = objects.size();
-		objects.emplace_back(torusVertices, torusNVertices * 8, shaders["basic2"], "torus");
+		objects.emplace_back(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"], "box");
+
+		// uniforms
 		unsigned int texture1, texture2;
+		//
+		
+		objects[index].createTexture("container.jpg", texture1);
+		objects[index].createTexture("awesomeface.png", texture2, true);
+	}
+
+	void createTorus() {
+		size_t index = objects.size();
+		objects.emplace_back(torusVert, torusN * 8, torusTri, torusTriCNT, shaders["basic2"], "torus");
+
+		// uniforms
+		unsigned int texture1, texture2;
+		//
+
 		objects[index].createTexture("container.jpg", texture1);
 		objects[index].createTexture("awesomeface.png", texture2, true);
 	}
 
 	void createObjects() {
 		createBoxes();
-		//createB();
+		//createTorus();
+
 	}
 
 	void createShaders() {
 		shaders.emplace("basic", std::make_shared<Shader>(".\\shaders\\vertex_shader.txt", ".\\shaders\\fragment_shader.txt"));
 		shaders.emplace("basic2", std::make_shared<Shader>(".\\shaders\\vertex_shader.txt", ".\\shaders\\fragment_shader.txt"));
-	}
-
-	void createBoxes() {
-		size_t index = objects.size();
-		objects.emplace_back(CV, CVNVertices * 8, shaders["basic"], "box");
-
-		// uniforms
-		unsigned int texture1, texture2;
-		objects[index].createTexture("container.jpg", texture1);
-		objects[index].createTexture("awesomeface.png", texture2, true);
 	}
 
 	void setViewAndProjection(std::shared_ptr <Shader> shader) {
