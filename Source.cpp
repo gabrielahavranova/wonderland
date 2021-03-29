@@ -12,6 +12,7 @@
 
 int main(int argc, char** argv) {
 	Wonderland::initEnviroment();
+	Wonderland::createShaders();
 	Wonderland::createObjects();
 
 	GLFWwindow* w = Wonderland::win;
@@ -26,8 +27,7 @@ int main(int argc, char** argv) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		for (auto & object : Wonderland::objects) {
-			object.DrawPrep();
-			//object.shader->use();
+			//object.DrawPrep();
 			Wonderland::setViewAndProjection(object.shader);
 			object.Draw();
 		}

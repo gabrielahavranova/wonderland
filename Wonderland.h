@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Camera.h"
 #include "Object.h"
+#include <map>
 
 
 namespace Wonderland {
@@ -16,19 +17,30 @@ namespace Wonderland {
 	float last_frame;
 	GLFWwindow* win;
 	std::vector <Object> objects;
+	std::map <std::string, std::shared_ptr<Shader>> shaders;
 
 	void createBoxes();
+	void createB() {
+		size_t index = objects.size();
+		objects.emplace_back(torusVertices, torusNVertices * 8, shaders["basic2"], "torus");
+		unsigned int texture1, texture2;
+		objects[index].createTexture("container.jpg", texture1);
+		objects[index].createTexture("awesomeface.png", texture2, true);
+	}
 
 	void createObjects() {
 		createBoxes();
+		//createB();
 	}
 
-	
+	void createShaders() {
+		shaders.emplace("basic", std::make_shared<Shader>(".\\shaders\\vertex_shader.txt", ".\\shaders\\fragment_shader.txt"));
+		shaders.emplace("basic2", std::make_shared<Shader>(".\\shaders\\vertex_shader.txt", ".\\shaders\\fragment_shader.txt"));
+	}
 
 	void createBoxes() {
-		std::shared_ptr<Shader> shader_ptr = std::make_shared<Shader>(".\\shaders\\vertex_shader.txt", ".\\shaders\\fragment_shader.txt");
 		size_t index = objects.size();
-		objects.emplace_back(cube_vertices, shader_ptr);
+		objects.emplace_back(CV, CVNVertices * 8, shaders["basic"], "box");
 
 		// uniforms
 		unsigned int texture1, texture2;
