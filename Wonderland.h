@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Object.h"
 
+
 namespace Wonderland {
 	Camera camera;
 	float lastX;
@@ -21,6 +22,8 @@ namespace Wonderland {
 	void createObjects() {
 		createBoxes();
 	}
+
+	
 
 	void createBoxes() {
 		std::shared_ptr<Shader> shader_ptr = std::make_shared<Shader>(".\\shaders\\vertex_shader.txt", ".\\shaders\\fragment_shader.txt");

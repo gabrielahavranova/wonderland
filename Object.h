@@ -3,9 +3,21 @@
 #include "Shader.h"
 #include "VerticesLib.h"
 #include <vector>
+#include "glm/glm/glm.hpp"
+#include "glm/glm/gtc/matrix_transform.hpp"
+
 
 class Object {
 public:
+	double getTimeSeed() {
+		std::chrono::time_point<std::chrono::system_clock> now =
+			std::chrono::system_clock::now();
+		auto duration = now.time_since_epoch();
+		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+		double res = (millis % 10000) / 1000.0;
+		return res;
+	}
+
 	Object(const float * vertices, std::shared_ptr <Shader> shader): shader(shader) {
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
@@ -31,10 +43,27 @@ public:
 			glBindTexture(GL_TEXTURE_2D, textures[i]);
 		}
 		glBindVertexArray(VAO);
+		shader->use();
 	}
-	void Draw(const glm::mat4 model, unsigned int size) {
-		shader->setMat4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, size);
+
+	void DrawBoxes() {
+		for (unsigned int i = 0; i < 10; i++) {
+
+			glm::mat4 model1 = glm::mat4(1.0f);
+			model1 = glm::translate(model1, cubePositions[i]);
+			float angle = 20.0f * i;
+			if (i < 5) {
+				model1 = glm::rotate(model1, (float)getTimeSeed() * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			}
+			else model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+
+			shader->setMat4("model", model1);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+	}
+
+	void Draw() {
+		DrawBoxes();
 	}
 
 
