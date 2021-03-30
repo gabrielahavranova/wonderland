@@ -60,7 +60,7 @@ public:
 	}
 
 	void DrawBoxes() {
-		std::cout << "drawboxes called " << std::endl;
+		//std::cout << "drawboxes called " << std::endl;
 		const float xses[] = { 2, -3, 5, -8, 1, -5, 0 , -4, 6, 9 };
 		for (unsigned int i = 0; i < 10; i++) {
 			int x = (int)getTimeSeed() % 10;

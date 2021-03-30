@@ -60,7 +60,7 @@ public:
 	}
 
 	void DrawBoxes() {
-		std::cout << "drawboxes called " << std::endl;
+		//std::cout << "drawboxes called " << std::endl;
 		//for (unsigned int i = 0; i < 10; i++) {
 			
 			glm::mat4 model1 = glm::mat4(1.0f);

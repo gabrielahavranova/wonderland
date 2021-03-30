@@ -139,6 +139,11 @@ namespace Wonderland {
 			camera.ProcessKeyboard(LEFT, delta_time);
 		if (glfwGetKey(win, GLFW_KEY_D) == GLFW_PRESS)
 			camera.ProcessKeyboard(RIGHT, delta_time);
+		if (glfwGetKey(win, GLFW_KEY_F1) == GLFW_PRESS)
+			camera.ProcessKeyboard(STATIC1, delta_time);
+		if (glfwGetKey(win, GLFW_KEY_F2) == GLFW_PRESS)
+			camera.ProcessKeyboard(STATIC2, delta_time);
+	
 	}
 };
 

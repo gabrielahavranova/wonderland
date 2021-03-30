@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 #include "glm/glm/glm.hpp"
 #include "glm/glm/gtc/matrix_transform.hpp"
+#include <cmath>
 
 #include <vector>
 
@@ -14,7 +15,9 @@ enum Camera_Movement {
     FORWARD,
     BACKWARD,
     LEFT,
-    RIGHT
+    RIGHT,
+    STATIC1,
+    STATIC2
 };
 
 // Default camera values
@@ -80,6 +83,34 @@ public:
             Position -= Right * velocity;
         if (direction == RIGHT)
             Position += Right * velocity;
+        if (direction == STATIC1) {
+           // glm::vec3 front;
+            //front.x = cos(glm::radians(20.0f)) * cos(glm::radians(20.0f));
+            //front.y = sin(glm::radians(20.0f));
+          //  front.z = sin(glm::radians(20.0f)) * cos(glm::radians(20.0f));
+            //Front = glm::normalize(front);
+            //Position = glm::vec3(-24.3f, -0.22f, 18.0f);
+            //Front = glm::vec3(0.696716f, 0.0697564f, -0.713947f);
+            //Pitch = std::asin(0.0697564f);
+
+
+            std::cout << "Position = glm::vec3(" << Position[0] << "f, " << Position[1] << "f, " << Position[2] << "f);" << std::endl;
+            std::cout << "Front = glm::vec3(" << Front.x << "f, " << Front.y << "f, " << Front.z << "f);" << std::endl;
+            std::cout << "Right = glm::vec3(" << Right.x << "f, " << Right.y << "f, " << Right.z << "f);" << std::endl;
+            std::cout << "Up = glm::vec3(" << Up.x << "f, " << Up.y << "f, " << Up.z << "f);" << std::endl;
+            std::cout << "Pitch = " << Pitch << "f;" << std::endl;
+            std::cout << "Yaw = " << Yaw << "f;" << std::endl;
+
+            Position = glm::vec3(-10.7041f, 0.524644f, 6.51507f);
+            Front = glm::vec3(0.620842f, -0.0314108f, -0.783306f);
+            Right = glm::vec3(0.209618f, 0.0f, -0.977783f);
+            Up = glm::vec3(-0.430165f, 0.898028f, -0.0922193f);
+            Pitch = -1.8f;
+            Yaw = -51.6f;
+        }
+        if (direction == STATIC2)
+            Position = glm::vec3(3.90264f, 6.07039f, 45.2156f);
+           // Front = glm::vec3(-0.317231f, - 0.020943f, - 0.948117f);
     }
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
