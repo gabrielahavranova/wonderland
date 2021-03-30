@@ -31,6 +31,32 @@ const float kukuVert[] = {
   1.0f,-1.0f,1.0f,0.0f,-0.0f,1.0f,0.625f,0.75f,
 }; // end cubeVertices
 
+const float testVert[] = {
+    1.717718f, 0.716532f, - 0.006571f,
+    1.000000f, - 1.000000f, - 1.000000f,
+    1.219301f, 0.637220f, 0.950647f,
+    1.000000f, - 1.000000f, 1.000000f,
+    - 0.250264f, 0.549781f, - 0.374718f,
+    - 1.000000f, - 1.000000f, - 1.000000f,
+    - 0.562204f, 0.473523f, 0.657731f,
+    - 1.000000f, - 1.000000f, 1.000000f
+};
+
+const int indCnt = 24;
+const int vertCnt = 8;
+
+const unsigned int testInd[] = {
+    1, 5, 7, 3,
+    4, 3, 7, 8,
+    8, 7, 5, 6,
+    6, 2, 4, 8,
+    2, 1, 3, 4,
+    6, 5, 1, 2
+};
+
+
+
+
 const unsigned int kukuTri[] = {
   0, 1, 2,
   0, 2, 3,
@@ -46,7 +72,6 @@ const unsigned int kukuTri[] = {
   20, 22, 23,
 };
 
-#include "qq.cpp.h"
 const int torusN = 228;
 const int torusTriCNT = 120 * 3;
 

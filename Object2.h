@@ -7,7 +7,7 @@
 #include "glm/glm/gtc/matrix_transform.hpp"
 
 
-class Object {
+class Object2 {
 public:
 	double getTimeSeed() {
 		std::chrono::time_point<std::chrono::system_clock> now =
@@ -18,7 +18,7 @@ public:
 		return res;
 	}
 
-	Object(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+	Object2(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
 			std::shared_ptr <Shader> shader, const std::string& name) : shader(shader) {
 		this->name = name;
 		glGenVertexArrays(1, &VAO);
@@ -64,7 +64,7 @@ public:
 		//for (unsigned int i = 0; i < 10; i++) {
 			float s = (float)getTimeSeed();
 			glm::mat4 model1 = glm::mat4(1.0f);
-			model1 = glm::translate(model1, glm::vec3(1.0f, 1.0f, 1.0f));
+			model1 = glm::translate(model1, glm::vec3(10.0f, 10.0f, 1.0f));
 			float angle = 20.0f;
 			//if (i < 5) {
 				model1 = glm::rotate(model1, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
@@ -74,19 +74,19 @@ public:
 			shader->setMat4("model", model1);
 			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 			glBindVertexArray(VAO);
-			glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, torusTriCNT, GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
 		//}
 	}
 
 	void Draw() {
 		DrawPrep();
-		if (name == "box") DrawBoxes();
-		//DrawB();
+		DrawBoxes();
+		
 	}
 
 
-	~Object() {
+	~Object2() {
 		glDeleteVertexArrays(1, &VAO);
 		glDeleteBuffers(1, &VBO);
 	}

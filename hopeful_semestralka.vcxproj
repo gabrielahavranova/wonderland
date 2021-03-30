@@ -159,6 +159,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="Object2.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="VerticesLib.h" />
