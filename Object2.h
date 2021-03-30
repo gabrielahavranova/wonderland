@@ -62,19 +62,25 @@ public:
 	void DrawBoxes() {
 		std::cout << "drawboxes called " << std::endl;
 		//for (unsigned int i = 0; i < 10; i++) {
-			float s = (float)getTimeSeed();
+			
 			glm::mat4 model1 = glm::mat4(1.0f);
-			model1 = glm::translate(model1, glm::vec3(10.0f, 10.0f, 1.0f));
-			float angle = 20.0f;
+			model1 = glm::translate(model1, glm::vec3(3.0f, -5.0f, 5.0f));
+			float angle = -90.0f;
 			//if (i < 5) {
-				model1 = glm::rotate(model1, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+				model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
 			//}
 			//else model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
 			shader->setMat4("model", model1);
 			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 			glBindVertexArray(VAO);
-			glDrawElements(GL_TRIANGLES, torusTriCNT, GL_UNSIGNED_INT, 0);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			shader->setFloat("color", 0.7f);
+			glDrawElements(GL_TRIANGLES, planeNTriangles, GL_UNSIGNED_INT, 0);
+
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			shader->setFloat("color", 0.2f);
+			glDrawElements(GL_TRIANGLES, planeNTriangles, GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
 		//}
 	}

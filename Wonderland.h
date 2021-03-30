@@ -35,7 +35,9 @@ namespace Wonderland {
 
 	void createTorus() {
 		size_t index = objects.size();
-		objects2.emplace_back(torusVert, torusN * 8, torusTri, torusTriCNT, shaders["basic2"], "torus");
+		//objects2.emplace_back(torusVert, torusN * 8, torusTri, torusTriCNT, shaders["basic2"], "torus");
+		objects2.emplace_back(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic2"], "plane");
+		
 		//objects2.emplace_back(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"], "box");
 		// uniforms
 		unsigned int texture1, texture2;

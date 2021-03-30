@@ -74,15 +74,17 @@ public:
 			shader->setMat4("model", model1);
 			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 			glBindVertexArray(VAO);
-			glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			shader->setFloat("color", 0.4f);
+			glDrawElements(GL_TRIANGLES, kukuTriCNT, GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
 		//}
 	}
 
 	void Draw() {
 		DrawPrep();
-		if (name == "box") DrawBoxes();
-		//DrawB();
+		DrawBoxes();
+		
 	}
 
 
