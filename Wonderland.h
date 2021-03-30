@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Object.h"
 #include "Object2.h"
+#include "Object3.h"
 #include <map>
 
 
@@ -19,6 +20,7 @@ namespace Wonderland {
 	GLFWwindow* win;
 	std::vector <Object> objects;
 	std::vector <Object2> objects2;
+	std::vector <Object3> objects3;
 	std::map <std::string, std::shared_ptr<Shader>> shaders;
 
 	void createBoxes() {
@@ -37,6 +39,7 @@ namespace Wonderland {
 		size_t index = objects.size();
 		//objects2.emplace_back(torusVert, torusN * 8, torusTri, torusTriCNT, shaders["basic2"], "torus");
 		objects2.emplace_back(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic2"], "plane");
+		objects3.emplace_back(cylinderVertices, cylinderNVertices* 8, cylinderTriangles, cylinderNTriangles, shaders["basic2"], "plane");
 		
 		//objects2.emplace_back(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"], "box");
 		// uniforms

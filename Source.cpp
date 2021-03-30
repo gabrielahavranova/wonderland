@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 
 		Wonderland::processInput();
 
-		glClearColor(0.5f, 0.2f, 0.4f, 1.0f);
+		glClearColor(0.05f, 0.15f, 0.5f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		for (auto & object : Wonderland::objects) {
@@ -33,6 +33,12 @@ int main(int argc, char** argv) {
 		}
 
 		for (auto& object : Wonderland::objects2) {
+			//object.DrawPrep();
+			Wonderland::setViewAndProjection(object.shader);
+			object.Draw();
+		}
+
+		for (auto& object : Wonderland::objects3) {
 			//object.DrawPrep();
 			Wonderland::setViewAndProjection(object.shader);
 			object.Draw();

@@ -6,10 +6,12 @@ in vec2 tex_coord;
 
 //uniform sampler2D texture0;
 //uniform sampler2D texture1;
-uniform float color;
+uniform float color1;
+uniform float color2;
+uniform float color3;
 
 void main () {
 	//FragColor = mix(texture(texture0, tex_coord), texture(texture1, tex_coord), 0.2);
 	//FragColor = vec4(1.0f, 6.0f, 1.0f, 0.8f);
-	FragColor = vec4(color, color - 0.2f, color + 0.2f, 1.0f) ;
+	FragColor = vec4(color1, color2, color3, 1.0f) ;
 }

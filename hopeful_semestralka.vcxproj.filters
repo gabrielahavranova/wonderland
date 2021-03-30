@@ -62,6 +62,9 @@
     <ClInclude Include="Object2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Object3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="shaders\fragment_shader.txt">

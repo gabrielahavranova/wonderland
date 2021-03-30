@@ -7,7 +7,7 @@
 #include "glm/glm/gtc/matrix_transform.hpp"
 
 
-class Object2 {
+class Object3 {
 public:
 	double getTimeSeed() {
 		std::chrono::time_point<std::chrono::system_clock> now =
@@ -18,7 +18,7 @@ public:
 		return res;
 	}
 
-	Object2(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+	Object3(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
 			std::shared_ptr <Shader> shader, const std::string& name) : shader(shader) {
 		this->name = name;
 		glGenVertexArrays(1, &VAO);
@@ -61,13 +61,18 @@ public:
 
 	void DrawBoxes() {
 		std::cout << "drawboxes called " << std::endl;
-		//for (unsigned int i = 0; i < 10; i++) {
-			
+		const float xses[] = { 2, -3, 5, -8, 1, -5, 0 , -4, 6, 9 };
+		for (unsigned int i = 0; i < 10; i++) {
+			int x = (int)getTimeSeed() % 10;
+			int y = (int)getTimeSeed() % 10;
 			glm::mat4 model1 = glm::mat4(1.0f);
-			model1 = glm::translate(model1, glm::vec3(3.0f, -5.0f, 5.0f));
+			//										 vvvvv plane      |  height| distance from camera
+			model1 = glm::translate(model1, glm::vec3(0.0f + xses[i] * 4.5f, -10.0f + i * 2.0f, 10.0f + xses[9 - i] * 8.0f));
 			float angle = -90.0f;
 			//if (i < 5) {
+			
 				model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
+				model1 = glm::scale(model1, glm::vec3(5.0f, 5.0f, 7.0f));
 			//}
 			//else model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
@@ -75,18 +80,18 @@ public:
 			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 			glBindVertexArray(VAO);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			shader->setFloat("color1", 0.1f);
+			shader->setFloat("color1", 0.7f);
 			shader->setFloat("color2", 0.3f);
-			shader->setFloat("color3", 0.1f);
-			glDrawElements(GL_TRIANGLES, planeNTriangles, GL_UNSIGNED_INT, 0);
+			shader->setFloat("color3", 0.2f);
+			glDrawElements(GL_TRIANGLES, cylinderNTriangles, GL_UNSIGNED_INT, 0);
 
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			shader->setFloat("color1", 0.0f);
 			shader->setFloat("color2", 0.0f);
 			shader->setFloat("color3", 0.0f);
-			glDrawElements(GL_TRIANGLES, planeNTriangles, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, cylinderNTriangles, GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
-		//}
+		}
 	}
 
 	void Draw() {
@@ -96,7 +101,7 @@ public:
 	}
 
 
-	~Object2() {
+	~Object3() {
 		glDeleteVertexArrays(1, &VAO);
 		glDeleteBuffers(1, &VBO);
 	}
