@@ -20,6 +20,7 @@ enum Camera_Movement {
     STATIC2
 };
 
+
 // Default camera values
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
@@ -101,15 +102,22 @@ public:
             std::cout << "Pitch = " << Pitch << "f;" << std::endl;
             std::cout << "Yaw = " << Yaw << "f;" << std::endl;
 
-            Position = glm::vec3(-10.7041f, 0.524644f, 6.51507f);
-            Front = glm::vec3(0.620842f, -0.0314108f, -0.783306f);
-            Right = glm::vec3(0.209618f, 0.0f, -0.977783f);
-            Up = glm::vec3(-0.430165f, 0.898028f, -0.0922193f);
-            Pitch = -1.8f;
-            Yaw = -51.6f;
+            Pitch = 0.400004f;
+            Yaw = 318.3f;
+            Position = glm::vec3(-25.051f, -0.572113f, 18.8281f);
+            Zoom = 45.0f;
+            updateCameraVectors();
+            //Front = glm::vec3(0.620842f, -0.0314108f, -0.783306f);
+           // Right = glm::vec3(0.209618f, 0.0f, -0.977783f);
+            //Up = glm::vec3(-0.430165f, 0.898028f, -0.0922193f);
+            
         }
-        if (direction == STATIC2)
-            Position = glm::vec3(3.90264f, 6.07039f, 45.2156f);
+        if (direction == STATIC2) {
+            Pitch = -25.3f;
+            Yaw = 216.1f;
+            Position = glm::vec3(66.6536f, 37.5282f, 30.5252f);
+            updateCameraVectors();
+        }
            // Front = glm::vec3(-0.317231f, - 0.020943f, - 0.948117f);
     }
 

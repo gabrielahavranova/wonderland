@@ -43,6 +43,13 @@ int main(int argc, char** argv) {
 			Wonderland::setViewAndProjection(object.shader);
 			object.Draw();
 		}
+
+		for (auto& object : Wonderland::objects4) {
+			//object.DrawPrep();
+			Wonderland::setViewAndProjection(object.shader);
+			object.Draw();
+		}
+
 		glfwSwapBuffers(w);
 		glfwPollEvents();
 	}
