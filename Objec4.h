@@ -21,6 +21,7 @@ public:
 	Object4(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
 			std::shared_ptr <Shader> shader, const std::string& name) : shader(shader) {
 		this->name = name;
+		color1 = color2 = color3 = 0.0f;
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
 		glGenBuffers(1, &EBO);
@@ -82,12 +83,13 @@ public:
 			shader->setFloat("color3", 0.0f);
 			glDrawElements(GL_TRIANGLES, torus_001NTriangles, GL_UNSIGNED_INT, 0);
 
-			double x = getTimeSeed();
-			float color = ((int)x % 1000) / 1000.0;
+			double x = (int)(getTimeSeed() * 1000)/ 1000.0;
+			float color = std::abs(std::sin(x));
+			std::cout << "color is: " << color << std::endl;
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			shader->setFloat("color1",color);
+			shader->setFloat("color1",1.0f - color);
 			shader->setFloat("color2", color);
-			shader->setFloat("color3", color);
+			shader->setFloat("color3", 0.2f + color / 4.0f);
 			glDrawElements(GL_TRIANGLES, torus_001NTriangles, GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
 		//}
@@ -110,6 +112,7 @@ public:
 	unsigned int VBO, VAO, EBO;
 	int texture_cnt = 0; 
 	std::string name;
+	float color1, color2, color3;
 
 	int createTexture(const char* tex_path, unsigned int & texture, bool flip_texture_on_load = false) {
 		glGenTextures(1, &texture);

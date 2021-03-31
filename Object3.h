@@ -86,9 +86,9 @@ public:
 			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 			glBindVertexArray(VAO);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			shader->setFloat("color1", 0.7f);
-			shader->setFloat("color2", 0.3f);
-			shader->setFloat("color3", 0.2f);
+			shader->setFloat("color1", 1.0f);
+			shader->setFloat("color2", 0.768f);
+			shader->setFloat("color3", 0.768f);
 			glDrawElements(GL_TRIANGLES, cylinderNTriangles, GL_UNSIGNED_INT, 0);
 
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
