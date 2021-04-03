@@ -8,6 +8,7 @@
 #include "Object2.h"
 #include "Object3.h"
 #include "Objec4.h"
+#include "OBJtest.h"
 #include <map>
 
 
@@ -19,15 +20,17 @@ namespace Wonderland {
 	float delta_time;
 	float last_frame;
 	GLFWwindow* win;
-	std::vector <Object> objects;
-	std::vector <Object2> objects2;
-	std::vector <Object3> objects3;
-	std::vector <Object4> objects4;
+	//std::vector <Object> objects;
+	//std::vector <Object2> objects2;
+	//std::vector <Object3> objects3;
+	//std::vector <Object4> objects4;
+	std::vector <std::shared_ptr<OBJtest>> objectsTEST;
+	//std::vector <OBJtest> objectsTEST;
 	std::map <std::string, std::shared_ptr<Shader>> shaders;
 
 	void createBoxes() {
-		size_t index = objects.size();
-		objects.emplace_back(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"], "box");
+		size_t index = objectsTEST.size();
+		objectsTEST.emplace_back(std::make_shared <Object>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"], "box"));
 
 		// uniforms
 		unsigned int texture1, texture2;
@@ -38,12 +41,16 @@ namespace Wonderland {
 	}
 
 	void createTorus() {
-		size_t index = objects.size();
+		size_t index = objectsTEST.size();
 		//objects2.emplace_back(torusVert, torusN * 8, torusTri, torusTriCNT, shaders["basic2"], "torus");
-		objects2.emplace_back(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic2"], "plane");
-		objects3.emplace_back(cylinderVertices, cylinderNVertices* 8, cylinderTriangles, cylinderNTriangles, shaders["basic2"], "plane");
-		objects4.emplace_back(torus_001Vertices	, torus_001NVertices* 8, torus_001Triangles, torus_001NTriangles, shaders["basic2"], "plane");
+		objectsTEST.emplace_back(std::make_shared <Object2>(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic2"], "plane"));
+		objectsTEST.emplace_back(std::make_shared <Object3>(cylinderVertices, cylinderNVertices* 8, cylinderTriangles, cylinderNTriangles, shaders["basic2"], "plane"));
+		objectsTEST.emplace_back(std::make_shared <Object4>(torus_001Vertices	, torus_001NVertices* 8, torus_001Triangles, torus_001NTriangles, shaders["basic2"], "plane"));
+		//OBJtest pp(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"], "box");
+		//std::shared_ptr <testInstance> pp2 = std::make_shared<testInstance>(pp);
 		
+		objectsTEST.emplace_back(std::make_shared<testInstance>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"], "box"));
+		//objectsTEST.push_back(pp2);
 		//objects2.emplace_back(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"], "box");
 		// uniforms
 		unsigned int texture1, texture2;

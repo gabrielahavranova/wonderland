@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
-#include "glm/glm/glm.hpp"
+#include "../glm/glm/glm.hpp"
+//#include "glm/glm/glm.hpp"
 
 
 struct Vertex {
@@ -15,5 +16,5 @@ struct Texture {
 	std::string path;
 };
 
-const int WIN_WIDTH = 800;
-const int WIN_HEIGHT = 600;
+const int WIN_WIDTH = 1200;
+const int WIN_HEIGHT = 800;

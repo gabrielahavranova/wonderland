@@ -1,4 +1,5 @@
 #pragma once
+
 #include "stb_image.h"
 #include "Shader.h"
 #include "VerticesLib.h"
@@ -7,58 +8,30 @@
 #include "../glm/glm/gtc/matrix_transform.hpp"
 //#include "glm/glm/glm.hpp"
 //#include "glm/glm/gtc/matrix_transform.hpp"
-#include "OBJtest.h"
 
-class Object : public OBJtest { 
-public: 
-	Object(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader, const std::string& name) : OBJtest(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
-		void DrawBoxes () override {
-			//std::cout << "drawboxes called " << std::endl;
-			//for (unsigned int i = 0; i < 10; i++) {
-			float s = (float)getTimeSeed();
-			glm::mat4 model1 = glm::mat4(1.0f);
-			model1 = glm::translate(model1, glm::vec3(1.0f, 1.0f, 1.0f));
-			float angle = 20.0f;
-			//if (i < 5) {
-			model1 = glm::rotate(model1, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-			//}
-			//else model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
-			shader->setMat4("model", model1);
-			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
-			glBindVertexArray(VAO);
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			shader->setFloat("color1", 0.9f);
-			shader->setFloat("color2", 0.9f);
-			shader->setFloat("color3", 0.0f);
-			glDrawElements(GL_TRIANGLES, kukuTriCNT, GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
-			//}
-		
-		}
-/*
+class OBJtest {
 public:
 	double getTimeSeed() {
 		std::chrono::time_point<std::chrono::system_clock> now =
 			std::chrono::system_clock::now();
 		auto duration = now.time_since_epoch();
 		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-		double res =  millis % (long int)10e4 / 10.0e2 ;
+		double res = millis % (long int)10e4 / 10.0e2;
 		return res;
 	}
 
-	Object(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-			std::shared_ptr <Shader> shader, const std::string& name) : shader(shader) {
+	OBJtest(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+		std::shared_ptr <Shader> shader, const std::string& name) : shader(shader), vertices(vertices), vertices_cnt(vertices_cnt), indices_cnt(indices_cnt), indices(indices) {
 		this->name = name;
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
 		glGenBuffers(1, &EBO);
-		
+
 		glBindVertexArray(VAO);
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float)*vertices_cnt, vertices, GL_STATIC_DRAW); //puts vertices data into our vertex buffer object
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices_cnt, vertices, GL_STATIC_DRAW); //puts vertices data into our vertex buffer object
 
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -75,7 +48,7 @@ public:
 		// texture coord attribute
 		//glEnableVertexAttribArray(2);
 		//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-		
+
 		glBindVertexArray(0);
 	}
 
@@ -89,38 +62,38 @@ public:
 		}
 	}
 
-	void DrawBoxes() {
+	virtual void DrawBoxes() {
 		//std::cout << "drawboxes called " << std::endl;
 		//for (unsigned int i = 0; i < 10; i++) {
-			float s = (float)getTimeSeed();
-			glm::mat4 model1 = glm::mat4(1.0f);
-			model1 = glm::translate(model1, glm::vec3(1.0f, 1.0f, 1.0f));
-			float angle = 20.0f;
-			//if (i < 5) {
-				model1 = glm::rotate(model1, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-			//}
-			//else model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-
-			shader->setMat4("model", model1);
-			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
-			glBindVertexArray(VAO);
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			shader->setFloat("color1", 0.9f);
-			shader->setFloat("color2", 0.9f);
-			shader->setFloat("color3", 0.0f);
-			glDrawElements(GL_TRIANGLES, kukuTriCNT, GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
+		float s = (float)getTimeSeed();
+		glm::mat4 model1 = glm::mat4(1.0f);
+		model1 = glm::translate(model1, glm::vec3(2.0f, 1.0f, 1.0f));
+		float angle = 20.0f;
+		//if (i < 5) {
+		model1 = glm::rotate(model1, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 		//}
-	}
+		//else model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+
+		shader->setMat4("model", model1);
+		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
+		glBindVertexArray(VAO);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		shader->setFloat("color1", 0.0f);
+		shader->setFloat("color2", 0.9f);
+		shader->setFloat("color3", 0.9f);
+		glDrawElements(GL_TRIANGLES, kukuTriCNT, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+		//}
+	} 
 
 	void Draw() {
 		DrawPrep();
 		DrawBoxes();
-		
+
 	}
 
 
-	~Object() {
+	~OBJtest() {
 		glDeleteVertexArrays(1, &VAO);
 		glDeleteBuffers(1, &VBO);
 	}
@@ -128,10 +101,10 @@ public:
 	std::shared_ptr<Shader> shader;
 	std::vector <unsigned int> textures;
 	unsigned int VBO, VAO, EBO;
-	int texture_cnt = 0; 
+	int texture_cnt = 0;
 	std::string name;
 
-	int createTexture(const char* tex_path, unsigned int & texture, bool flip_texture_on_load = false) {
+	int createTexture(const char* tex_path, unsigned int& texture, bool flip_texture_on_load = false) {
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -141,7 +114,7 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_REPEAT);
 
 		int width, height, nrChannels;
-		
+
 		stbi_set_flip_vertically_on_load(flip_texture_on_load);
 		unsigned char* data = stbi_load(tex_path, &width, &height, &nrChannels, 0);
 		int mode = nrChannels == 3 ? GL_RGB : GL_RGBA;
@@ -160,6 +133,39 @@ public:
 		shader->setInt(texture_name.c_str(), texture_cnt++);
 		textures.push_back(texture);
 		return 1;
-	} */
+	}
+	protected: 
+	const float *vertices;
+	int vertices_cnt, indices_cnt;
+	const unsigned int * indices;
 };
 
+class testInstance : public OBJtest {
+public:
+	testInstance(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+		std::shared_ptr <Shader> shader, const std::string& name) : OBJtest(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
+
+	void DrawBoxes() override {
+		//std::cout << "drawboxes called " << std::endl;
+		//for (unsigned int i = 0; i < 10; i++) {
+		float s = (float)getTimeSeed();
+		glm::mat4 model1 = glm::mat4(1.0f);
+		model1 = glm::translate(model1, glm::vec3(2.0f, 1.0f, 1.0f));
+		float angle = 20.0f;
+		//if (i < 5) {
+		model1 = glm::rotate(model1, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		//}
+		//else model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+
+		shader->setMat4("model", model1);
+		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
+		glBindVertexArray(VAO);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		shader->setFloat("color1", 0.0f);
+		shader->setFloat("color2", 0.9f);
+		shader->setFloat("color3", 0.9f);
+		glDrawElements(GL_TRIANGLES, kukuTriCNT, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
+
+};

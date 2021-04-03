@@ -2,13 +2,12 @@
 #include <iostream>
 #include "Shader.h"
 #include "stb_image.h"
-#include "glm/glm/glm.hpp"
-#include "glm/glm/gtc/matrix_transform.hpp"
-#include "glm/glm/gtc/type_ptr.hpp"
+#include "../glm/glm/glm.hpp"
+#include "../glm/glm/gtc/matrix_transform.hpp"
+#include "../glm/glm/gtc/type_ptr.hpp"
 #include "Camera.h"
 #include "ConstsAndTypes.h"
-#include "Object.h"
-#include "assimp/BaseImporter.h"
+//#include "assimp/BaseImporter.h"
 
 int main(int argc, char** argv) {
 	Wonderland::initEnviroment();
@@ -26,7 +25,7 @@ int main(int argc, char** argv) {
 		glClearColor(0.05f, 0.05f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		for (auto & object : Wonderland::objects) {
+		/*for (auto & object : Wonderland::objects) {
 			//object.DrawPrep();
 			Wonderland::setViewAndProjection(object.shader);
 			object.Draw();
@@ -48,6 +47,12 @@ int main(int argc, char** argv) {
 			//object.DrawPrep();
 			Wonderland::setViewAndProjection(object.shader);
 			object.Draw();
+		}*/
+		
+		for (auto& object : Wonderland::objectsTEST) {
+			//object.DrawPrep();
+			Wonderland::setViewAndProjection(object->shader);
+			object->Draw();
 		}
 
 		glfwSwapBuffers(w);
