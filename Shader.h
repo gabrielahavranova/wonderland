@@ -6,7 +6,8 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include "glm/glm/glm.hpp"
+#include "../glm/glm/glm.hpp"
+//#include "glm/glm/glm.hpp"
 
 class Shader {
 public:
