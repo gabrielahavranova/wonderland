@@ -10,20 +10,10 @@
 //#include "glm/glm/gtc/matrix_transform.hpp"
 
 
-class ObjectBase {
+class Mesh {
 public:
-	double getTimeSeed() {
-		std::chrono::time_point<std::chrono::system_clock> now =
-			std::chrono::system_clock::now();
-		auto duration = now.time_since_epoch();
-		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-		double res = millis % (long int)10e4 / 10.0e2;
-		return res;
-	}
-
-	ObjectBase(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader, const std::string& name) : shader(shader), vertices(vertices), vertices_cnt(vertices_cnt), indices_cnt(indices_cnt), indices(indices) {
-		this->name = name;
+	Mesh(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+		std::shared_ptr <Shader> shader) : shader(shader), vertices(vertices), vertices_cnt(vertices_cnt), indices_cnt(indices_cnt), indices(indices) {
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
 		glGenBuffers(1, &EBO);
@@ -52,37 +42,6 @@ public:
 		glBindVertexArray(0);
 	}
 
-	void Update() {}
-	void DrawPrep() {
-		shader->use();
-		glBindVertexArray(VAO);
-		for (size_t i = 0; i < textures.size(); i++) {
-			glActiveTexture(GL_TEXTURE0 + i);
-			glBindTexture(GL_TEXTURE_2D, textures[i]);
-		}
-	}
-
-	
-	virtual void DrawObject() = 0; 
-
-
-	void Draw() {
-		DrawPrep();
-		DrawObject();
-
-	}
-
-
-	~ObjectBase() {
-		glDeleteVertexArrays(1, &VAO);
-		glDeleteBuffers(1, &VBO);
-	}
-
-	std::shared_ptr<Shader> shader;
-	std::vector <unsigned int> textures;
-	unsigned int VBO, VAO, EBO;
-	int texture_cnt = 0;
-	std::string name;
 
 	int createTexture(const char* tex_path, unsigned int& texture, bool flip_texture_on_load = false) {
 		glGenTextures(1, &texture);
@@ -114,10 +73,73 @@ public:
 		textures.push_back(texture);
 		return 1;
 	}
+
+	void Draw() const {
+		glBindVertexArray(VAO);
+
+		for (size_t i = 0; i < textures.size(); i++) {
+			glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, textures[i]);
+		}
+
+		glDrawElements(GL_TRIANGLES, indices_cnt, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
+	~Mesh() {
+		glDeleteVertexArrays(1, &VAO);
+		glDeleteBuffers(1, &VBO);
+	}
+
+private:
+	const float* vertices;
+	int vertices_cnt, indices_cnt;
+	const unsigned int* indices;
+	int texture_cnt = 0;
+
+	unsigned int VAO, VBO, EBO;
+	std::vector <unsigned int> textures;
+	std::shared_ptr <Shader> shader;
+
+
+};
+
+class ObjectBase {
+public:
+	double getTimeSeed() {
+		std::chrono::time_point<std::chrono::system_clock> now =
+			std::chrono::system_clock::now();
+		auto duration = now.time_since_epoch();
+		auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+		double res = millis % (long int)10e4 / 10.0e2;
+		return res;
+	}
+
+	ObjectBase(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+		std::shared_ptr <Shader> shader) : shader(shader), vertices(vertices), vertices_cnt(vertices_cnt), indices_cnt(indices_cnt), indices(indices) {
+		meshes.emplace_back(vertices, vertices_cnt, indices, indices_cnt, shader);
+		
+	}
+
+	virtual void DrawObject() = 0; 
+
+	void Draw() {
+		shader->use();
+		DrawObject();
+	}
+
+
+	virtual ~ObjectBase() = default;
+
+	std::shared_ptr<Shader> shader;
+	std::vector <Mesh> meshes;
+	//unsigned int VBO, VAO, EBO;
+	//int texture_cnt = 0;
+	//std::string name;
+
+	
 	protected: 
 	const float *vertices;
 	int vertices_cnt, indices_cnt;
 	const unsigned int * indices;
 };
-
 

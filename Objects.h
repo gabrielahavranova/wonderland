@@ -12,23 +12,23 @@
 class YellowBox : public ObjectBase { 
 public: 
 	YellowBox(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader, const std::string& name) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
+		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {}
 		void DrawObject () override {
 			float s = (float)getTimeSeed();
 			glm::mat4 model1 = glm::mat4(1.0f);
 			model1 = glm::translate(model1, glm::vec3(1.0f, 1.0f, 1.0f));
 			float angle = 20.0f;
 			model1 = glm::rotate(model1, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-
-			shader->setMat4("model", model1);
-			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
-			glBindVertexArray(VAO);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			//shader->use();
+			shader->setMat4("model", model1);
 			shader->setFloat("color1", 0.9f);
 			shader->setFloat("color2", 0.9f);
 			shader->setFloat("color3", 0.0f);
-			glDrawElements(GL_TRIANGLES, kukuTriCNT, GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
+			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
+			for (const auto & mesh: meshes) {
+				mesh.Draw();
+			}
 		}
 };
 
@@ -36,38 +36,34 @@ class Plane : public ObjectBase {
 public:
 
 	Plane(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader, const std::string& name) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
+		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {}
 
 	void DrawObject() override {
-
 		glm::mat4 model1 = glm::mat4(1.0f);
 		model1 = glm::translate(model1, glm::vec3(3.0f, -5.0f, 5.0f));
 		float angle = -90.0f;
-		//if (i < 5) {
 		model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
 
 		shader->setMat4("model", model1);
 		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
-		glBindVertexArray(VAO);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		shader->setFloat("color1", 0.05f);
 		shader->setFloat("color2", 0.2f);
 		shader->setFloat("color3", 0.05f);
-		glDrawElements(GL_TRIANGLES, planeNTriangles, GL_UNSIGNED_INT, 0);
+		for (const auto & mesh: meshes) mesh.Draw();
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		shader->setFloat("color1", 0.0f);
 		shader->setFloat("color2", 0.0f);
 		shader->setFloat("color3", 0.0f);
-		glDrawElements(GL_TRIANGLES, planeNTriangles, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
+		for (const auto& mesh : meshes) mesh.Draw();
 	}
 };
 
 class Mushrooms : public ObjectBase {
 public:
 	Mushrooms(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader, const std::string& name) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
+		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {}
 
 	void DrawObject() override {
 		//std::cout << "drawboxes called " << std::endl;
@@ -92,59 +88,56 @@ public:
 
 			shader->setMat4("model", model1);
 			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
-			glBindVertexArray(VAO);
+			//glBindVertexArray(VAO);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			shader->setFloat("color1", 1.0f);
 			shader->setFloat("color2", 0.768f);
 			shader->setFloat("color3", 0.768f);
-			glDrawElements(GL_TRIANGLES, cylinderNTriangles, GL_UNSIGNED_INT, 0);
+			for (const auto& mesh : meshes) {
+				mesh.Draw();
+			}
 
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			shader->setFloat("color1", 0.0f);
 			shader->setFloat("color2", 0.0f);
 			shader->setFloat("color3", 0.0f);
-			glDrawElements(GL_TRIANGLES, cylinderNTriangles, GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
+			for (const auto& mesh : meshes) {
+				mesh.Draw();
+			}
 		}
 	}};
 
 class God : public ObjectBase {
 public:
 	God(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader, const std::string& name) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
+		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {}
 
 	void DrawObject() override {
-		//std::cout << "drawboxes called " << std::endl;
-			//for (unsigned int i = 0; i < 10; i++) {
 
 		glm::mat4 model1 = glm::mat4(1.0f);
 		model1 = glm::translate(model1, glm::vec3(35.0f, 30.0f, 18.0f));
 		model1 = glm::scale(model1, glm::vec3(0.7f, 0.7f, 0.7f));
 		float angle = -90.0f;
-		//if (i < 5) {
 		model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.3f, 0.0f, 0.0f));
 		model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(0.0f, 0.0f, 0.5f));
-		//}
-		//else model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
 		shader->setMat4("model", model1);
-		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
-		glBindVertexArray(VAO);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		shader->setFloat("color1", 0.0f);
 		shader->setFloat("color2", 0.0f);
 		shader->setFloat("color3", 0.0f);
-		glDrawElements(GL_TRIANGLES, torus_001NTriangles, GL_UNSIGNED_INT, 0);
-
+		for (const auto& mesh : meshes) {
+			mesh.Draw();
+		}
 		double x = (int)(getTimeSeed() * 1000) / 1000.0;
 		float color = std::abs(std::sin(x));
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		shader->setFloat("color1", 1.0f - color);
 		shader->setFloat("color2", color);
 		shader->setFloat("color3", 0.2f + color / 4.0f);
-		glDrawElements(GL_TRIANGLES, torus_001NTriangles, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-		//}
+		for (const auto& mesh : meshes) {
+			mesh.Draw();
+		}
 	}
 };
 
@@ -152,28 +145,22 @@ public:
 class LightBlueBox : public ObjectBase {
 public:
 	LightBlueBox(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader, const std::string& name) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
+		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {}
 
 	void DrawObject() override {
-		//std::cout << "drawboxes called " << std::endl;
-		//for (unsigned int i = 0; i < 10; i++) {
 		float s = (float)getTimeSeed();
-		glm::mat4 model1 = glm::mat4(1.0f);
-		model1 = glm::translate(model1, glm::vec3(2.0f, 1.0f, 1.0f));
-		float angle = 20.0f;
-		//if (i < 5) {
-		model1 = glm::rotate(model1, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-		//}
-		//else model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(2.0f, 1.0f, 1.0f));
+		float angle = 30.0f;
+		model = glm::rotate(model, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
-		shader->setMat4("model", model1);
-		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
-		glBindVertexArray(VAO);
+		shader->setMat4("model", model);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		shader->setFloat("color1", 0.0f);
 		shader->setFloat("color2", 0.9f);
 		shader->setFloat("color3", 0.9f);
-		glDrawElements(GL_TRIANGLES, kukuTriCNT, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
+		for (const auto& mesh : meshes) {
+			mesh.Draw();
+		}
 	}
 };

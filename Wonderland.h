@@ -24,11 +24,11 @@ namespace Wonderland {
 	void createObjects() {
 		size_t index = objectsTEST.size();
 
-		objectsTEST.emplace_back(std::make_shared <YellowBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"], "box"));
-		objectsTEST.emplace_back(std::make_shared <Plane>(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic2"], "plane"));
-		objectsTEST.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic2"], "plane"));
-		objectsTEST.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic2"], "plane"));
-		objectsTEST.emplace_back(std::make_shared<LightBlueBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"], "box"));
+		objectsTEST.emplace_back(std::make_shared <YellowBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"]));
+		objectsTEST.emplace_back(std::make_shared <Plane>(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic2"]));
+		objectsTEST.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic2"]));
+		objectsTEST.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic2"]));
+		objectsTEST.emplace_back(std::make_shared<LightBlueBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"]));
 		// uniforms
 		unsigned int texture1, texture2;
 
