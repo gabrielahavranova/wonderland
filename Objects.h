@@ -7,13 +7,13 @@
 #include "../glm/glm/gtc/matrix_transform.hpp"
 //#include "glm/glm/glm.hpp"
 //#include "glm/glm/gtc/matrix_transform.hpp"
-#include "OBJtest.h"
+#include "ObjectBase.h"
 
-class Object : public OBJtest { 
+class YellowBox : public ObjectBase { 
 public: 
-	Object(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader, const std::string& name) : OBJtest(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
-		void DrawBoxes () override {
+	YellowBox(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+		std::shared_ptr <Shader> shader, const std::string& name) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
+		void DrawObject () override {
 			float s = (float)getTimeSeed();
 			glm::mat4 model1 = glm::mat4(1.0f);
 			model1 = glm::translate(model1, glm::vec3(1.0f, 1.0f, 1.0f));
@@ -32,13 +32,13 @@ public:
 		}
 };
 
-class Object2 : public OBJtest {
+class Plane : public ObjectBase {
 public:
 
-	Object2(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader, const std::string& name) : OBJtest(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
+	Plane(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+		std::shared_ptr <Shader> shader, const std::string& name) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
 
-	void DrawBoxes() override {
+	void DrawObject() override {
 
 		glm::mat4 model1 = glm::mat4(1.0f);
 		model1 = glm::translate(model1, glm::vec3(3.0f, -5.0f, 5.0f));
@@ -64,12 +64,12 @@ public:
 	}
 };
 
-class Object3 : public OBJtest {
+class Mushrooms : public ObjectBase {
 public:
-	Object3(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader, const std::string& name) : OBJtest(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
+	Mushrooms(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+		std::shared_ptr <Shader> shader, const std::string& name) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
 
-	void DrawBoxes() override {
+	void DrawObject() override {
 		//std::cout << "drawboxes called " << std::endl;
 		const float xses[] = {
 			-4, 0, -6, -9, 7, -3, 5, -5, 1, -7,
@@ -108,12 +108,12 @@ public:
 		}
 	}};
 
-class Object4 : public OBJtest {
+class God : public ObjectBase {
 public:
-	Object4(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader, const std::string& name) : OBJtest(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
+	God(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+		std::shared_ptr <Shader> shader, const std::string& name) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
 
-	void DrawBoxes() override {
+	void DrawObject() override {
 		//std::cout << "drawboxes called " << std::endl;
 			//for (unsigned int i = 0; i < 10; i++) {
 
@@ -145,5 +145,35 @@ public:
 		glDrawElements(GL_TRIANGLES, torus_001NTriangles, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 		//}
+	}
+};
+
+
+class LightBlueBox : public ObjectBase {
+public:
+	LightBlueBox(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+		std::shared_ptr <Shader> shader, const std::string& name) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
+
+	void DrawObject() override {
+		//std::cout << "drawboxes called " << std::endl;
+		//for (unsigned int i = 0; i < 10; i++) {
+		float s = (float)getTimeSeed();
+		glm::mat4 model1 = glm::mat4(1.0f);
+		model1 = glm::translate(model1, glm::vec3(2.0f, 1.0f, 1.0f));
+		float angle = 20.0f;
+		//if (i < 5) {
+		model1 = glm::rotate(model1, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		//}
+		//else model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+
+		shader->setMat4("model", model1);
+		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
+		glBindVertexArray(VAO);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		shader->setFloat("color1", 0.0f);
+		shader->setFloat("color2", 0.9f);
+		shader->setFloat("color3", 0.9f);
+		glDrawElements(GL_TRIANGLES, kukuTriCNT, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 	}
 };

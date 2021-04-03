@@ -5,7 +5,7 @@
 #include <iostream>
 #include "Camera.h"
 #include "Objects.h"
-#include "OBJtest.h"
+#include "ObjectBase.h"
 #include <map>
 
 
@@ -17,43 +17,31 @@ namespace Wonderland {
 	float delta_time;
 	float last_frame;
 	GLFWwindow* win;
-	std::vector <std::shared_ptr<OBJtest>> objectsTEST;
+	std::vector <std::shared_ptr<ObjectBase>> objectsTEST;
 	std::map <std::string, std::shared_ptr<Shader>> shaders;
 
-	void createBoxes() {
-		size_t index = objectsTEST.size();
-		objectsTEST.emplace_back(std::make_shared <Object>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"], "box"));
 
+	void createObjects() {
+		size_t index = objectsTEST.size();
+
+		objectsTEST.emplace_back(std::make_shared <YellowBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"], "box"));
+		objectsTEST.emplace_back(std::make_shared <Plane>(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic2"], "plane"));
+		objectsTEST.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic2"], "plane"));
+		objectsTEST.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic2"], "plane"));
+		objectsTEST.emplace_back(std::make_shared<LightBlueBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"], "box"));
 		// uniforms
 		unsigned int texture1, texture2;
-	}
-
-	void createTorus() {
-		size_t index = objectsTEST.size();
-		//objects2.emplace_back(torusVert, torusN * 8, torusTri, torusTriCNT, shaders["basic2"], "torus");
-		objectsTEST.emplace_back(std::make_shared <Object2>(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic2"], "plane"));
-		objectsTEST.emplace_back(std::make_shared <Object3>(cylinderVertices, cylinderNVertices* 8, cylinderTriangles, cylinderNTriangles, shaders["basic2"], "plane"));
-		objectsTEST.emplace_back(std::make_shared <Object4>(torus_001Vertices	, torus_001NVertices* 8, torus_001Triangles, torus_001NTriangles, shaders["basic2"], "plane"));
-		
-		objectsTEST.emplace_back(std::make_shared<testInstance>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"], "box"));
-		// uniforms
-		unsigned int texture1, texture2;
-		//
 
 		//objects[index].createTexture("container.jpg", texture1);
 		//objects[index].createTexture("awesomeface.png", texture2, true);
 	}
 
-	void createObjects() {
-		createBoxes();
-		createTorus();
-
-	}
 
 	void createShaders() {
 		shaders.emplace("basic", std::make_shared<Shader>(".\\shaders\\vertex_shader.txt", ".\\shaders\\fragment_shader.txt"));
 		shaders.emplace("basic2", std::make_shared<Shader>(".\\shaders\\vertex_shader.txt", ".\\shaders\\fragment_shader.txt"));
 	}
+
 
 	void setViewAndProjection(std::shared_ptr <Shader> shader) {
 		glm::mat4 projection = glm::perspective(glm::radians(Wonderland::camera.Zoom), (float)800 / (float)600, 0.1f, 100.0f);

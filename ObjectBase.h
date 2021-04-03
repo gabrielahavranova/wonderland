@@ -10,7 +10,7 @@
 //#include "glm/glm/gtc/matrix_transform.hpp"
 
 
-class OBJtest {
+class ObjectBase {
 public:
 	double getTimeSeed() {
 		std::chrono::time_point<std::chrono::system_clock> now =
@@ -21,7 +21,7 @@ public:
 		return res;
 	}
 
-	OBJtest(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+	ObjectBase(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
 		std::shared_ptr <Shader> shader, const std::string& name) : shader(shader), vertices(vertices), vertices_cnt(vertices_cnt), indices_cnt(indices_cnt), indices(indices) {
 		this->name = name;
 		glGenVertexArrays(1, &VAO);
@@ -62,38 +62,18 @@ public:
 		}
 	}
 
-	virtual void DrawBoxes() {
-		//std::cout << "drawboxes called " << std::endl;
-		//for (unsigned int i = 0; i < 10; i++) {
-		float s = (float)getTimeSeed();
-		glm::mat4 model1 = glm::mat4(1.0f);
-		model1 = glm::translate(model1, glm::vec3(2.0f, 1.0f, 1.0f));
-		float angle = 20.0f;
-		//if (i < 5) {
-		model1 = glm::rotate(model1, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-		//}
-		//else model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+	
+	virtual void DrawObject() = 0; 
 
-		shader->setMat4("model", model1);
-		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
-		glBindVertexArray(VAO);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		shader->setFloat("color1", 0.0f);
-		shader->setFloat("color2", 0.9f);
-		shader->setFloat("color3", 0.9f);
-		glDrawElements(GL_TRIANGLES, kukuTriCNT, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-		//}
-	} 
 
 	void Draw() {
 		DrawPrep();
-		DrawBoxes();
+		DrawObject();
 
 	}
 
 
-	~OBJtest() {
+	~ObjectBase() {
 		glDeleteVertexArrays(1, &VAO);
 		glDeleteBuffers(1, &VBO);
 	}
@@ -140,32 +120,4 @@ public:
 	const unsigned int * indices;
 };
 
-class testInstance : public OBJtest {
-public:
-	testInstance(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader, const std::string& name) : OBJtest(vertices, vertices_cnt, indices, indices_cnt, shader, name) {}
 
-	void DrawBoxes() override {
-		//std::cout << "drawboxes called " << std::endl;
-		//for (unsigned int i = 0; i < 10; i++) {
-		float s = (float)getTimeSeed();
-		glm::mat4 model1 = glm::mat4(1.0f);
-		model1 = glm::translate(model1, glm::vec3(2.0f, 1.0f, 1.0f));
-		float angle = 20.0f;
-		//if (i < 5) {
-		model1 = glm::rotate(model1, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-		//}
-		//else model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-
-		shader->setMat4("model", model1);
-		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
-		glBindVertexArray(VAO);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		shader->setFloat("color1", 0.0f);
-		shader->setFloat("color2", 0.9f);
-		shader->setFloat("color3", 0.9f);
-		glDrawElements(GL_TRIANGLES, kukuTriCNT, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-	}
-
-};
