@@ -30,20 +30,23 @@ public:
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 
-
+		createTexture("transparent.png", false);
 		// texture coord attribute
 		//glEnableVertexAttribArray(1);
 		//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 
 		// texture coord attribute
-		//glEnableVertexAttribArray(2);
-		//glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
 		glBindVertexArray(0);
 	}
 
 
-	int createTexture(const char* tex_path, unsigned int& texture, bool flip_texture_on_load = false) {
+	int createTexture(const char* tex_path, bool flip_texture_on_load = false) {
+		unsigned int texture;
+		//textures.emplace_back(texture);
+		//exture = textures.back();
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -70,18 +73,18 @@ public:
 		shader->use();
 		std::string texture_name = std::string("texture") + std::to_string(texture_cnt);
 		shader->setInt(texture_name.c_str(), texture_cnt++);
-		textures.push_back(texture);
+		textures.push_back(std::move(texture));
 		return 1;
 	}
 
 	void Draw() const {
 		glBindVertexArray(VAO);
+		
 
-		for (size_t i = 0; i < textures.size(); i++) {
-			glActiveTexture(GL_TEXTURE0 + i);
-			glBindTexture(GL_TEXTURE_2D, textures[i]);
-		}
-
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, textures.back());
+		shader->setInt("texture0", 0);
+				
 		glDrawElements(GL_TRIANGLES, indices_cnt, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}

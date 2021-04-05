@@ -21,10 +21,12 @@ public:
 			model1 = glm::rotate(model1, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			//shader->use();
+			//shader->setInt("texture0", 0);
 			shader->setMat4("model", model1);
-			shader->setFloat("color1", 0.9f);
-			shader->setFloat("color2", 0.9f);
-			shader->setFloat("color3", 0.0f);
+			shader->setVec3("col", glm::vec3(0.9f, 0.9f, 0.0f));
+			//shader->setFloat("color1", 0.9f);
+			//shader->setFloat("color2", 0.9f);
+			//shader->setFloat("color3", 0.0f);
 			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 			for (const auto & mesh: meshes) {
 				mesh.Draw();
@@ -36,7 +38,12 @@ class Plane : public ObjectBase {
 public:
 
 	Plane(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {}
+		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {
+			for (auto & mesh : meshes) {
+				mesh.createTexture("grass.png", false);
+				//mesh.createTexture("awesomeface.png", false);
+			}
+	}
 
 	void DrawObject() override {
 		glm::mat4 model1 = glm::mat4(1.0f);
@@ -47,16 +54,20 @@ public:
 		shader->setMat4("model", model1);
 		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		shader->setFloat("color1", 0.05f);
-		shader->setFloat("color2", 0.2f);
-		shader->setFloat("color3", 0.05f);
+		shader->setVec3("col", glm::vec3(1.0f, 1.0f, 1.0f));
+		//shader->setFloat("color1", 0.905f)
+		//shader->setFloat("color2", 0.92f);
+		//shader->setFloat("color3", 0.905f);
 		for (const auto & mesh: meshes) mesh.Draw();
 
+		/*
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		shader->setFloat("color1", 0.0f);
-		shader->setFloat("color2", 0.0f);
-		shader->setFloat("color3", 0.0f);
+		shader->setVec3("col", glm::vec3(1.0f, 1.0f, 1.0f));
+		//shader->setFloat("color1", 1.0f);
+		//shader->setFloat("color2", 1.0f);
+		//shader->setFloat("color3", 1.0f);
 		for (const auto& mesh : meshes) mesh.Draw();
+		*/
 	}
 };
 
@@ -90,17 +101,19 @@ public:
 			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 			//glBindVertexArray(VAO);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			shader->setFloat("color1", 1.0f);
-			shader->setFloat("color2", 0.768f);
-			shader->setFloat("color3", 0.768f);
+			shader->setVec3("col", glm::vec3(1.0f, 0.768f, 0.768f));
+			//shader->setFloat("color1", 1.0f);
+			//shader->setFloat("color2", 0.768f);
+			//shader->setFloat("color3", 0.768f);
 			for (const auto& mesh : meshes) {
 				mesh.Draw();
 			}
 
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			shader->setFloat("color1", 0.0f);
-			shader->setFloat("color2", 0.0f);
-			shader->setFloat("color3", 0.0f);
+			shader->setVec3("col", glm::vec3(0.0f, 0.0f, 0.0f));
+			//shader->setFloat("color1", 0.0f);
+			//shader->setFloat("color2", 0.0f);
+			//shader->setFloat("color3", 0.0f);
 			for (const auto& mesh : meshes) {
 				mesh.Draw();
 			}
@@ -123,18 +136,20 @@ public:
 
 		shader->setMat4("model", model1);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		shader->setFloat("color1", 0.0f);
-		shader->setFloat("color2", 0.0f);
-		shader->setFloat("color3", 0.0f);
+		shader->setVec3("col", glm::vec3(0.0f, 0.0f, 0.0f));
+		//shader->setFloat("color1", 0.0f);
+		//shader->setFloat("color2", 0.0f);
+		//shader->setFloat("color3", 0.0f);
 		for (const auto& mesh : meshes) {
 			mesh.Draw();
 		}
 		double x = (int)(getTimeSeed() * 1000) / 1000.0;
 		float color = std::abs(std::sin(x));
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		shader->setFloat("color1", 1.0f - color);
-		shader->setFloat("color2", color);
-		shader->setFloat("color3", 0.2f + color / 4.0f);
+		shader->setVec3("col", glm::vec3(1.0f - color, color, 0.2f + color / 4.0f));
+		//shader->setFloat("color1", 1.0f - color);
+		//shader->setFloat("color2", color);
+		//shader->setFloat("color3", 0.2f + color / 4.0f);
 		for (const auto& mesh : meshes) {
 			mesh.Draw();
 		}
@@ -156,9 +171,36 @@ public:
 
 		shader->setMat4("model", model);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		shader->setFloat("color1", 0.0f);
-		shader->setFloat("color2", 0.9f);
-		shader->setFloat("color3", 0.9f);
+		shader->setVec3("col", glm::vec3(0.0f, 0.9f, 0.9f));
+		//shader->setFloat("color1", 0.0f);
+		//shader->setFloat("color2", 0.9f);
+		//shader->setFloat("color3", 0.9f);
+		for (const auto& mesh : meshes) {
+			mesh.Draw();
+		}
+	}
+};
+
+
+class LightSource : public ObjectBase {
+public:
+	LightSource(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {}
+
+	void DrawObject() override {
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(2.0f, 50.0f, 1.0f));
+		float angle = 30.0f;
+		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+
+		shader->setMat4("model", model);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		shader->setVec3("col", glm::vec3(0.7f, 0.9f, 0.0f));
+		//shader->setFloat("color1", 0.7f);
+		//shader->setFloat("color2", 0.9f);
+		//shader->setFloat("color3", 0.0f);
+		
 		for (const auto& mesh : meshes) {
 			mesh.Draw();
 		}

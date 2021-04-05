@@ -17,20 +17,23 @@ namespace Wonderland {
 	float delta_time;
 	float last_frame;
 	GLFWwindow* win;
-	std::vector <std::shared_ptr<ObjectBase>> objectsTEST;
+	std::vector <std::shared_ptr<ObjectBase>> scene_objects;
 	std::map <std::string, std::shared_ptr<Shader>> shaders;
 
 
 	void createObjects() {
-		size_t index = objectsTEST.size();
+		size_t index = scene_objects.size();
 
-		objectsTEST.emplace_back(std::make_shared <YellowBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"]));
-		objectsTEST.emplace_back(std::make_shared <Plane>(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic2"]));
-		objectsTEST.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic2"]));
-		objectsTEST.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic2"]));
-		objectsTEST.emplace_back(std::make_shared<LightBlueBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"]));
+		scene_objects.emplace_back(std::make_shared <YellowBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"]));
+		scene_objects.emplace_back(std::make_shared <Plane>(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic"]));
+		scene_objects.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic"]));
+		scene_objects.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic"]));
+		scene_objects.emplace_back(std::make_shared <LightBlueBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"]));
+		scene_objects.emplace_back(std::make_shared <LightSource>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["light"]));
+		
 		// uniforms
 		unsigned int texture1, texture2;
+
 
 		//objects[index].createTexture("container.jpg", texture1);
 		//objects[index].createTexture("awesomeface.png", texture2, true);
@@ -39,7 +42,7 @@ namespace Wonderland {
 
 	void createShaders() {
 		shaders.emplace("basic", std::make_shared<Shader>(".\\shaders\\vertex_shader.txt", ".\\shaders\\fragment_shader.txt"));
-		shaders.emplace("basic2", std::make_shared<Shader>(".\\shaders\\vertex_shader.txt", ".\\shaders\\fragment_shader.txt"));
+		shaders.emplace("light", std::make_shared<Shader>(".\\shaders\\vs_light.txt", ".\\shaders\\fs_light.txt"));
 	}
 
 

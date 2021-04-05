@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
 		glClearColor(0.05f, 0.05f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		for (auto& object : Wonderland::objectsTEST) {
+		for (auto& object : Wonderland::scene_objects) {
 			Wonderland::setViewAndProjection(object->shader);
 			object->Draw();
 		}
