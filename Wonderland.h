@@ -53,7 +53,7 @@ namespace Wonderland {
 		// camera/view transformation
 		glm::mat4 view = Wonderland::camera.GetViewMatrix();
 		shader->setMat4("view", view);
-		shader->setVec3("light_color", glm::vec3(0.9f, 0.9f, 0.5f));
+		shader->setVec3("light_color", glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 
 	void mouseCallback(GLFWwindow* window, double xpos, double ypos) {

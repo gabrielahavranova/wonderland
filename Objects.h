@@ -80,22 +80,23 @@ public:
 			//if (i < 5) {
 
 			model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
-			model1 = glm::scale(model1, glm::vec3(5.0f, 5.0f, 7.0f));
+			model1 = glm::scale(model1, glm::vec3(15.0f, 15.0f, 18.0f));
 
 			shader->setMat4("model", model1);
 			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 			//glBindVertexArray(VAO);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			shader->setVec3("col", glm::vec3(1.0f, 0.768f, 0.768f));
+			shader->setVec3("col", glm::vec3(1.0f - (float)i * 0.015, 0.768f, 0.768f));
 			for (const auto& mesh : meshes) {
 				mesh.Draw();
 			}
 
+			/*
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			shader->setVec3("col", glm::vec3(0.0f, 0.0f, 0.0f));
 			for (const auto& mesh : meshes) {
 				mesh.Draw();
-			}
+			}*/
 		}
 	}};
 
