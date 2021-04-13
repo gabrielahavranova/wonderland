@@ -47,6 +47,7 @@ namespace Wonderland {
 
 
 	void setViewAndProjection(std::shared_ptr <Shader> shader) {
+		shader->use();
 		glm::mat4 projection = glm::perspective(glm::radians(Wonderland::camera.Zoom), (float)800 / (float)600, 0.1f, 100.0f);
 		shader->setMat4("projection", projection);
 
