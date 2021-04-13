@@ -6,8 +6,10 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include "../glm/glm/glm.hpp"
-//#include "glm/glm/glm.hpp"
+// WORK NTB: 
+//#include "../glm/glm/glm.hpp"
+// PRIVATE NTB:
+#include "glm/glm/glm.hpp"
 
 class Shader {
 public:

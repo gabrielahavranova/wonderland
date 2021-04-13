@@ -2,9 +2,16 @@
 #include <iostream>
 #include "Shader.h"
 #include "stb_image.h"
-#include "../glm/glm/glm.hpp"
-#include "../glm/glm/gtc/matrix_transform.hpp"
-#include "../glm/glm/gtc/type_ptr.hpp"
+// WORK NTB:
+// #include "../glm/glm/glm.hpp"
+// #include "../glm/glm/gtc/matrix_transform.hpp"
+// #include "../glm/glm/gtc/type_ptr.hpp"
+
+// private ntb: 
+#include "glm/glm/glm.hpp"
+#include "glm/glm/gtc/matrix_transform.hpp"
+#include "glm/glm/gtc/type_ptr.hpp"
+
 #include "Camera.h"
 #include "ConstsAndTypes.h"
 //#include "assimp/BaseImporter.h"

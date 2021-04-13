@@ -3,10 +3,11 @@
 #include "Shader.h"
 #include "VerticesLib.h"
 #include <vector>
-#include "../glm/glm/glm.hpp"
-#include "../glm/glm/gtc/matrix_transform.hpp"
-//#include "glm/glm/glm.hpp"
-//#include "glm/glm/gtc/matrix_transform.hpp"
+//#include "../glm/glm/glm.hpp"
+//#include "../glm/glm/gtc/matrix_transform.hpp"
+
+#include "glm/glm/glm.hpp"
+#include "glm/glm/gtc/matrix_transform.hpp"
 #include "ObjectBase.h"
 
 class YellowBox : public ObjectBase { 
