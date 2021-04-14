@@ -22,7 +22,8 @@ public:
 			model1 = glm::rotate(model1, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			
-			shader->setMat4("model", model1);
+			setModelMatrices(model1);
+			//shader->setMat4("model", model1);
 			shader->setVec3("col", glm::vec3(0.9f, 0.9f, 0.0f));
 			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 			for (const auto & mesh: meshes) {
@@ -49,7 +50,8 @@ public:
 		model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
 		model1 = glm::scale(model1, glm::vec3(0.5f, 0.5f, 0.5f));
 
-		shader->setMat4("model", model1);
+		setModelMatrices(model1);
+		//shader->setMat4("model", model1);
 		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		shader->setVec3("col", glm::vec3(1.0f, 1.0f, 1.0f));
@@ -83,7 +85,8 @@ public:
 			model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
 			model1 = glm::scale(model1, glm::vec3(15.0f, 15.0f, 18.0f));
 
-			shader->setMat4("model", model1);
+			setModelMatrices(model1);
+			//shader->setMat4("model", model1);
 			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 			//glBindVertexArray(VAO);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -115,7 +118,8 @@ public:
 		model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.3f, 0.0f, 0.0f));
 		model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(0.0f, 0.0f, 0.5f));
 
-		shader->setMat4("model", model1);
+		//shader->setMat4("model", model1);
+		setModelMatrices(model1);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		shader->setVec3("col", glm::vec3(0.0f, 0.0f, 0.0f));
 		for (const auto& mesh : meshes) {
@@ -139,13 +143,14 @@ public:
 
 	void DrawObject() override {
 		float s = (float)getTimeSeed();
+		
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(2.0f, 1.0f, 1.0f));
 		float angle = 30.0f;
 		model = glm::rotate(model, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-
-		shader->setMat4("model", model);
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		setModelMatrices(model);
+		
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		shader->setVec3("col", glm::vec3(0.0f, 0.9f, 0.9f));
 		for (const auto& mesh : meshes) {
 			mesh.Draw();
@@ -161,7 +166,7 @@ public:
 
 	void DrawObject() override {
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(2.0f, 50.0f, 1.0f));
+		model = glm::translate(model, glm::vec3(2.0f, 20.0f, 1.0f));
 		float angle = 30.0f;
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));

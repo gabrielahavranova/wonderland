@@ -61,20 +61,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="shaders\fragment_shader.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="shaders\vertex_shader.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="shaders\fs_light.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="shaders\vs_light.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="wall.jpg">
       <Filter>Resource Files</Filter>
     </Image>
@@ -84,5 +70,19 @@
     <Image Include="assets\grass.png">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\fragment_shader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\fs_light.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\vertex_shader.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\vs_light.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

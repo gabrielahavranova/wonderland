@@ -165,15 +165,15 @@
     <ClInclude Include="Wonderland.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="shaders\fragment_shader.txt" />
-    <Text Include="shaders\fs_light.txt" />
-    <Text Include="shaders\vertex_shader.txt" />
-    <Text Include="shaders\vs_light.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="assets\grass.png" />
     <Image Include="container.jpg" />
     <Image Include="wall.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\fragment_shader.frag" />
+    <None Include="shaders\fs_light.frag" />
+    <None Include="shaders\vertex_shader.vert" />
+    <None Include="shaders\vs_light.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

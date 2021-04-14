@@ -132,6 +132,12 @@ public:
 		DrawObject();
 	}
 
+	void setModelMatrices(const glm::mat4& model_mat) {
+		shader->setMat4("model", model_mat);
+		glm::mat3 normal_model = glm::mat3(glm::transpose(glm::inverse(model_mat)));
+		shader->setMat3("normal_model", normal_model);
+	}
+
 
 	virtual ~ObjectBase() = default;
 
