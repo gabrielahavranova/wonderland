@@ -41,8 +41,8 @@ namespace Wonderland {
 
 
 	void createShaders() {
-		shaders.emplace("basic", std::make_shared<Shader>(".\\shaders\\vertex_shader.txt", ".\\shaders\\fragment_shader.txt"));
-		shaders.emplace("light", std::make_shared<Shader>(".\\shaders\\vs_light.txt", ".\\shaders\\fs_light.txt"));
+		shaders.emplace("basic", std::make_shared<Shader>(".\\shaders\\vertex_shader.vert", ".\\shaders\\fragment_shader.frag"));
+		shaders.emplace("light", std::make_shared<Shader>(".\\shaders\\vs_light.vert", ".\\shaders\\fs_light.frag"));
 	}
 
 

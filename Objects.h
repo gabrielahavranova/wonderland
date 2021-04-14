@@ -47,6 +47,7 @@ public:
 		model1 = glm::translate(model1, glm::vec3(3.0f, -5.0f, 5.0f));
 		float angle = -90.0f;
 		model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
+		model1 = glm::scale(model1, glm::vec3(0.5f, 0.5f, 0.5f));
 
 		shader->setMat4("model", model1);
 		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
@@ -75,7 +76,7 @@ public:
 			int y = (int)getTimeSeed() % 10;
 			glm::mat4 model1 = glm::mat4(1.0f);
 			//										 vvvvv plane      |  height| distance from camera
-			model1 = glm::translate(model1, glm::vec3(0.0f + xses[i] * 4.5f, -20.0f + (i % 4) * 1.5f, 10.0f + xses[49 - i] * 8.0f));
+			model1 = glm::translate(model1, glm::vec3(0.0f + xses[i] * 4.5f, -12.0f + (i % 4) * 1.5f, 10.0f + xses[49 - i] * 8.0f));
 			float angle = -90.0f;
 			//if (i < 5) {
 
