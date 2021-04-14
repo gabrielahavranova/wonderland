@@ -1,0 +1,279 @@
+[1mdiff --git a/ObjectBase.h b/ObjectBase.h[m
+[1mindex 486a5f3..d549807 100644[m
+[1m--- a/ObjectBase.h[m
+[1m+++ b/ObjectBase.h[m
+[36m@@ -138,6 +138,27 @@[m [mpublic:[m
+ 		shader->setMat3("normal_model", normal_model);[m
+ 	}[m
+ [m
+[32m+[m	[32mvoid setMeshMaterial(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, float shininess) {[m
+[32m+[m		[32mshader->setVec3("material.ambient", ambient);[m
+[32m+[m		[32mshader->setVec3("material.diffuse", diffuse);[m
+[32m+[m		[32mshader->setVec3("material.specular", specular);[m
+[32m+[m		[32mshader->setFloat("material.shininess", shininess);[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32mvoid setMeshMaterial(const glm::vec3& ambient, float shininess) {[m
+[32m+[m		[32mshader->setVec3("material.ambient", ambient);[m
+[32m+[m		[32mshader->setVec3("material.diffuse", ambient);[m
+[32m+[m		[32mshader->setVec3("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));[m
+[32m+[m		[32mshader->setFloat("material.shininess", shininess);[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32mvoid setMeshMaterial(float shininess) {[m
+[32m+[m		[32mshader->setVec3("material.ambient", glm::vec3(1.0f, 1.0f, 1.0f));[m
+[32m+[m		[32mshader->setVec3("material.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));[m
+[32m+[m		[32mshader->setVec3("material.specular", glm::vec3(1.0f, 1.0f, 1.0f));[m
+[32m+[m		[32mshader->setFloat("material.shininess", shininess);[m
+[32m+[m	[32m}[m
+[32m+[m
+ [m
+ 	virtual ~ObjectBase() = default;[m
+ [m
+[1mdiff --git a/Objects.h b/Objects.h[m
+[1mindex c88108f..2f07bde 100644[m
+[1m--- a/Objects.h[m
+[1m+++ b/Objects.h[m
+[36m@@ -10,21 +10,23 @@[m
+ #include "glm/glm/gtc/matrix_transform.hpp"[m
+ #include "ObjectBase.h"[m
+ [m
+[32m+[m[32mconst glm::vec3 ones3f = glm::vec3(1.0f, 1.0f, 1.0f);[m
+[32m+[m[32mconst glm::vec3 zeroes3f = glm::vec3(0.0f, 0.0f, 0.0f);[m
+[32m+[m
+ class YellowBox : public ObjectBase { [m
+ public: [m
+ 	YellowBox(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,[m
+ 		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {}[m
+ 		void DrawObject () override {[m
+ 			float s = (float)getTimeSeed();[m
+[31m-			glm::mat4 model1 = glm::mat4(1.0f);[m
+[31m-			model1 = glm::translate(model1, glm::vec3(1.0f, 1.0f, 1.0f));[m
+[32m+[m			[32mglm::mat4 model = glm::mat4(1.0f);[m
+[32m+[m			[32mmodel = glm::translate(model, glm::vec3(1.0f, 1.0f, 1.0f));[m
+ 			float angle = 20.0f;[m
+[31m-			model1 = glm::rotate(model1, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));[m
+[32m+[m			[32mmodel = glm::rotate(model, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));[m
+ 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);[m
+ 			[m
+[31m-			setModelMatrices(model1);[m
+[31m-			//shader->setMat4("model", model1);[m
+[31m-			shader->setVec3("col", glm::vec3(0.9f, 0.9f, 0.0f));[m
+[32m+[m			[32msetModelMatrices(model);[m
+[32m+[m			[32msetMeshMaterial(glm::vec3(0.9f, 0.9f, 0.0f), 0.5f);[m
+ 			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! [m
+ 			for (const auto & mesh: meshes) {[m
+ 				mesh.Draw();[m
+[36m@@ -44,17 +46,16 @@[m [mpublic:[m
+ 	}[m
+ [m
+ 	void DrawObject() override {[m
+[31m-		glm::mat4 model1 = glm::mat4(1.0f);[m
+[31m-		model1 = glm::translate(model1, glm::vec3(3.0f, -5.0f, 5.0f));[m
+[32m+[m		[32mglm::mat4 model = glm::mat4(1.0f);[m
+[32m+[m		[32mmodel = glm::translate(model, glm::vec3(3.0f, -5.0f, 5.0f));[m
+ 		float angle = -90.0f;[m
+[31m-		model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));[m
+[31m-		model1 = glm::scale(model1, glm::vec3(0.5f, 0.5f, 0.5f));[m
+[32m+[m		[32mmodel = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));[m
+[32m+[m		[32mmodel = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));[m
+ [m
+[31m-		setModelMatrices(model1);[m
+[31m-		//shader->setMat4("model", model1);[m
+[32m+[m		[32msetModelMatrices(model);[m
+[32m+[m		[32msetMeshMaterial(ones3f, 0.0f);[m
+ 		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! [m
+ 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);[m
+[31m-		shader->setVec3("col", glm::vec3(1.0f, 1.0f, 1.0f));[m
+ 		for (const auto & mesh: meshes) mesh.Draw();[m
+ 	}[m
+ };[m
+[36m@@ -76,31 +77,21 @@[m [mpublic:[m
+ 		for (unsigned int i = 0; i < 50; i++) {[m
+ 			int x = (int)getTimeSeed() % 10;[m
+ 			int y = (int)getTimeSeed() % 10;[m
+[31m-			glm::mat4 model1 = glm::mat4(1.0f);[m
+[32m+[m			[32mglm::mat4 model = glm::mat4(1.0f);[m
+ 			//										 vvvvv plane      |  height| distance from camera[m
+[31m-			model1 = glm::translate(model1, glm::vec3(0.0f + xses[i] * 4.5f, -12.0f + (i % 4) * 1.5f, 10.0f + xses[49 - i] * 8.0f));[m
+[32m+[m			[32mmodel = glm::translate(model, glm::vec3(0.0f + xses[i] * 4.5f, -12.0f + (i % 4) * 1.5f, 10.0f + xses[49 - i] * 8.0f));[m
+ 			float angle = -90.0f;[m
+[31m-			//if (i < 5) {[m
+ [m
+[31m-			model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));[m
+[31m-			model1 = glm::scale(model1, glm::vec3(15.0f, 15.0f, 18.0f));[m
+[32m+[m			[32mmodel = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));[m
+[32m+[m			[32mmodel = glm::scale(model, glm::vec3(15.0f, 15.0f, 18.0f));[m
+ [m
+[31m-			setModelMatrices(model1);[m
+[31m-			//shader->setMat4("model", model1);[m
+[32m+[m			[32msetModelMatrices(model);[m
+ 			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! [m
+[31m-			//glBindVertexArray(VAO);[m
+ 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);[m
+[31m-			shader->setVec3("col", glm::vec3(1.0f - (float)i * 0.015, 0.768f, 0.768f));[m
+[32m+[m			[32msetMeshMaterial(glm::vec3(1.0f - (float)i * 0.015, 0.768f, 0.768f), 0.1f);[m
+ 			for (const auto& mesh : meshes) {[m
+ 				mesh.Draw();[m
+ 			}[m
+[31m-[m
+[31m-			/*[m
+[31m-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);[m
+[31m-			shader->setVec3("col", glm::vec3(0.0f, 0.0f, 0.0f));[m
+[31m-			for (const auto& mesh : meshes) {[m
+[31m-				mesh.Draw();[m
+[31m-			}*/[m
+ 		}[m
+ 	}};[m
+ [m
+[36m@@ -111,24 +102,23 @@[m [mpublic:[m
+ [m
+ 	void DrawObject() override {[m
+ [m
+[31m-		glm::mat4 model1 = glm::mat4(1.0f);[m
+[31m-		model1 = glm::translate(model1, glm::vec3(35.0f, 30.0f, 18.0f));[m
+[31m-		model1 = glm::scale(model1, glm::vec3(0.7f, 0.7f, 0.7f));[m
+[32m+[m		[32mglm::mat4 model = glm::mat4(1.0f);[m
+[32m+[m		[32mmodel = glm::translate(model, glm::vec3(35.0f, 30.0f, 18.0f));[m
+[32m+[m		[32mmodel = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));[m
+ 		float angle = -90.0f;[m
+[31m-		model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(1.3f, 0.0f, 0.0f));[m
+[31m-		model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(0.0f, 0.0f, 0.5f));[m
+[32m+[m		[32mmodel = glm::rotate(model, glm::radians(angle), glm::vec3(1.3f, 0.0f, 0.0f));[m
+[32m+[m		[32mmodel = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 0.0f, 0.5f));[m
+ [m
+[31m-		//shader->setMat4("model", model1);[m
+[31m-		setModelMatrices(model1);[m
+[32m+[m		[32msetModelMatrices(model);[m
+ 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);[m
+[31m-		shader->setVec3("col", glm::vec3(0.0f, 0.0f, 0.0f));[m
+[32m+[m		[32msetMeshMaterial(zeroes3f, 0.0f);[m
+ 		for (const auto& mesh : meshes) {[m
+ 			mesh.Draw();[m
+ 		}[m
+ 		double x = (int)(getTimeSeed() * 1000) / 1000.0;[m
+ 		float color = std::abs(std::sin(x));[m
+ 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);[m
+[31m-		shader->setVec3("col", glm::vec3(1.0f - color, color, 0.2f + color / 4.0f));[m
+[32m+[m		[32msetMeshMaterial(glm::vec3(1.0f - color, color, 0.2f + color / 4.0f), 0.3f);[m
+ 		for (const auto& mesh : meshes) {[m
+ 			mesh.Draw();[m
+ 		}[m
+[36m@@ -151,7 +141,7 @@[m [mpublic:[m
+ 		setModelMatrices(model);[m
+ 		[m
+ 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);[m
+[31m-		shader->setVec3("col", glm::vec3(0.0f, 0.9f, 0.9f));[m
+[32m+[m		[32msetMeshMaterial(glm::vec3(0.0f, 0.9f, 0.9f), 0.0f);[m
+ 		for (const auto& mesh : meshes) {[m
+ 			mesh.Draw();[m
+ 		}[m
+[36m@@ -162,7 +152,14 @@[m [mpublic:[m
+ class LightSource : public ObjectBase {[m
+ public:[m
+ 	LightSource(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,[m
+[31m-		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {}[m
+[32m+[m		[32mstd::shared_ptr <Shader> own_shader, std::shared_ptr <Shader> object_shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, own_shader) {[m
+[32m+[m		[32mobject_shader->use();[m
+[32m+[m		[32mobject_shader->setVec3("light.ambient",  glm::vec3(0.1f, 0.1f, 0.1f));[m
+[32m+[m		[32mobject_shader->setVec3("light.diffuse",  glm::vec3(0.5f, 0.5f, 0.5f)); // darken diffuse light a bit[m
+[32m+[m		[32mobject_shader->setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));[m
+[32m+[m		[32mobject_shader->setVec3("light.position", glm::vec3(2.0f, 20.0f, 1.0f));[m
+[32m+[m[41m		[m
+[32m+[m	[32m}[m
+ [m
+ 	void DrawObject() override {[m
+ 		glm::mat4 model = glm::mat4(1.0f);[m
+[1mdiff --git a/Wonderland.h b/Wonderland.h[m
+[1mindex ae38c1e..e818d63 100644[m
+[1m--- a/Wonderland.h[m
+[1m+++ b/Wonderland.h[m
+[36m@@ -29,7 +29,7 @@[m [mnamespace Wonderland {[m
+ 		scene_objects.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic"]));[m
+ 		scene_objects.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic"]));[m
+ 		scene_objects.emplace_back(std::make_shared <LightBlueBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"]));[m
+[31m-		scene_objects.emplace_back(std::make_shared <LightSource>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["light"]));[m
+[32m+[m		[32mscene_objects.emplace_back(std::make_shared <LightSource>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["light"], shaders["basic"]));[m
+ 		[m
+ 		// uniforms[m
+ 		unsigned int texture1, texture2;[m
+[36m@@ -48,6 +48,7 @@[m [mnamespace Wonderland {[m
+ [m
+ 	void setViewAndProjection(std::shared_ptr <Shader> shader) {[m
+ 		shader->use();[m
+[32m+[m		[32mshader->setVec3("view_pos", camera.Position);[m
+ 		glm::mat4 projection = glm::perspective(glm::radians(Wonderland::camera.Zoom), (float)800 / (float)600, 0.1f, 100.0f);[m
+ 		shader->setMat4("projection", projection);[m
+ [m
+[1mdiff --git a/shaders/fragment_shader.frag b/shaders/fragment_shader.frag[m
+[1mindex 3049228..d71787b 100644[m
+[1m--- a/shaders/fragment_shader.frag[m
+[1m+++ b/shaders/fragment_shader.frag[m
+[36m@@ -9,31 +9,59 @@[m [min vec3 frag_pos;[m
+ uniform sampler2D texture0;[m
+ //uniform sampler2D texture1;[m
+ [m
+[31m-uniform vec3 col;[m
+[31m-uniform vec3 light_color;[m
+[32m+[m[32m//uniform vec3 col;[m
+[32m+[m[32m//uniform vec3 light_color;[m
+ [m
+[32m+[m[32muniform vec3 view_pos;[m
+ [m
+ //uniform float color1;[m
+ //uniform float color2;[m
+ //uniform float color3;[m
+ [m
+[32m+[m[32mstruct Material {[m
+[32m+[m	[32mvec3 ambient;[m
+[32m+[m	[32mvec3 diffuse;[m
+[32m+[m	[32mvec3 specular;[m
+[32m+[m	[32mfloat shininess;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32mstruct Light {[m
+[32m+[m	[32mvec3 position;[m
+[32m+[m	[32mvec3 ambient;[m
+[32m+[m	[32mvec3 diffuse;[m
+[32m+[m	[32mvec3 specular;[m
+[32m+[m[32m};[m
+[32m+[m
+[32m+[m[32muniform Light light;[m
+[32m+[m[32muniform Material material;[m
+[32m+[m
+ void main () {[m
+[31m-	vec3 light_pos = vec3(2.0f, 20.0f, 1.0f);[m
+[32m+[m	[32m//vec3 light_pos = vec3(2.0f, 20.0f, 1.0f);[m
+ [m
+ 	//ambient[m
+[31m-	float ambient_strength = 0.01f;[m
+[31m-    vec3 ambient = ambient_strength * light_color;[m
+[32m+[m	[32mfloat ambient_strength = 0.1f;[m
+[32m+[m[32m    //vec3 ambient = material.ambient * ambient_strength * light_color;[m
+[32m+[m[32m    vec3 ambient = material.ambient * light.ambient;[m
+ [m
+ 	//diffuse[m
+ 	vec3 norm = normalize(normal);[m
+[31m-	vec3 light_direction = normalize(light_pos - frag_pos);[m
+[32m+[m	[32mvec3 light_direction = normalize(light.position - frag_pos);[m
+ 	float diff = max(dot(norm, light_direction), 0.0);[m
+[31m-	vec3 diffuse = diff * light_color;[m
+[32m+[m	[32m//vec3 diffuse = light_color * (diff * material.diffuse);[m
+[32m+[m	[32mvec3 diffuse = light.diffuse * (diff * material.diffuse);[m
+[32m+[m
+[32m+[m	[32m// specular[m
+[32m+[m	[32mfloat specular_strength = 0.5;[m
+[32m+[m	[32mvec3 view_direction = normalize(view_pos - frag_pos);[m
+[32m+[m	[32mvec3 reflect_direction = reflect(-light_direction, norm);[m
+ [m
+[32m+[m	[32mfloat spec = pow(max(dot(view_direction, reflect_direction), 0.0), 32);[m
+[32m+[m	[32m//vec3 specular = specular_strength * spec * light_color * material.specular;[m
+[32m+[m	[32mvec3 specular = light.specular * spec * material.specular;[m
+ 	[m
+ 	//FragColor = mix(texture(texture0, tex_coord), texture(texture1, tex_coord), 0.2);[m
+ 	//FragColor = vec4(1.0f, 6.0f, 1.0f, 0.8f);[m
+[31m-	FragColor = texture2D(texture0, tex_coord) * vec4(col * min((ambient + diffuse), 1), 1.0f) ;[m
+[32m+[m	[32mFragColor = texture2D(texture0, tex_coord) * vec4((ambient + diffuse + specular), 1.0f) ;[m
+ 	[m
+ 	[m
+ 	[m

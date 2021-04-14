@@ -138,6 +138,27 @@ public:
 		shader->setMat3("normal_model", normal_model);
 	}
 
+	void setMeshMaterial(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, float shininess) {
+		shader->setVec3("material.ambient", ambient);
+		shader->setVec3("material.diffuse", diffuse);
+		shader->setVec3("material.specular", specular);
+		shader->setFloat("material.shininess", shininess);
+	}
+
+	void setMeshMaterial(const glm::vec3& ambient, float shininess) {
+		shader->setVec3("material.ambient", ambient);
+		shader->setVec3("material.diffuse", ambient);
+		shader->setVec3("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+		shader->setFloat("material.shininess", shininess);
+	}
+
+	void setMeshMaterial(float shininess) {
+		shader->setVec3("material.ambient", glm::vec3(1.0f, 1.0f, 1.0f));
+		shader->setVec3("material.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+		shader->setVec3("material.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+		shader->setFloat("material.shininess", shininess);
+	}
+
 
 	virtual ~ObjectBase() = default;
 

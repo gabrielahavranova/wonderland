@@ -29,7 +29,7 @@ namespace Wonderland {
 		scene_objects.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <LightBlueBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"]));
-		scene_objects.emplace_back(std::make_shared <LightSource>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["light"]));
+		scene_objects.emplace_back(std::make_shared <LightSource>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["light"], shaders["basic"]));
 		
 		// uniforms
 		unsigned int texture1, texture2;
@@ -48,6 +48,7 @@ namespace Wonderland {
 
 	void setViewAndProjection(std::shared_ptr <Shader> shader) {
 		shader->use();
+		shader->setVec3("view_pos", camera.Position);
 		glm::mat4 projection = glm::perspective(glm::radians(Wonderland::camera.Zoom), (float)800 / (float)600, 0.1f, 100.0f);
 		shader->setMat4("projection", projection);
 
