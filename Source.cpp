@@ -20,6 +20,7 @@ int main(int argc, char** argv) {
 	Wonderland::initEnviroment();
 	Wonderland::createShaders();
 	Wonderland::createObjects();
+	std::shared_ptr <Shader> last_shader = nullptr;
 
 	GLFWwindow* w = Wonderland::win;
 	while (!glfwWindowShouldClose( w ) ) {
@@ -33,7 +34,10 @@ int main(int argc, char** argv) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		for (auto& object : Wonderland::scene_objects) {
-			Wonderland::setViewAndProjection(object->shader);
+			if (last_shader != object->shader) {
+				Wonderland::setViewAndProjection(object->shader);
+				last_shader = object->shader;
+			}
 			object->Draw();
 		}
 

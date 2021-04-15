@@ -17,9 +17,14 @@ namespace Wonderland {
 	float delta_time;
 	float last_frame;
 	GLFWwindow* win;
+	bool flashlight_on = false;
 	std::vector <std::shared_ptr<ObjectBase>> scene_objects;
 	std::map <std::string, std::shared_ptr<Shader>> shaders;
+	std::map <int, bool> key_pressed;
 
+	void toggleFlashlight() {
+		flashlight_on = !flashlight_on;
+	}
 
 	void createObjects() {
 		size_t index = scene_objects.size();
@@ -34,6 +39,8 @@ namespace Wonderland {
 		// uniforms
 		unsigned int texture1, texture2;
 
+		
+
 
 		//objects[index].createTexture("container.jpg", texture1);
 		//objects[index].createTexture("awesomeface.png", texture2, true);
@@ -47,7 +54,17 @@ namespace Wonderland {
 
 
 	void setViewAndProjection(std::shared_ptr <Shader> shader) {
-		shader->use();
+		std::shared_ptr <Shader> current_shader = shaders["basic"];
+		current_shader->use();
+		// setup flashlight
+		current_shader->setVec3("flashlight.position", camera.Position);
+		//shaders["basic"]->setVec3("light_pos_unif", camera.Position);
+		//shaders["basic"]->setVec3("flashlight.position", glm::vec3(0.0f, 0.0f, 0.0f));
+		current_shader->setVec3("flashlight.direction", camera.Front);
+		float theta = flashlight_on ? 12.5f : 0.0f;
+		current_shader->setFloat("flashlight.cut_off", glm::cos(glm::radians(theta)));
+
+		if (current_shader != shader) shader->use();
 		shader->setVec3("view_pos", camera.Position);
 		glm::mat4 projection = glm::perspective(glm::radians(Wonderland::camera.Zoom), (float)800 / (float)600, 0.1f, 100.0f);
 		shader->setMat4("projection", projection);
@@ -114,6 +131,10 @@ namespace Wonderland {
 			return -1;
 		}
 		glEnable(GL_DEPTH_TEST);
+
+		key_pressed.emplace(GLFW_KEY_F1, false);
+		key_pressed.emplace(GLFW_KEY_F2, false);
+		key_pressed.emplace(GLFW_KEY_L, false);
 	}
 
 	void processInput() {
@@ -127,11 +148,25 @@ namespace Wonderland {
 			camera.ProcessKeyboard(LEFT, delta_time);
 		if (glfwGetKey(win, GLFW_KEY_D) == GLFW_PRESS)
 			camera.ProcessKeyboard(RIGHT, delta_time);
-		if (glfwGetKey(win, GLFW_KEY_F1) == GLFW_PRESS)
+		if (glfwGetKey(win, GLFW_KEY_F1) == GLFW_RELEASE)
+			key_pressed[GLFW_KEY_F1] = false;
+		if (glfwGetKey(win, GLFW_KEY_F2) == GLFW_RELEASE)
+			key_pressed[GLFW_KEY_F2] = false;
+		if (glfwGetKey(win, GLFW_KEY_L) == GLFW_RELEASE)
+			key_pressed[GLFW_KEY_L] = false;
+		if (glfwGetKey(win, GLFW_KEY_F1) == GLFW_PRESS && !key_pressed[GLFW_KEY_F1]) {
 			camera.ProcessKeyboard(STATIC1, delta_time);
-		if (glfwGetKey(win, GLFW_KEY_F2) == GLFW_PRESS)
+			key_pressed[GLFW_KEY_F1] = true;
+		}
+		if (glfwGetKey(win, GLFW_KEY_F2) == GLFW_PRESS && !key_pressed[GLFW_KEY_F2]) {
 			camera.ProcessKeyboard(STATIC2, delta_time);
-	
+			key_pressed[GLFW_KEY_F2] = true;
+		}
+		if (glfwGetKey(win, GLFW_KEY_L) == GLFW_PRESS && !key_pressed[GLFW_KEY_L]) {
+			toggleFlashlight();
+			key_pressed[GLFW_KEY_L] = true;
+		}
+		
 	}
 };
 

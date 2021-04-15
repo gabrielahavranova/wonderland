@@ -161,9 +161,10 @@ public:
 		object_shader->setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
 		object_shader->setVec3("light.position", glm::vec3(2.0f, 20.0f, 1.0f));
 
+		// constants used for point light attenuation
 		object_shader->setFloat("light.constant",  1.0f);
 		object_shader->setFloat("light.linear",    0.014);
-		object_shader->setFloat("light.quadratic", 0.0007);
+		object_shader->setFloat("light.quadratic", 0.0019f);
 	}
 
 	void DrawObject() override {

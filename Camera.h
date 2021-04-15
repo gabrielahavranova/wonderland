@@ -118,6 +118,7 @@ public:
             Position = glm::vec3(66.6536f, 37.5282f, 30.5252f);
             updateCameraVectors();
         }
+        //Position.y = 10.0f;
            // Front = glm::vec3(-0.317231f, - 0.020943f, - 0.948117f);
     }
 

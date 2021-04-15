@@ -9,11 +9,14 @@ layout (location = 2) in vec2 aTexCoord;
 out vec2 tex_coord;
 out vec3 frag_pos;
 out vec3 normal;
+out vec3 light_pos;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 uniform mat3 normal_model;
+
+//uniform vec3 light_pos_unif;
 
 
 void main () {
@@ -21,4 +24,5 @@ void main () {
 	normal = normal_model * aNorm;
 	frag_pos = vec3(model * vec4(aPos, 1.0));
 	tex_coord = aTexCoord;
+	//light_pos = vec3(view * vec4(light_pos_unif, 1.0));
 }
