@@ -88,7 +88,9 @@ public:
 			setModelMatrices(model);
 			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			setMeshMaterial(glm::vec3(1.0f - (float)i * 0.015, 0.768f, 0.768f), 0.1f);
+			//setMeshMaterial(glm::vec3(1.0f - (float)i * 0.015, 0.768f, 0.768f), 1.0f);
+			setMeshMaterial(glm::vec3(1.0f - (float)i * 0.015, 0.768f, 0.768f), ones3f, 1.0f);
+
 			for (const auto& mesh : meshes) {
 				mesh.Draw();
 			}
@@ -158,7 +160,10 @@ public:
 		object_shader->setVec3("light.diffuse",  glm::vec3(0.5f, 0.5f, 0.5f)); // darken diffuse light a bit
 		object_shader->setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
 		object_shader->setVec3("light.position", glm::vec3(2.0f, 20.0f, 1.0f));
-		
+
+		object_shader->setFloat("light.constant",  1.0f);
+		object_shader->setFloat("light.linear",    0.014);
+		object_shader->setFloat("light.quadratic", 0.0007);
 	}
 
 	void DrawObject() override {

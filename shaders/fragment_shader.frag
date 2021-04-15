@@ -30,24 +30,29 @@ struct Light {
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
+
+	float constant;
+	float linear;
+	float quadratic;
 };
 
 uniform Light light;
 uniform Material material;
 
 void main () {
-	//vec3 light_pos = vec3(2.0f, 20.0f, 1.0f);
+	// point light attribs
+	float dist = length(light.position - frag_pos);
+	float attenuation = 1.0 / (light.constant + light.linear * dist + 
+						light.quadratic * dist * dist);
 
-	//ambient
-	float ambient_strength = 0.1f;
-    //vec3 ambient = material.ambient * ambient_strength * light_color;
+
+	// ambient
     vec3 ambient = material.ambient * light.ambient;
 
 	//diffuse
 	vec3 norm = normalize(normal);
 	vec3 light_direction = normalize(light.position - frag_pos);
 	float diff = max(dot(norm, light_direction), 0.0);
-	//vec3 diffuse = light_color * (diff * material.diffuse);
 	vec3 diffuse = light.diffuse * (diff * material.diffuse);
 
 	// specular
@@ -56,15 +61,11 @@ void main () {
 	vec3 reflect_direction = reflect(-light_direction, norm);
 
 	float spec = pow(max(dot(view_direction, reflect_direction), 0.0), 32);
-	//vec3 specular = specular_strength * spec * light_color * material.specular;
 	vec3 specular = light.specular * spec * material.specular;
 	
-	//FragColor = mix(texture(texture0, tex_coord), texture(texture1, tex_coord), 0.2);
-	//FragColor = vec4(1.0f, 6.0f, 1.0f, 0.8f);
-	FragColor = texture2D(texture0, tex_coord) * vec4((ambient + diffuse + specular), 1.0f) ;
-	
-	
-	
-	
+	ambient *= attenuation;
+	diffuse *= attenuation;
+	specular *= attenuation;
 
+	FragColor = texture2D(texture0, tex_coord) * vec4((ambient + diffuse + specular), 1.0f) ;
 }
