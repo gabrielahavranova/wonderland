@@ -61,8 +61,9 @@ namespace Wonderland {
 		//shaders["basic"]->setVec3("light_pos_unif", camera.Position);
 		//shaders["basic"]->setVec3("flashlight.position", glm::vec3(0.0f, 0.0f, 0.0f));
 		current_shader->setVec3("flashlight.direction", camera.Front);
-		float theta = flashlight_on ? 12.5f : 0.0f;
-		current_shader->setFloat("flashlight.cut_off", glm::cos(glm::radians(theta)));
+		current_shader->setFloat("flashlight.cut_off", glm::cos(glm::radians(10.0f)));
+		float epsilon = flashlight_on ? 17.0f : 0.0f;
+		current_shader->setFloat("flashlight.outer_cut_off", glm::cos(glm::radians(epsilon)));
 
 		if (current_shader != shader) shader->use();
 		shader->setVec3("view_pos", camera.Position);

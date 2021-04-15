@@ -42,6 +42,7 @@ struct Flashlight {
 	vec3 position;
 	vec3 direction;
 	float cut_off;
+	float outer_cut_off;
 };
 
 uniform Flashlight flashlight;
@@ -81,10 +82,13 @@ vec3 getFlashlightComponents() {
     
     // check if lighting is inside the spotlight cone
     float theta = dot(lightDir, normalize(-flashlight.direction)); 
-	if (theta > flashlight.cut_off)	{
-		return vec3(0.2, 0.2, 0.2);
+
+	if (theta > flashlight.outer_cut_off)	{
+		float epsilon   = flashlight.cut_off - flashlight.outer_cut_off;
+		float intensity = clamp((theta - flashlight.outer_cut_off) / epsilon, 0.0, 1.0);  
+		return vec3((0.2, 0.2, 0.2) * intensity);
 	} else {
-	return vec3(0.0, 0.0, 0.0);
+		return vec3(0.0, 0.0, 0.0);
 	}
 }
 
