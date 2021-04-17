@@ -14,6 +14,7 @@ uniform sampler2D texture0;
 //uniform vec3 light_color;
 
 uniform vec3 view_pos;
+uniform int fog;
 
 //uniform float color1;
 //uniform float color2;
@@ -48,6 +49,18 @@ struct Flashlight {
 uniform Flashlight flashlight;
 uniform Light light;
 uniform Material material;
+
+vec4 applyFog(vec4 res_color) {
+	vec4 fog_color = vec4(0.7);
+	float intensity = 0.01f;
+	
+	float dist = length(view_pos - frag_pos);
+	float fog_intensity = clamp(exp(-dist * dist * intensity * intensity), 0.0f, 1.0f);
+	res_color = res_color * fog_intensity + (1 - fog_intensity) * fog_color;
+
+	return res_color;
+}
+
 
 vec3 getPointLightComponents() {
 	// compute attenuation
@@ -97,4 +110,7 @@ vec3 getFlashlightComponents() {
 void main () {
 	FragColor = texture2D(texture0, tex_coord) * 
 				vec4(getPointLightComponents() + getFlashlightComponents(), 1.0);
+	if (fog == 1) {
+		FragColor = applyFog(FragColor);
+	}
 }

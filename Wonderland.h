@@ -18,12 +18,18 @@ namespace Wonderland {
 	float last_frame;
 	GLFWwindow* win;
 	bool flashlight_on = false;
+	bool fog = false;
 	std::vector <std::shared_ptr<ObjectBase>> scene_objects;
 	std::map <std::string, std::shared_ptr<Shader>> shaders;
 	std::map <int, bool> key_pressed;
 
+
 	void toggleFlashlight() {
 		flashlight_on = !flashlight_on;
+	}
+
+	void toggleFog() {
+		fog = !fog;
 	}
 
 	void createObjects() {
@@ -64,6 +70,8 @@ namespace Wonderland {
 		current_shader->setFloat("flashlight.cut_off", glm::cos(glm::radians(10.0f)));
 		float epsilon = flashlight_on ? 17.0f : 0.0f;
 		current_shader->setFloat("flashlight.outer_cut_off", glm::cos(glm::radians(epsilon)));
+		current_shader->setInt("fog", fog);
+
 
 		if (current_shader != shader) shader->use();
 		shader->setVec3("view_pos", camera.Position);
@@ -136,6 +144,7 @@ namespace Wonderland {
 		key_pressed.emplace(GLFW_KEY_F1, false);
 		key_pressed.emplace(GLFW_KEY_F2, false);
 		key_pressed.emplace(GLFW_KEY_L, false);
+		key_pressed.emplace(GLFW_KEY_F, false);
 	}
 
 	void processInput() {
@@ -155,6 +164,8 @@ namespace Wonderland {
 			key_pressed[GLFW_KEY_F2] = false;
 		if (glfwGetKey(win, GLFW_KEY_L) == GLFW_RELEASE)
 			key_pressed[GLFW_KEY_L] = false;
+		if (glfwGetKey(win, GLFW_KEY_F) == GLFW_RELEASE)
+			key_pressed[GLFW_KEY_F] = false;
 		if (glfwGetKey(win, GLFW_KEY_F1) == GLFW_PRESS && !key_pressed[GLFW_KEY_F1]) {
 			camera.ProcessKeyboard(STATIC1, delta_time);
 			key_pressed[GLFW_KEY_F1] = true;
@@ -166,6 +177,10 @@ namespace Wonderland {
 		if (glfwGetKey(win, GLFW_KEY_L) == GLFW_PRESS && !key_pressed[GLFW_KEY_L]) {
 			toggleFlashlight();
 			key_pressed[GLFW_KEY_L] = true;
+		}
+		if (glfwGetKey(win, GLFW_KEY_F) == GLFW_PRESS && !key_pressed[GLFW_KEY_F]) {
+			toggleFog();
+			key_pressed[GLFW_KEY_F] = true;
 		}
 		
 	}
