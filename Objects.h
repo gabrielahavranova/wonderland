@@ -89,7 +89,7 @@ public:
 			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			//setMeshMaterial(glm::vec3(1.0f - (float)i * 0.015, 0.768f, 0.768f), 1.0f);
-			setMeshMaterial(glm::vec3(1.0f - (float)i * 0.015, 0.768f, 0.768f), ones3f, 1.0f);
+			setMeshMaterial(glm::vec3(1.0f - (float)i * 0.015, 0.768f, 0.768f), ones3f, 0.5f);
 
 			for (const auto& mesh : meshes) {
 				mesh.Draw();
@@ -155,21 +155,28 @@ class LightSource : public ObjectBase {
 public:
 	LightSource(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
 		std::shared_ptr <Shader> own_shader, std::shared_ptr <Shader> object_shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, own_shader) {
+		this->position = glm::vec3(13.5f, -14.7f, -4.6f);
 		object_shader->use();
-		object_shader->setVec3("light.ambient",  glm::vec3(0.1f, 0.1f, 0.1f));
-		object_shader->setVec3("light.diffuse",  glm::vec3(0.5f, 0.5f, 0.5f)); // darken diffuse light a bit
-		object_shader->setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-		object_shader->setVec3("light.position", glm::vec3(2.0f, 20.0f, 1.0f));
+		object_shader->setVec3("pointlight.ambient",  glm::vec3(0.1f, 0.1f, 0.1f));
+		object_shader->setVec3("pointlight.diffuse",  glm::vec3(0.5f, 0.5f, 0.5f)); // darken diffuse light a bit
+		object_shader->setVec3("pointlight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+		object_shader->setVec3("pointlight.position", this->position);
 
 		// constants used for point light attenuation
-		object_shader->setFloat("light.constant",  1.0f);
-		object_shader->setFloat("light.linear",    0.014);
-		object_shader->setFloat("light.quadratic", 0.0019f);
+		object_shader->setFloat("pointlight.constant",  1.0f);
+		object_shader->setFloat("pointlight.linear",    0.014);
+		object_shader->setFloat("pointlight.quadratic", 0.0019f);
+
+		object_shader->setVec3("dir_light.direction", glm::vec3(2.0f, 100.0f, 1.0f));
+		object_shader->setVec3("dir_light.ambient",   glm::vec3(0.15f, 0.15f, 0.15f));
+		object_shader->setVec3("dir_light.diffuse",   glm::vec3(0.15f, 0.15f, 0.15f));
+		object_shader->setVec3("dir_light.specular",  glm::vec3(0.3f, 0.3f, 0.3f));
+
 	}
 
 	void DrawObject() override {
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(2.0f, 20.0f, 1.0f));
+		model = glm::translate(model, this->position);
 		float angle = 30.0f;
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
@@ -181,5 +188,14 @@ public:
 		for (const auto& mesh : meshes) {
 			mesh.Draw();
 		}
+		model = glm::translate(model, glm::vec3(5.0f, 20.0f, -4.0f));
+		shader->setMat4("model", model);
+		shader->setVec3("col", glm::vec3(0.7f, 0.3f, 0.0f));
+		for (const auto& mesh : meshes) {
+			mesh.Draw();
+		}
+
 	}
+private: 
+	glm::vec3 position;
 };
