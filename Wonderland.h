@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Objects.h"
 #include "ObjectBase.h"
+#include "Skybox.h"
 #include <map>
 
 
@@ -22,7 +23,7 @@ namespace Wonderland {
 	std::vector <std::shared_ptr<ObjectBase>> scene_objects;
 	std::map <std::string, std::shared_ptr<Shader>> shaders;
 	std::map <int, bool> key_pressed;
-
+	std::unique_ptr <Skybox> skybox;
 
 	void toggleFlashlight() {
 		flashlight_on = !flashlight_on;
@@ -45,7 +46,10 @@ namespace Wonderland {
 		// uniforms
 		unsigned int texture1, texture2;
 
-		
+
+		std::vector <std::string> skybox_faces { ".\\skybox\\right.jpg", ".\\skybox\\left.jpg", ".\\skybox\\top.jpg",
+										  ".\\skybox\\bottom.jpg", ".\\skybox\\front.jpg", ".\\skybox\\back.jpg"};
+		skybox = std::make_unique<Skybox>(skybox_faces, skyboxVertices, 108, shaders["skybox"]);
 
 
 		//objects[index].createTexture("container.jpg", texture1);
@@ -56,8 +60,20 @@ namespace Wonderland {
 	void createShaders() {
 		shaders.emplace("basic", std::make_shared<Shader>(".\\shaders\\vertex_shader.vert", ".\\shaders\\fragment_shader.frag"));
 		shaders.emplace("light", std::make_shared<Shader>(".\\shaders\\vs_light.vert", ".\\shaders\\fs_light.frag"));
+		shaders.emplace("skybox", std::make_shared<Shader>(".\\shaders\\skybox.vert", ".\\shaders\\skybox.frag"));
 	}
 
+	void setSkyboxMatrices() {
+		std::shared_ptr <Shader> shader = shaders["skybox"];
+		shader->use();
+
+		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) WIN_WIDTH / (float) WIN_HEIGHT, 0.1f, 100.0f);
+
+		view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
+		shader->setMat4("view", view);
+		shader->setMat4("projection", projection);
+	}
 
 	void setViewAndProjection(std::shared_ptr <Shader> shader) {
 		std::shared_ptr <Shader> current_shader = shaders["basic"];

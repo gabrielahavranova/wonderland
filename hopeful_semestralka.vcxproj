@@ -159,6 +159,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Objects.h" />
+    <ClInclude Include="Skybox.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="VerticesLib.h" />
@@ -172,6 +173,8 @@
   <ItemGroup>
     <None Include="shaders\fragment_shader.frag" />
     <None Include="shaders\fs_light.frag" />
+    <None Include="shaders\skybox.frag" />
+    <None Include="shaders\skybox.vert" />
     <None Include="shaders\vertex_shader.vert" />
     <None Include="shaders\vs_light.vert" />
   </ItemGroup>

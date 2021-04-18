@@ -59,6 +59,9 @@
     <ClInclude Include="Objects.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="wall.jpg">
@@ -82,6 +85,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="shaders\vs_light.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\skybox.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\skybox.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

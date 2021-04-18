@@ -41,6 +41,10 @@ int main(int argc, char** argv) {
 			object->Draw();
 		}
 
+		Wonderland::setSkyboxMatrices();
+		Wonderland::skybox->draw();
+
+
 		glfwSwapBuffers(w);
 		glfwPollEvents();
 	}
