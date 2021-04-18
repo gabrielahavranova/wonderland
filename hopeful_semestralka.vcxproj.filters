@@ -93,5 +93,11 @@
     <None Include="shaders\skybox.vert">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="shaders\multimesh_obj.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\multimesh_obj.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

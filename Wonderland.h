@@ -8,6 +8,7 @@
 #include "ObjectBase.h"
 #include "Skybox.h"
 #include <map>
+#include "Model.h"
 
 
 namespace Wonderland {
@@ -24,6 +25,7 @@ namespace Wonderland {
 	std::map <std::string, std::shared_ptr<Shader>> shaders;
 	std::map <int, bool> key_pressed;
 	std::unique_ptr <Skybox> skybox;
+	std::unique_ptr <Model> uniq_model;
 
 	void toggleFlashlight() {
 		flashlight_on = !flashlight_on;
@@ -51,7 +53,7 @@ namespace Wonderland {
 										  ".\\skybox\\bottom.jpg", ".\\skybox\\front.jpg", ".\\skybox\\back.jpg"};
 		skybox = std::make_unique<Skybox>(skybox_faces, skyboxVertices, 108, shaders["skybox"]);
 
-
+		uniq_model = std::make_unique <Model> (".\\objects\\backpack.obj");
 		//objects[index].createTexture("container.jpg", texture1);
 		//objects[index].createTexture("awesomeface.png", texture2, true);
 	}
@@ -61,7 +63,28 @@ namespace Wonderland {
 		shaders.emplace("basic", std::make_shared<Shader>(".\\shaders\\vertex_shader.vert", ".\\shaders\\fragment_shader.frag"));
 		shaders.emplace("light", std::make_shared<Shader>(".\\shaders\\vs_light.vert", ".\\shaders\\fs_light.frag"));
 		shaders.emplace("skybox", std::make_shared<Shader>(".\\shaders\\skybox.vert", ".\\shaders\\skybox.frag"));
+		shaders.emplace("multimesh", std::make_shared<Shader>(".\\shaders\\multimesh_obj.vert", ".\\shaders\\multimesh_obj.frag"));
+		
 	}
+
+
+	void drawMultimesh() {
+		std::shared_ptr <Shader> shader = shaders["multimesh"];
+		shader->use();
+
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		shader->setMat4("projection", projection);
+		shader->setMat4("view", view);
+
+		// render the loaded model
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(12.0f, 30.0f, 5.0f)); // translate it down so it's at the center of the scene
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+		shader->setMat4("model", model);
+		uniq_model->Draw(shader);
+	}
+
 
 	void setSkyboxMatrices() {
 		std::shared_ptr <Shader> shader = shaders["skybox"];
