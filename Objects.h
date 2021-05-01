@@ -127,6 +127,32 @@ public:
 	}
 };
 
+class Lava : public ObjectBase {
+public:
+	Lava(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {
+			for (auto& mesh : meshes) mesh.createTexture(".\\objects\\lava_diffuse.jpg", false);
+		//mesh.createTexture("awesomeface.png", false);
+	}
+
+	void DrawObject() override {
+		shader->setBool("is_lava", true);
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(3.0f, 0.0f, 5.0f));
+		//model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+		float angle = -90.0f;
+		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
+
+		setModelMatrices(model);
+		setMeshMaterial(ones3f, 0.0f);
+		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		for (const auto& mesh : meshes) mesh.Draw();
+		shader->setBool("is_lava", false);
+
+	}
+};
+
 
 class LightBlueBox : public ObjectBase {
 public:

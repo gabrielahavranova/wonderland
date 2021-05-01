@@ -25,7 +25,7 @@ namespace Wonderland {
 	std::map <std::string, std::shared_ptr<Shader>> shaders;
 	std::map <int, bool> key_pressed;
 	std::unique_ptr <Skybox> skybox;
-	std::unique_ptr <Model> uniq_model;
+	//std::unique_ptr <Model> uniq_model;
 
 	void toggleFlashlight() {
 		flashlight_on = !flashlight_on;
@@ -40,6 +40,7 @@ namespace Wonderland {
 
 		scene_objects.emplace_back(std::make_shared <YellowBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Plane>(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic"]));
+		scene_objects.emplace_back(std::make_shared <Lava>(lavaVertices, lavaNVertices * 8, lavaTriangles, lavaNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <LightBlueBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"]));
@@ -52,8 +53,8 @@ namespace Wonderland {
 		std::vector <std::string> skybox_faces { ".\\skybox\\right.jpg", ".\\skybox\\left.jpg", ".\\skybox\\top.jpg",
 										  ".\\skybox\\bottom.jpg", ".\\skybox\\front.jpg", ".\\skybox\\back.jpg"};
 		skybox = std::make_unique<Skybox>(skybox_faces, skyboxVertices, 108, shaders["skybox"]);
-
-		uniq_model = std::make_unique <Model> (".\\objects\\backpack.obj");
+		shaders["basic"]->setBool("is_lava", false);
+		//uniq_model = std::make_unique <Model> (".\\objects\\backpack.obj");
 		//objects[index].createTexture("container.jpg", texture1);
 		//objects[index].createTexture("awesomeface.png", texture2, true);
 	}
@@ -82,7 +83,7 @@ namespace Wonderland {
 		model = glm::translate(model, glm::vec3(12.0f, 30.0f, 5.0f)); // translate it down so it's at the center of the scene
 		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
 		shader->setMat4("model", model);
-		uniq_model->Draw(shader);
+		//uniq_model->Draw(shader);
 	}
 
 
@@ -121,6 +122,10 @@ namespace Wonderland {
 		glm::mat4 view = Wonderland::camera.GetViewMatrix();
 		shader->setMat4("view", view);
 		shader->setVec3("light_color", glm::vec3(1.0f, 1.0f, 1.0f));
+
+		// set time seed in shader
+		shader->setFloat("time_seed", glfwGetTime()/20.0);
+		//std::cout << "glfw time seed: " << (int)(glfwGetTime() * 1000) / 100 << " and undivided: " << glfwGetTime() << std::endl;
 	}
 
 	void mouseCallback(GLFWwindow* window, double xpos, double ypos) {
