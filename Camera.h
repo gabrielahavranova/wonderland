@@ -73,17 +73,28 @@ public:
     }
 
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-    void ProcessKeyboard(Camera_Movement direction, float deltaTime)
+    void ProcessKeyboard(Camera_Movement direction, float deltaTime, const std::vector<glm::vec3>& colliders)
     {
         float velocity = MovementSpeed * deltaTime;
-        if (direction == FORWARD)
-            Position += Front * velocity;
-        if (direction == BACKWARD)
-            Position -= Front * velocity;
-        if (direction == LEFT)
-            Position -= Right * velocity;
-        if (direction == RIGHT)
-            Position += Right * velocity;
+        if (direction == FORWARD) {
+            glm::vec3 new_pos = Position + Front * velocity;
+            if (!collides(new_pos, colliders)) Position = new_pos;
+        }
+        if (direction == BACKWARD) {
+            //Position -= Front * velocity;
+            glm::vec3 new_pos = Position - Front * velocity;
+            if (!collides(new_pos, colliders)) Position = new_pos;
+        }
+        if (direction == LEFT) {
+            //Position -= Right * velocity;
+            glm::vec3 new_pos = Position - Right * velocity;
+            if (!collides(new_pos, colliders)) Position = new_pos;
+        }
+        if (direction == RIGHT) {
+            //Position += Right * velocity;
+            glm::vec3 new_pos = Position + Right * velocity;
+            if (!collides(new_pos, colliders)) Position = new_pos;
+        }
         if (direction == STATIC1) {
            // glm::vec3 front;
             //front.x = cos(glm::radians(20.0f)) * cos(glm::radians(20.0f));
@@ -155,7 +166,14 @@ public:
     }
 
 private:
-    // calculates the front vector from the Camera's (updated) Euler Angles
+    bool collides(const glm::vec3& new_position, const std::vector<glm::vec3> &colliders) {
+        for (size_t i = 0; i < colliders.size(); i++) {
+            if (glm::distance(glm::vec2(new_position.x, new_position.z), glm::vec2(colliders[i].x, colliders[i].y)) < colliders[i].z) return true;
+        }
+        return false;
+    }
+
+
     void updateCameraVectors()
     {
         // calculate the new Front vector

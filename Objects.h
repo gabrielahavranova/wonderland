@@ -47,7 +47,7 @@ public:
 
 	void DrawObject() override {
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(3.0f, -5.0f, 5.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 12.0f, 0.0f));
 		float angle = -90.0f;
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
@@ -63,8 +63,12 @@ public:
 class Mushrooms : public ObjectBase {
 public:
 	Mushrooms(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {}
+		std::shared_ptr <Shader> shader, std::vector <glm::vec3>& colliders) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader), colliders(colliders) {
+		initialized = false;
+	}
 
+	std::vector<glm::vec3>& colliders;
+	bool initialized;
 	void DrawObject() override {
 		//std::cout << "drawboxes called " << std::endl;
 		const float xses[] = {
@@ -74,14 +78,16 @@ public:
 			 -6, -8, -3, -6, 8, -4, 3, 9, -7, -5,
 			 5, 7, 8, -8, 7, -6, -5, 9, -3, -2 };
 
-		for (unsigned int i = 0; i < 50; i++) {
+		for (unsigned int i = 0; i < 20; i++) {
 			int x = (int)getTimeSeed() % 10;
 			int y = (int)getTimeSeed() % 10;
 			glm::mat4 model = glm::mat4(1.0f);
 			//										 vvvvv plane      |  height| distance from camera
-			model = glm::translate(model, glm::vec3(0.0f + xses[i] * 4.5f, -12.0f + (i % 4) * 1.5f, 10.0f + xses[49 - i] * 8.0f));
-			float angle = -90.0f;
+			model = glm::translate(model, glm::vec3(0.0f + xses[i] * 4.5f, 3.0f + (i % 4) * 1.5f, 10.0f + xses[49 - i] * 8.0f));
+			
+			if (!initialized) colliders.emplace_back(0.0f + xses[i] * 4.5f, 10.0f + xses[49 - i] * 8.0f, 3.0f);
 
+			float angle = -90.0f;
 			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(15.0f, 15.0f, 18.0f));
 
@@ -95,6 +101,7 @@ public:
 				mesh.Draw();
 			}
 		}
+		initialized = true;
 	}};
 
 class God : public ObjectBase {
@@ -138,7 +145,7 @@ public:
 	void DrawObject() override {
 		shader->setBool("is_lava", true);
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(3.0f, 0.0f, 5.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 		//model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 		float angle = -90.0f;
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -219,16 +226,18 @@ public:
 		float s = (float)getTimeSeed();
 
 		glm::mat4 model = glm::mat4(1.0f);
-		float angle = 0.5f;
+		float angle = 0.2f;
 
 		//this->position = glm::vec3(this->position.x + s*glm::cos(angle) * radius, this->position.y + s*glm::sin(angle) * radius, this->position.z);
 
-		std::cout << "x: " << this->position.x + glm::cos(s * angle) * radius << ", y: " << this->position.y +  glm::sin(s * angle) * radius << ", z: " << this->position.z << std::endl;
+		//std::cout << "x: " << this->position.x + glm::cos(s * angle) * radius << ", y: " << this->position.y +  glm::sin(s * angle) * radius << ", z: " << this->position.z << std::endl;
 		model = glm::translate(model, glm::vec3(this->position.x + glm::cos(angle *s) * radius, this->position.y , this->position.z + glm::sin(s * angle) * radius));
 		model = glm::rotate(model, s * glm::radians(angle), glm::vec3(1.0f, 0.0f, 1.0f));
+		model = glm::scale(model, glm::vec3(0.35f, 0.35f, 0.35f));
 		setModelMatrices(model);
 
-		setMeshMaterial(glm::vec3(0.0f, 0.9f, 0.9f), 0.0f);
+		//setMeshMaterial(glm::vec3(1.0f, 1.0f, 1.0f), 0.0f);
+		shader->setVec3("col", glm::vec3(1.0f, 1.0f, 1.0f));
 		for (const auto& mesh : meshes) {
 			mesh.Draw();
 		}

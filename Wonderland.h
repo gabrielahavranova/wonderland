@@ -25,6 +25,7 @@ namespace Wonderland {
 	std::map <std::string, std::shared_ptr<Shader>> shaders;
 	std::map <int, bool> key_pressed;
 	std::unique_ptr <Skybox> skybox;
+	std::vector <glm::vec3> colliders;
 	//std::unique_ptr <Model> uniq_model;
 
 	void toggleFlashlight() {
@@ -42,10 +43,10 @@ namespace Wonderland {
 		scene_objects.emplace_back(std::make_shared <Plane>(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Lava>(lavaVertices, lavaNVertices * 8, lavaTriangles, lavaNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Flame>(flameVertices, flameNVertices * 8, flameTriangles, flameNTriangles, shaders["basic"]));
-		scene_objects.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic"]));
+		scene_objects.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic"], colliders));
 		scene_objects.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <LightBlueBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"]));
-		scene_objects.emplace_back(std::make_shared <Stars>(starVertices, starNVertices * 8, starTriangles, starNTriangles, shaders["basic"]));
+		scene_objects.emplace_back(std::make_shared <Stars>(starVertices, starNVertices * 8, starTriangles, starNTriangles, shaders["light"]));
 		scene_objects.emplace_back(std::make_shared <LightSource>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["light"], shaders["basic"]));
 		
 		// uniforms
@@ -60,8 +61,9 @@ namespace Wonderland {
 		//uniq_model = std::make_unique <Model> (".\\objects\\backpack.obj");
 		//objects[index].createTexture("container.jpg", texture1);
 		//objects[index].createTexture("awesomeface.png", texture2, true);
+		
+		colliders.emplace_back(30.0f, 11.0f, 8.0f);
 	}
-
 
 	void createShaders() {
 		shaders.emplace("basic", std::make_shared<Shader>(".\\shaders\\vertex_shader.vert", ".\\shaders\\fragment_shader.frag"));
@@ -206,13 +208,13 @@ namespace Wonderland {
 		if (glfwGetKey(win, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(win, true);
 		if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
-			camera.ProcessKeyboard(FORWARD, delta_time);
+			camera.ProcessKeyboard(FORWARD, delta_time, colliders);
 		if (glfwGetKey(win, GLFW_KEY_S) == GLFW_PRESS)
-			camera.ProcessKeyboard(BACKWARD, delta_time);
+			camera.ProcessKeyboard(BACKWARD, delta_time, colliders);
 		if (glfwGetKey(win, GLFW_KEY_A) == GLFW_PRESS)
-			camera.ProcessKeyboard(LEFT, delta_time);
+			camera.ProcessKeyboard(LEFT, delta_time, colliders);
 		if (glfwGetKey(win, GLFW_KEY_D) == GLFW_PRESS)
-			camera.ProcessKeyboard(RIGHT, delta_time);
+			camera.ProcessKeyboard(RIGHT, delta_time, colliders);
 		if (glfwGetKey(win, GLFW_KEY_F1) == GLFW_RELEASE)
 			key_pressed[GLFW_KEY_F1] = false;
 		if (glfwGetKey(win, GLFW_KEY_F2) == GLFW_RELEASE)
@@ -222,11 +224,11 @@ namespace Wonderland {
 		if (glfwGetKey(win, GLFW_KEY_F) == GLFW_RELEASE)
 			key_pressed[GLFW_KEY_F] = false;
 		if (glfwGetKey(win, GLFW_KEY_F1) == GLFW_PRESS && !key_pressed[GLFW_KEY_F1]) {
-			camera.ProcessKeyboard(STATIC1, delta_time);
+			camera.ProcessKeyboard(STATIC1, delta_time, colliders);
 			key_pressed[GLFW_KEY_F1] = true;
 		}
 		if (glfwGetKey(win, GLFW_KEY_F2) == GLFW_PRESS && !key_pressed[GLFW_KEY_F2]) {
-			camera.ProcessKeyboard(STATIC2, delta_time);
+			camera.ProcessKeyboard(STATIC2, delta_time, colliders);
 			key_pressed[GLFW_KEY_F2] = true;
 		}
 		if (glfwGetKey(win, GLFW_KEY_L) == GLFW_PRESS && !key_pressed[GLFW_KEY_L]) {
@@ -237,7 +239,7 @@ namespace Wonderland {
 			toggleFog();
 			key_pressed[GLFW_KEY_F] = true;
 		}
-		
+
 	}
 };
 
