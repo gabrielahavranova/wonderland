@@ -204,6 +204,38 @@ public:
 };
 
 
+class Stars : public ObjectBase {
+public: 
+	Stars(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {
+		
+	}
+
+	glm::vec3 position = glm::vec3(7.2748f, 64.168f, 17.4503f);
+	const glm::vec3 rot_center = glm::vec3(25.0f, 30.0f, 15.0f);
+	const int radius = 5; 
+
+	void DrawObject() override {
+		float s = (float)getTimeSeed();
+
+		glm::mat4 model = glm::mat4(1.0f);
+		float angle = 0.5f;
+
+		//this->position = glm::vec3(this->position.x + s*glm::cos(angle) * radius, this->position.y + s*glm::sin(angle) * radius, this->position.z);
+
+		std::cout << "x: " << this->position.x + glm::cos(s * angle) * radius << ", y: " << this->position.y +  glm::sin(s * angle) * radius << ", z: " << this->position.z << std::endl;
+		model = glm::translate(model, glm::vec3(this->position.x + glm::cos(angle *s) * radius, this->position.y , this->position.z + glm::sin(s * angle) * radius));
+		model = glm::rotate(model, s * glm::radians(angle), glm::vec3(1.0f, 0.0f, 1.0f));
+		setModelMatrices(model);
+
+		setMeshMaterial(glm::vec3(0.0f, 0.9f, 0.9f), 0.0f);
+		for (const auto& mesh : meshes) {
+			mesh.Draw();
+		}
+	}
+};
+
+
 class LightSource : public ObjectBase {
 public:
 	LightSource(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
