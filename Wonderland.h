@@ -120,7 +120,7 @@ namespace Wonderland {
 
 		if (current_shader != shader) shader->use();
 		shader->setVec3("view_pos", camera.Position);
-		glm::mat4 projection = glm::perspective(glm::radians(Wonderland::camera.Zoom), (float)800 / (float)600, 0.1f, 100.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(Wonderland::camera.Zoom), (float)800 / (float)600, 0.1f, 300.0f);
 		shader->setMat4("projection", projection);
 
 		// camera/view transformation
