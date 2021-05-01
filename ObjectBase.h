@@ -45,7 +45,7 @@ public:
 	}
 
 
-	int createTexture(const char* tex_path, bool flip_texture_on_load = false) {
+	int createTexture(const char* tex_path, bool flip_texture_on_load = false, bool is_png = false) {
 		unsigned int texture;
 		//textures.emplace_back(texture);
 		//exture = textures.back();
@@ -61,10 +61,11 @@ public:
 
 		stbi_set_flip_vertically_on_load(flip_texture_on_load);
 		unsigned char* data = stbi_load(tex_path, &width, &height, &nrChannels, 0);
-		int mode = nrChannels == 3 ? GL_RGB : GL_RGBA;
+		int mode1 = is_png ? GL_RGBA : GL_RGB;
+		int mode2 = nrChannels == 3 ? GL_RGB : GL_RGBA;
 
 		if (data) {
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, mode, GL_UNSIGNED_BYTE, data);
+			glTexImage2D(GL_TEXTURE_2D, 0, mode1, width, height, 0, mode2, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 		else {

@@ -126,7 +126,10 @@ vec3 getFlashlightComponents() {
 void main () {
 	vec3 view_direction = normalize(view_pos - frag_pos);
 
-	FragColor = texture2D(texture0, tex_coord) * 
+	//FragColor = texture2D(texture0, tex_coord) * 
+	vec4 tex_color = texture(texture0, tex_coord);
+	if (tex_color.a < 0.1) discard;
+	FragColor = tex_color * 
 				//vec4(getFlashlightComponents() + getDirLightComponents(view_direction), 1.0);
 				vec4(getPointLightComponents(view_direction) + getFlashlightComponents() + getDirLightComponents(view_direction), 1.0);
 				//vec4(getPointLightComponents(view_direction) + getFlashlightComponents(), 1.0);

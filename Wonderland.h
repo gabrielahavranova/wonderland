@@ -41,6 +41,7 @@ namespace Wonderland {
 		scene_objects.emplace_back(std::make_shared <YellowBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Plane>(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Lava>(lavaVertices, lavaNVertices * 8, lavaTriangles, lavaNTriangles, shaders["basic"]));
+		scene_objects.emplace_back(std::make_shared <Flame>(flameVertices, flameNVertices * 8, flameTriangles, flameNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <LightBlueBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"]));
@@ -54,6 +55,7 @@ namespace Wonderland {
 										  ".\\skybox\\bottom.jpg", ".\\skybox\\front.jpg", ".\\skybox\\back.jpg"};
 		skybox = std::make_unique<Skybox>(skybox_faces, skyboxVertices, 108, shaders["skybox"]);
 		shaders["basic"]->setBool("is_lava", false);
+		shaders["basic"]->setBool("is_flame", false);
 		//uniq_model = std::make_unique <Model> (".\\objects\\backpack.obj");
 		//objects[index].createTexture("container.jpg", texture1);
 		//objects[index].createTexture("awesomeface.png", texture2, true);
@@ -123,9 +125,17 @@ namespace Wonderland {
 		shader->setMat4("view", view);
 		shader->setVec3("light_color", glm::vec3(1.0f, 1.0f, 1.0f));
 
+		double time = glfwGetTime();
+		int time_i = (int)(time * 100) / 5;
+
 		// set time seed in shader
-		shader->setFloat("time_seed", glfwGetTime()/20.0);
-		//std::cout << "glfw time seed: " << (int)(glfwGetTime() * 1000) / 100 << " and undivided: " << glfwGetTime() << std::endl;
+		shader->setFloat("time_seed", time / 20.0);
+		shader->setInt("flame.x_offset", time_i % 4);
+		shader->setInt("flame.y_offset", time_i / 4);
+		//std::cout << "glfw time seed x: " << time;
+		//std::cout << "time x 100 double:" << time * 100;
+		//std::cout << "time x 100 int:" << (int)(time * 100) / 10 << std::endl;
+		
 	}
 
 	void mouseCallback(GLFWwindow* window, double xpos, double ypos) {

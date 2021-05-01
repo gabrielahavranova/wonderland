@@ -1,6 +1,20 @@
 #pragma once
 #include <chrono>
 
+const int flameNVertices = 4;
+const int flameNTriangles = 2 * 3;
+const float flameVertices[] = {
+  -1.0f,-1.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,
+  1.0f,-1.0f,0.0f,0.0f,0.0f,1.0f,1.0f,0.0f,
+  1.0f,1.0f,0.0f,0.0f,0.0f,1.0f,1.0f,1.0f,
+  -1.0f,1.0f,0.0f,-0.0f,0.0f,1.0f,0.0f,1.0f,
+};
+
+const unsigned flameTriangles[] = {
+  0, 1, 2,
+  0, 2, 3,
+}; 
+
 const int kukuN = 24;
 const unsigned int kukuTriCNT = 36; // = triangles cnt * 3
 
