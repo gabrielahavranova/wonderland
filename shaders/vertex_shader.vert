@@ -23,6 +23,7 @@ uniform mat3 normal_model;
 
 uniform float time_seed;
 uniform bool is_lava;
+uniform float lava_sped;
 uniform bool is_flame;
 uniform Flame flame;
 
@@ -34,7 +35,7 @@ void main () {
 	normal = normal_model * aNorm;
 	if (is_lava) {
 		tex_coord = tex_coord * 0.7f;
-		tex_coord = vec2(aTexCoord.x + cos(time_seed) * 0.7f, aTexCoord.y + sin(time_seed)*0.7f);
+		tex_coord = vec2(aTexCoord.x + cos(lava_sped * time_seed) * 0.7f, aTexCoord.y + sin(lava_sped * time_seed)*0.7f);
 	}
 		else if (is_flame) {
 		//int ts = int(time_seed);

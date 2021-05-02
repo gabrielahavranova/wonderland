@@ -139,11 +139,18 @@ public:
 	Lava(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
 		std::shared_ptr <Shader> shader, char color_id) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader, color_id) {
 			for (auto& mesh : meshes) mesh.createTexture(".\\objects\\lava_diffuse.jpg", false);
+
 		//mesh.createTexture("awesomeface.png", false);
+	}
+
+	void applyClick() {
+		lava_sped_up = !lava_sped_up;
+		std::cout << "clicked on lava!!!! FUCK YEAH!!!!! sped: " << 5.0f * lava_sped_up + 1.0f << std::endl;
 	}
 
 	void DrawObject() override {
 		shader->setBool("is_lava", true);
+		shader->setFloat("lava_sped", 3.0f * lava_sped_up + 1.0f);
 		shader->setVec3("click_test.object_color", glm::vec3(1.0f, 0.0f, 0.0f));
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
@@ -159,6 +166,8 @@ public:
 		shader->setBool("is_lava", false);
 		shader->setVec3("click_test.object_color", glm::vec3(0.0f, 0.0f, 0.0f));
 	}
+private:
+	bool lava_sped_up = false;
 };
 
 class Flame : public ObjectBase {

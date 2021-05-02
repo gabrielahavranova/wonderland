@@ -133,6 +133,10 @@ public:
 		DrawObject();
 	}
 
+	virtual void applyClick() {
+		std::cout << "applying click!" << std::endl;
+	}
+
 	void setModelMatrices(const glm::mat4& model_mat) {
 		shader->setMat4("model", model_mat);
 		glm::mat3 normal_model = glm::mat3(glm::transpose(glm::inverse(model_mat)));

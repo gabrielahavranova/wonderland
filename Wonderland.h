@@ -24,9 +24,9 @@ namespace Wonderland {
 	bool picking_on = false;
 	bool getClickLocation = false;
 	std::vector <std::shared_ptr<ObjectBase>> scene_objects;
-	std::vector <std::shared_ptr<ObjectBase>> clickable_objects;
 	std::map <std::string, std::shared_ptr<Shader>> shaders;
 	std::map <int, bool> key_pressed;
+	std::map <int, std::shared_ptr<ObjectBase>> clickable_objects;
 	std::unique_ptr <Skybox> skybox;
 	std::vector <glm::vec3> colliders;
 
@@ -47,8 +47,8 @@ namespace Wonderland {
 
 		scene_objects.emplace_back(std::make_shared <YellowBox>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Plane>(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic"]));
-		scene_objects.emplace_back(std::make_shared <Lava>(lavaVertices, lavaNVertices * 8, lavaTriangles, lavaNTriangles, shaders["basic"], 0x1));
-		clickable_objects.push_back(scene_objects.back());
+		scene_objects.emplace_back(std::make_shared <Lava>(lavaVertices, lavaNVertices * 8, lavaTriangles, lavaNTriangles, shaders["basic"], 0xFF));
+		clickable_objects.emplace(0xFF, scene_objects.back());
 		scene_objects.emplace_back(std::make_shared <Flame>(flameVertices, flameNVertices * 8, flameTriangles, flameNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic"], colliders));
 		scene_objects.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic"]));
@@ -134,7 +134,7 @@ namespace Wonderland {
 		epsilon = 0.5f;
 		current_shader->setFloat("picking.outer_cut_off", glm::cos(glm::radians(epsilon)));
 		current_shader->setInt("picking.on", picking_on);
-
+		current_shader->setFloat("lava_sped", 1.0f);
 		current_shader->setInt("fog", fog);
 		
 
@@ -161,6 +161,14 @@ namespace Wonderland {
 		//std::cout << "time x 100 int:" << (int)(time * 100) / 10 << std::endl;
 		
 	}
+
+	void makeClickAction(int object_id) {
+		auto it = clickable_objects.find(object_id);
+		if (it != clickable_objects.end()) {
+			it->second->applyClick();
+		}
+	}
+
 
 	void mouseCallback(GLFWwindow* window, double xpos, double ypos) {
 		if (firstMouse)

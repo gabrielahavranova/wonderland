@@ -41,18 +41,18 @@ int main(int argc, char** argv) {
 				}
 				object->Draw();
 			}
-			std::cout << " done drawing ids " << std::endl;
-			//glFlush();
-			//glFinish();
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			unsigned char color[4];
 			glReadPixels(WIN_WIDTH / 2, WIN_HEIGHT / 2, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
-			std::cout << "clicked color is: " << std::hex << (int)color[0] << " " << (int)color[1] << " " <<(int) color[2] << " " << (int)color[3] << std::endl;
+			std::cout << "clicked color is: " << (int)color[0] << " " << (int)color[1] << " " <<(int) color[2] << " " << (int)color[3] << std::endl;
 			Wonderland::getClickLocation = false;
+			Wonderland::shaders["basic"]->use();
+			Wonderland::shaders["basic"]->setBool("click_test.perform", false);
+			Wonderland::makeClickAction((int)color[0]);
 		}
 
 		glClearColor(0.05f, 0.05f, 0.2f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 		for (auto& object : Wonderland::scene_objects) {
 			if (last_shader != object->shader) {
