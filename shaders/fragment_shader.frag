@@ -52,10 +52,18 @@ struct Picking {
 	float outer_cut_off;
 };
 
+struct ClickTest {
+	bool perform;
+	vec3 object_color;
+};
+
 uniform DirLight dir_light;
 uniform Flashlight flashlight;
 uniform PointLight pointlight;
+
 uniform Picking picking;
+uniform ClickTest click_test;
+
 uniform Material material;
 
 vec4 applyFog(vec4 res_color) {
@@ -148,26 +156,30 @@ vec3 applyPicking() {
 
 
 void main () {
-	vec3 view_direction = normalize(view_pos - frag_pos);
+	if (!click_test.perform) {
+		vec3 view_direction = normalize(view_pos - frag_pos);
 
-	//FragColor = texture2D(texture0, tex_coord) * 
-	vec4 tex_color = texture(texture0, tex_coord);
-	if (tex_color.a < 0.1) discard;
-	vec3 cursor = {0.0, 0.0, 0.0};
-	//if (picking_on && frag_pos 
-	if (picking.on) {
-		cursor = applyPicking();
-	}
-	
-	if (cursor.x > 0.99) {
-		FragColor = vec4(cursor, 1.0);
-	} else {
-		FragColor = tex_color * 
-					//vec4(getFlashlightComponents() + getDirLightComponents(view_direction), 1.0);
-					vec4(getPointLightComponents(view_direction) + getFlashlightComponents() + getDirLightComponents(view_direction) + cursor, 1.0);
-					//vec4(getPointLightComponents(view_direction) + getFlashlightComponents(), 1.0);
-		if (fog == 1) {
-			FragColor = applyFog(FragColor);
+		//FragColor = texture2D(texture0, tex_coord) * 
+		vec4 tex_color = texture(texture0, tex_coord);
+		if (tex_color.a < 0.1) discard;
+		vec3 cursor = {0.0, 0.0, 0.0};
+		//if (picking_on && frag_pos 
+		if (picking.on) {
+			cursor = applyPicking();
 		}
+		
+		if (cursor.x > 0.99) {
+			FragColor = vec4(cursor, 1.0);
+		} else {
+			FragColor = tex_color * 
+						//vec4(getFlashlightComponents() + getDirLightComponents(view_direction), 1.0);
+						vec4(getPointLightComponents(view_direction) + getFlashlightComponents() + getDirLightComponents(view_direction) + cursor, 1.0);
+						//vec4(getPointLightComponents(view_direction) + getFlashlightComponents(), 1.0);
+			if (fog == 1) {
+				FragColor = applyFog(FragColor);
+			}
+		}
+	} else {
+		FragColor = vec4(click_test.object_color, 1.0);
 	}
 }

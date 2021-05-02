@@ -22,7 +22,9 @@ namespace Wonderland {
 	bool flashlight_on = false;
 	bool fog = false;
 	bool picking_on = false;
+	bool getClickLocation = false;
 	std::vector <std::shared_ptr<ObjectBase>> scene_objects;
+	std::vector <std::shared_ptr<ObjectBase>> clickable_objects;
 	std::map <std::string, std::shared_ptr<Shader>> shaders;
 	std::map <int, bool> key_pressed;
 	std::unique_ptr <Skybox> skybox;
@@ -45,13 +47,15 @@ namespace Wonderland {
 
 		scene_objects.emplace_back(std::make_shared <YellowBox>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Plane>(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic"]));
-		scene_objects.emplace_back(std::make_shared <Lava>(lavaVertices, lavaNVertices * 8, lavaTriangles, lavaNTriangles, shaders["basic"]));
+		scene_objects.emplace_back(std::make_shared <Lava>(lavaVertices, lavaNVertices * 8, lavaTriangles, lavaNTriangles, shaders["basic"], 0x1));
+		clickable_objects.push_back(scene_objects.back());
 		scene_objects.emplace_back(std::make_shared <Flame>(flameVertices, flameNVertices * 8, flameTriangles, flameNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic"], colliders));
 		scene_objects.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <LightBlueBox>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Stars>(starVertices, starNVertices * 8, starTriangles, starNTriangles, shaders["light"]));
 		scene_objects.emplace_back(std::make_shared <LightSource>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["light"], shaders["basic"]));
+		
 		
 		// uniforms
 		unsigned int texture1, texture2;
@@ -179,12 +183,17 @@ namespace Wonderland {
 	}
 
 	void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && !key_pressed[GLFW_MOUSE_BUTTON_LEFT]) {
 			key_pressed[GLFW_MOUSE_BUTTON_LEFT] = true;
+			shaders["basic"]->use();
+			shaders["basic"]->setBool("click_test.perform", true);
+			getClickLocation = true;
 			std::cout << "down" << std::endl;
 		}
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 			key_pressed[GLFW_MOUSE_BUTTON_LEFT] = false;
+			shaders["basic"]->use();
+			shaders["basic"]->setBool("click_test.perform", false);
 			std::cout << "mouse up " << std::endl;
 		}
 	}

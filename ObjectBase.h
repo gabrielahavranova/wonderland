@@ -121,7 +121,7 @@ public:
 	}
 
 	ObjectBase(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader) : shader(shader), vertices(vertices), vertices_cnt(vertices_cnt), indices_cnt(indices_cnt), indices(indices) {
+		std::shared_ptr <Shader> shader, char color_id = 0x0) : shader(shader), vertices(vertices), vertices_cnt(vertices_cnt), indices_cnt(indices_cnt), indices(indices), color_id(color_id) {
 		meshes.emplace_back(vertices, vertices_cnt, indices, indices_cnt, shader);
 		
 	}
@@ -165,6 +165,7 @@ public:
 
 	std::shared_ptr<Shader> shader;
 	std::vector <Mesh> meshes;
+	char color_id;
 	//unsigned int VBO, VAO, EBO;
 	//int texture_cnt = 0;
 	//std::string name;
