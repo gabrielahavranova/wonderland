@@ -106,18 +106,19 @@ public:
             //Pitch = std::asin(0.0697564f);
 
 
-            std::cout << "Position = glm::vec3(" << Position[0] << "f, " << Position[1] << "f, " << Position[2] << "f);" << std::endl;
-            std::cout << "Front = glm::vec3(" << Front.x << "f, " << Front.y << "f, " << Front.z << "f);" << std::endl;
-            std::cout << "Right = glm::vec3(" << Right.x << "f, " << Right.y << "f, " << Right.z << "f);" << std::endl;
-            std::cout << "Up = glm::vec3(" << Up.x << "f, " << Up.y << "f, " << Up.z << "f);" << std::endl;
-            std::cout << "Pitch = " << Pitch << "f;" << std::endl;
-            std::cout << "Yaw = " << Yaw << "f;" << std::endl;
+            //std::cout << "Position = glm::vec3(" << Position[0] << "f, " << Position[1] << "f, " << Position[2] << "f);" << std::endl;
+            std::cout << Position[0] << "f, " << Position[1] << "f, " << Position[2] << "f, ";
+            //std::cout << "Front = glm::vec3(" << Front.x << "f, " << Front.y << "f, " << Front.z << "f);" << std::endl;
+            //std::cout << "Right = glm::vec3(" << Right.x << "f, " << Right.y << "f, " << Right.z << "f);" << std::endl;
+            //std::cout << "Up = glm::vec3(" << Up.x << "f, " << Up.y << "f, " << Up.z << "f);" << std::endl;
+            //std::cout << "Pitch = " << Pitch << "f;" << std::endl;
+            //std::cout << "Yaw = " << Yaw << "f;" << std::endl;
 
-            Pitch = 0.400004f;
-            Yaw = 318.3f;
-            Position = glm::vec3(-25.051f, -0.572113f, 18.8281f);
-            Zoom = 45.0f;
-            updateCameraVectors();
+            //Pitch = 0.400004f;
+            //Yaw = 318.3f;
+            //Position = glm::vec3(-25.051f, -0.572113f, 18.8281f);
+            //Zoom = 45.0f;
+            //updateCameraVectors();
             //Front = glm::vec3(0.620842f, -0.0314108f, -0.783306f);
            // Right = glm::vec3(0.209618f, 0.0f, -0.977783f);
             //Up = glm::vec3(-0.430165f, 0.898028f, -0.0922193f);

@@ -53,7 +53,7 @@ public:
 		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 
 		setModelMatrices(model);
-		setMeshMaterial(ones3f, 0.0f);
+		setMeshMaterial(glm::vec3(0.01f, 0.01f, 0.01f), 0.0f);
 		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		for (const auto & mesh: meshes) mesh.Draw();
@@ -225,33 +225,49 @@ class Stars : public ObjectBase {
 public: 
 	Stars(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
 		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {
-		
 	}
 
 	glm::vec3 position = glm::vec3(7.2748f, 64.168f, 17.4503f);
-	const glm::vec3 rot_center = glm::vec3(25.0f, 30.0f, 15.0f);
+	//const glm::vec3 rot_center = glm::vec3(25.0f, 30.0f, 15.0f);
 	const int radius = 5; 
 
 	void DrawObject() override {
 		float s = (float)getTimeSeed();
+		float angle = 0.2f;
+		shader->setVec3("col", glm::vec3(1.0f, 1.0f, 1.0f));
+
+
+		for (int i = 0; i < star_count; i += 3) {
+			glm::mat4 model = glm::mat4(1.0f);
+			int rad = i*4 % 8 + 12;
+			bool sign = i % 2 == 0 ? 1 : -1;
+			float an = 0.1f * 2 / i * sign;
+			model = glm::translate(model, glm::vec3(star_positions[i] + glm::cos(an * s) * rad, star_positions[i+1], star_positions[i+2] + glm::sin(s * an) * rad));
+			model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
+			setModelMatrices(model);
+			for (const auto& mesh : meshes) {
+				mesh.Draw();
+			}
+		}
 
 		glm::mat4 model = glm::mat4(1.0f);
-		float angle = 0.2f;
+		//float angle = 0.2f;
 
 		//this->position = glm::vec3(this->position.x + s*glm::cos(angle) * radius, this->position.y + s*glm::sin(angle) * radius, this->position.z);
 
 		//std::cout << "x: " << this->position.x + glm::cos(s * angle) * radius << ", y: " << this->position.y +  glm::sin(s * angle) * radius << ", z: " << this->position.z << std::endl;
 		model = glm::translate(model, glm::vec3(this->position.x + glm::cos(angle *s) * radius, this->position.y , this->position.z + glm::sin(s * angle) * radius));
 		model = glm::rotate(model, s * glm::radians(angle), glm::vec3(1.0f, 0.0f, 1.0f));
-		model = glm::scale(model, glm::vec3(0.35f, 0.35f, 0.35f));
+		model = glm::scale(model, glm::vec3(0.25f, 0.25f, 0.25f));
 		setModelMatrices(model);
 
 		//setMeshMaterial(glm::vec3(1.0f, 1.0f, 1.0f), 0.0f);
-		shader->setVec3("col", glm::vec3(1.0f, 1.0f, 1.0f));
 		for (const auto& mesh : meshes) {
 			mesh.Draw();
 		}
 	}
+private:
+	const int star_count = 17; 
 };
 
 
