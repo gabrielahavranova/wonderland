@@ -62,8 +62,8 @@ namespace Wonderland {
 		unsigned int texture1, texture2;
 
 
-		std::vector <std::string> skybox_faces { ".\\skybox\\right.jpg", ".\\skybox\\left.jpg", ".\\skybox\\top.jpg",
-										  ".\\skybox\\bottom.jpg", ".\\skybox\\front.jpg", ".\\skybox\\back.jpg"};
+		std::vector <std::string> skybox_faces { ".\\skybox\\right3.png", ".\\skybox\\left3.png", ".\\skybox\\top3.png",
+										  ".\\skybox\\bottom3.png", ".\\skybox\\front3.png", ".\\skybox\\back3.png"};
 		skybox = std::make_unique<Skybox>(skybox_faces, skyboxVertices, 108, shaders["skybox"]);
 		shaders["basic"]->setBool("is_lava", false);
 		shaders["basic"]->setBool("is_flame", false);
@@ -95,9 +95,9 @@ namespace Wonderland {
 
 		// render the loaded model
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(12.0f, 80.0f, 5.0f)); // translate it down so it's at the center of the scene
+		model = glm::translate(model, glm::vec3(12.0f, 80.0f, 5.0f)); 
 		model = glm::rotate(model, glm::radians(45.0f), glm::vec3(1.0f, 0.5f, 1.0f));
-		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));	// it's a bit too big for our scene, so scale it down
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
 		shader->setMat4("model", model);
 		models[0].Draw(shader);
 	}
