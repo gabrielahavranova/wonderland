@@ -21,12 +21,12 @@ namespace Wonderland {
 	GLFWwindow* win;
 	bool flashlight_on = false;
 	bool fog = false;
+	bool picking_on = false;
 	std::vector <std::shared_ptr<ObjectBase>> scene_objects;
 	std::map <std::string, std::shared_ptr<Shader>> shaders;
 	std::map <int, bool> key_pressed;
 	std::unique_ptr <Skybox> skybox;
 	std::vector <glm::vec3> colliders;
-	//std::unique_ptr <Model> uniq_model;
 
 	void toggleFlashlight() {
 		flashlight_on = !flashlight_on;
@@ -36,18 +36,22 @@ namespace Wonderland {
 		fog = !fog;
 	}
 
+	void togglePicking() {
+		picking_on = !picking_on;
+	}
+
 	void createObjects() {
 		size_t index = scene_objects.size();
 
-		scene_objects.emplace_back(std::make_shared <YellowBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"]));
+		scene_objects.emplace_back(std::make_shared <YellowBox>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Plane>(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Lava>(lavaVertices, lavaNVertices * 8, lavaTriangles, lavaNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Flame>(flameVertices, flameNVertices * 8, flameTriangles, flameNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic"], colliders));
 		scene_objects.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic"]));
-		scene_objects.emplace_back(std::make_shared <LightBlueBox>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["basic"]));
+		scene_objects.emplace_back(std::make_shared <LightBlueBox>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["basic"]));
 		scene_objects.emplace_back(std::make_shared <Stars>(starVertices, starNVertices * 8, starTriangles, starNTriangles, shaders["light"]));
-		scene_objects.emplace_back(std::make_shared <LightSource>(kukuVert, kukuN * 8, kukuTri, kukuTriCNT, shaders["light"], shaders["basic"]));
+		scene_objects.emplace_back(std::make_shared <LightSource>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["light"], shaders["basic"]));
 		
 		// uniforms
 		unsigned int texture1, texture2;
@@ -112,10 +116,23 @@ namespace Wonderland {
 		//shaders["basic"]->setVec3("light_pos_unif", camera.Position);
 		//shaders["basic"]->setVec3("flashlight.position", glm::vec3(0.0f, 0.0f, 0.0f));
 		current_shader->setVec3("flashlight.direction", camera.Front);
+		current_shader->setVec3("flashlight.strength", glm::vec3(0.3f, 0.3f, 0.3f));
 		current_shader->setFloat("flashlight.cut_off", glm::cos(glm::radians(10.0f)));
 		float epsilon = flashlight_on ? 17.0f : 0.0f;
 		current_shader->setFloat("flashlight.outer_cut_off", glm::cos(glm::radians(epsilon)));
+
+
+		current_shader->setVec3("picking.position", camera.Position);
+		//shaders["basic"]->setVepickingpos_unif", camera.Position);
+		//shaders["basic"]->setVepickingight.position", glm::vec3(0.0f, 0.0f, 0.0f));
+		current_shader->setVec3("picking.direction", camera.Front);
+		current_shader->setFloat("picking.cut_off", glm::cos(glm::radians(0.2f)));
+		epsilon = 0.5f;
+		current_shader->setFloat("picking.outer_cut_off", glm::cos(glm::radians(epsilon)));
+		current_shader->setInt("picking.on", picking_on);
+
 		current_shader->setInt("fog", fog);
+		
 
 
 		if (current_shader != shader) shader->use();
@@ -160,6 +177,18 @@ namespace Wonderland {
 	void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
 		camera.ProcessMouseScroll(yoffset);
 	}
+
+	void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+			key_pressed[GLFW_MOUSE_BUTTON_LEFT] = true;
+			std::cout << "down" << std::endl;
+		}
+		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+			key_pressed[GLFW_MOUSE_BUTTON_LEFT] = false;
+			std::cout << "mouse up " << std::endl;
+		}
+	}
+
 	void windowResizeCallback(GLFWwindow* win, int width, int height) {
 		glViewport(0, 0, width, height);
 	}
@@ -186,6 +215,7 @@ namespace Wonderland {
 
 		glfwMakeContextCurrent(win);
 		glfwSetFramebufferSizeCallback(win, windowResizeCallback);
+		glfwSetMouseButtonCallback(win, mouseButtonCallback);
 		glfwSetCursorPosCallback(win, mouseCallback);
 		glfwSetScrollCallback(win, scrollCallback);
 
@@ -202,6 +232,8 @@ namespace Wonderland {
 		key_pressed.emplace(GLFW_KEY_F2, false);
 		key_pressed.emplace(GLFW_KEY_L, false);
 		key_pressed.emplace(GLFW_KEY_F, false);
+		key_pressed.emplace(GLFW_KEY_P, false);
+		key_pressed.emplace(GLFW_MOUSE_BUTTON_LEFT, false);
 	}
 
 	void processInput() {
@@ -223,6 +255,13 @@ namespace Wonderland {
 			key_pressed[GLFW_KEY_L] = false;
 		if (glfwGetKey(win, GLFW_KEY_F) == GLFW_RELEASE)
 			key_pressed[GLFW_KEY_F] = false;
+		if (glfwGetKey(win, GLFW_KEY_P) == GLFW_PRESS && !key_pressed[GLFW_KEY_P]) {
+			key_pressed[GLFW_KEY_P] = true;
+			togglePicking();
+		}
+		if (glfwGetKey(win, GLFW_KEY_P) == GLFW_RELEASE)
+			key_pressed[GLFW_KEY_P] = false;
+
 		if (glfwGetKey(win, GLFW_KEY_F1) == GLFW_PRESS && !key_pressed[GLFW_KEY_F1]) {
 			camera.ProcessKeyboard(STATIC1, delta_time, colliders);
 			key_pressed[GLFW_KEY_F1] = true;

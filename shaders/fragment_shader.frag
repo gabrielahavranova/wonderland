@@ -36,8 +36,16 @@ struct PointLight {
 	float quadratic;
 };
 
-
 struct Flashlight {
+	vec3 position;
+	vec3 direction;
+	vec3 strength;
+	float cut_off;
+	float outer_cut_off;
+};
+
+struct Picking {
+	bool on;
 	vec3 position;
 	vec3 direction;
 	float cut_off;
@@ -47,6 +55,7 @@ struct Flashlight {
 uniform DirLight dir_light;
 uniform Flashlight flashlight;
 uniform PointLight pointlight;
+uniform Picking picking;
 uniform Material material;
 
 vec4 applyFog(vec4 res_color) {
@@ -115,12 +124,27 @@ vec3 getFlashlightComponents() {
 	if (theta > flashlight.outer_cut_off)	{
 		float epsilon   = flashlight.cut_off - flashlight.outer_cut_off;
 		float intensity = clamp((theta - flashlight.outer_cut_off) / epsilon, 0.0, 1.0);  
-		return vec3((0.3, 0.3, 0.3) * intensity);
+		return flashlight.strength * intensity;
 	} else {
 		return vec3(0.0, 0.0, 0.0);
 	}
 }
 
+
+vec3 applyPicking() {
+	vec3 dir = normalize(picking.position - frag_pos);
+    
+    // check if lighting is inside the spotlight cone
+    float theta = dot(dir, normalize(-picking.direction)); 
+
+	if (theta > picking.outer_cut_off)	{
+		float epsilon   = picking.cut_off - picking.outer_cut_off;
+		float intensity = clamp((theta - picking.outer_cut_off) / epsilon, 0.0, 1.0);  
+		return vec3(1.0, 0.3, 0.3) * intensity;
+	} else {
+		return vec3(0.0, 0.0, 0.0);
+	}
+}
 
 
 void main () {
@@ -129,11 +153,21 @@ void main () {
 	//FragColor = texture2D(texture0, tex_coord) * 
 	vec4 tex_color = texture(texture0, tex_coord);
 	if (tex_color.a < 0.1) discard;
-	FragColor = tex_color * 
-				//vec4(getFlashlightComponents() + getDirLightComponents(view_direction), 1.0);
-				vec4(getPointLightComponents(view_direction) + getFlashlightComponents() + getDirLightComponents(view_direction), 1.0);
-				//vec4(getPointLightComponents(view_direction) + getFlashlightComponents(), 1.0);
-	if (fog == 1) {
-		FragColor = applyFog(FragColor);
+	vec3 cursor = {0.0, 0.0, 0.0};
+	//if (picking_on && frag_pos 
+	if (picking.on) {
+		cursor = applyPicking();
+	}
+	
+	if (cursor.x > 0.99) {
+		FragColor = vec4(cursor, 1.0);
+	} else {
+		FragColor = tex_color * 
+					//vec4(getFlashlightComponents() + getDirLightComponents(view_direction), 1.0);
+					vec4(getPointLightComponents(view_direction) + getFlashlightComponents() + getDirLightComponents(view_direction) + cursor, 1.0);
+					//vec4(getPointLightComponents(view_direction) + getFlashlightComponents(), 1.0);
+		if (fog == 1) {
+			FragColor = applyFog(FragColor);
+		}
 	}
 }

@@ -611,10 +611,10 @@ const unsigned flameTriangles[] = {
   0, 2, 3,
 }; 
 
-const int kukuN = 24;
-const unsigned int kukuTriCNT = 36; // = triangles cnt * 3
+const int cubeNVertices = 24;
+const unsigned int cubeNTriangles = 36; // = triangles cnt * 3
 
-const float kukuVert[] = {
+const float cubeVertices[] = {
   -1.0f,-1.0f,-1.0f,-1.0f,-0.0f,-0.0f,0.375f,0.0f,
   -1.0f,-1.0f,1.0f,-1.0f,-0.0f,-0.0f,0.625f,0.0f,
   -1.0f,1.0f,1.0f,-1.0f,-0.0f,-0.0f,0.625f,0.25f,
@@ -2212,7 +2212,7 @@ const unsigned lavaTriangles[] = {
 
 
 
-const unsigned int kukuTri[] = {
+const unsigned int cubeTriangles[] = {
   0, 1, 2,
   0, 2, 3,
   4, 5, 6,
