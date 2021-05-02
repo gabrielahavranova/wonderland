@@ -29,6 +29,7 @@ namespace Wonderland {
 	std::map <int, std::shared_ptr<ObjectBase>> clickable_objects;
 	std::unique_ptr <Skybox> skybox;
 	std::vector <glm::vec3> colliders;
+	std::vector <Model> models;
 
 	void toggleFlashlight() {
 		flashlight_on = !flashlight_on;
@@ -66,6 +67,7 @@ namespace Wonderland {
 		skybox = std::make_unique<Skybox>(skybox_faces, skyboxVertices, 108, shaders["skybox"]);
 		shaders["basic"]->setBool("is_lava", false);
 		shaders["basic"]->setBool("is_flame", false);
+		models.emplace_back(".\\objects\\moon.obj");
 		//uniq_model = std::make_unique <Model> (".\\objects\\backpack.obj");
 		//objects[index].createTexture("container.jpg", texture1);
 		//objects[index].createTexture("awesomeface.png", texture2, true);
@@ -93,10 +95,11 @@ namespace Wonderland {
 
 		// render the loaded model
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(12.0f, 30.0f, 5.0f)); // translate it down so it's at the center of the scene
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+		model = glm::translate(model, glm::vec3(12.0f, 80.0f, 5.0f)); // translate it down so it's at the center of the scene
+		model = glm::rotate(model, glm::radians(45.0f), glm::vec3(1.0f, 0.5f, 1.0f));
+		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));	// it's a bit too big for our scene, so scale it down
 		shader->setMat4("model", model);
-		//uniq_model->Draw(shader);
+		models[0].Draw(shader);
 	}
 
 
