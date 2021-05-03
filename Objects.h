@@ -267,7 +267,7 @@ public:
 		}
 	}
 private:
-	const int star_count = 17; 
+	const int star_count = 117 / 3; 
 };
 
 
@@ -287,7 +287,8 @@ public:
 		object_shader->setFloat("pointlight.linear",    0.014);
 		object_shader->setFloat("pointlight.quadratic", 0.0019f);
 
-		object_shader->setVec3("dir_light.direction", glm::vec3(2.0f, 100.0f, 1.0f));
+		// direction is set with moon position
+		
 		object_shader->setVec3("dir_light.ambient",   glm::vec3(0.15f, 0.15f, 0.15f));
 		object_shader->setVec3("dir_light.diffuse",   glm::vec3(0.15f, 0.15f, 0.15f));
 		object_shader->setVec3("dir_light.specular",  glm::vec3(0.3f, 0.3f, 0.3f));
@@ -308,12 +309,12 @@ public:
 		for (const auto& mesh : meshes) {
 			mesh.Draw();
 		}
-		model = glm::translate(model, glm::vec3(5.0f, 20.0f, -4.0f));
+		/*model = glm::translate(model, glm::vec3(5.0f, 20.0f, -4.0f));
 		shader->setMat4("model", model);
 		shader->setVec3("col", glm::vec3(0.7f, 0.3f, 0.0f));
 		for (const auto& mesh : meshes) {
 			mesh.Draw();
-		}
+		}*/
 
 	}
 private: 

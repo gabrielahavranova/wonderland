@@ -23,13 +23,14 @@ namespace Wonderland {
 	bool fog = false;
 	bool picking_on = false;
 	bool getClickLocation = false;
-	std::vector <std::shared_ptr<ObjectBase>> scene_objects;
+	std::vector <std::shared_ptr<ObjectBase>> simple_scene_objects;
 	std::map <std::string, std::shared_ptr<Shader>> shaders;
 	std::map <int, bool> key_pressed;
 	std::map <int, std::shared_ptr<ObjectBase>> clickable_objects;
 	std::unique_ptr <Skybox> skybox;
 	std::vector <glm::vec3> colliders;
-	std::vector <Model> models;
+	std::map <std::string, std::shared_ptr<Model>> mm_scene_objects;
+	//std::vector <Model> multimesh_scene_objects;
 
 	void toggleFlashlight() {
 		flashlight_on = !flashlight_on;
@@ -44,18 +45,18 @@ namespace Wonderland {
 	}
 
 	void createObjects() {
-		size_t index = scene_objects.size();
+		size_t index = simple_scene_objects.size();
 
-		scene_objects.emplace_back(std::make_shared <YellowBox>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["basic"]));
-		scene_objects.emplace_back(std::make_shared <Plane>(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic"]));
-		scene_objects.emplace_back(std::make_shared <Lava>(lavaVertices, lavaNVertices * 8, lavaTriangles, lavaNTriangles, shaders["basic"], 0xFF));
-		clickable_objects.emplace(0xFF, scene_objects.back());
-		scene_objects.emplace_back(std::make_shared <Flame>(flameVertices, flameNVertices * 8, flameTriangles, flameNTriangles, shaders["basic"]));
-		scene_objects.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic"], colliders));
-		scene_objects.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic"]));
-		scene_objects.emplace_back(std::make_shared <LightBlueBox>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["basic"]));
-		scene_objects.emplace_back(std::make_shared <Stars>(starVertices, starNVertices * 8, starTriangles, starNTriangles, shaders["light"]));
-		scene_objects.emplace_back(std::make_shared <LightSource>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["light"], shaders["basic"]));
+		simple_scene_objects.emplace_back(std::make_shared <YellowBox>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["basic"]));
+		simple_scene_objects.emplace_back(std::make_shared <Plane>(planeVertices, planeNVertices * 8, planeTriangles, planeNTriangles, shaders["basic"]));
+		simple_scene_objects.emplace_back(std::make_shared <Lava>(lavaVertices, lavaNVertices * 8, lavaTriangles, lavaNTriangles, shaders["basic"], 0xFF));
+		clickable_objects.emplace(0xFF, simple_scene_objects.back());
+		simple_scene_objects.emplace_back(std::make_shared <Flame>(flameVertices, flameNVertices * 8, flameTriangles, flameNTriangles, shaders["basic"]));
+		simple_scene_objects.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic"], colliders));
+		simple_scene_objects.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic"]));
+		simple_scene_objects.emplace_back(std::make_shared <LightBlueBox>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["basic"]));
+		simple_scene_objects.emplace_back(std::make_shared <Stars>(starVertices, starNVertices * 8, starTriangles, starNTriangles, shaders["light"]));
+		simple_scene_objects.emplace_back(std::make_shared <LightSource>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["light"], shaders["basic"]));
 		
 		
 		// uniforms
@@ -67,7 +68,7 @@ namespace Wonderland {
 		skybox = std::make_unique<Skybox>(skybox_faces, skyboxVertices, 108, shaders["skybox"]);
 		shaders["basic"]->setBool("is_lava", false);
 		shaders["basic"]->setBool("is_flame", false);
-		models.emplace_back(".\\objects\\moon.obj");
+		mm_scene_objects.emplace("moon", std::make_shared<Model>(".\\objects\\moon.obj"));
 		//uniq_model = std::make_unique <Model> (".\\objects\\backpack.obj");
 		//objects[index].createTexture("container.jpg", texture1);
 		//objects[index].createTexture("awesomeface.png", texture2, true);
@@ -83,23 +84,40 @@ namespace Wonderland {
 		
 	}
 
-
-	void drawMultimesh() {
-		std::shared_ptr <Shader> shader = shaders["multimesh"];
-		shader->use();
-
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
+	void drawMoon(std::shared_ptr <Model> moon, std::shared_ptr<Shader> shader) {
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIN_WIDTH / (float)WIN_HEIGHT, NEAR_P, FAR_P * 3);
 		glm::mat4 view = camera.GetViewMatrix();
 		shader->setMat4("projection", projection);
 		shader->setMat4("view", view);
 
 		// render the loaded model
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(12.0f, 80.0f, 5.0f)); 
-		model = glm::rotate(model, glm::radians(45.0f), glm::vec3(1.0f, 0.5f, 1.0f));
-		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		//model = glm::translate(model, glm::vec3(12.0f, 80.0f, 5.0f));
+		double time = glfwGetTime();
+		float time_seed = (int)(time * 100) / 100.0f;
+		float an = 0.02f;
+		glm::vec3 moon_pos(12.0f + glm::cos(an * time_seed) * 140.0f, 500.0f, 5.0f + glm::sin(an * time_seed) * 140.0f);
+		model = glm::translate(model, moon_pos);
+		shaders["basic"]->use();
+		shaders["basic"]->setVec3("dir_light.direction", moon_pos);
+		shader->use();
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, -an * time_seed, glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(100.0f, 100.0f, 100.0f));
 		shader->setMat4("model", model);
-		models[0].Draw(shader);
+		moon->Draw(shader);
+	}
+
+	void drawMultimesh() {
+		std::shared_ptr <Shader> shader = shaders["multimesh"];
+		shader->use();
+
+		for (auto it = mm_scene_objects.begin(); it != mm_scene_objects.end(); it++) {
+			if (it->first == "moon") drawMoon(it->second, shader);
+			else if (it->first == "something else") {}
+			else {}
+
+		}
 	}
 
 
@@ -144,7 +162,7 @@ namespace Wonderland {
 
 		if (current_shader != shader) shader->use();
 		shader->setVec3("view_pos", camera.Position);
-		glm::mat4 projection = glm::perspective(glm::radians(Wonderland::camera.Zoom), (float)800 / (float)600, 0.1f, 300.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(Wonderland::camera.Zoom), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 300.0f);
 		shader->setMat4("projection", projection);
 
 		// camera/view transformation
@@ -215,8 +233,8 @@ namespace Wonderland {
 
 	int initEnviroment() {
 		camera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
-		lastX = 800 / 2.0f;
-		lastY = 600 / 2.0f;
+		lastX = WIN_WIDTH / 2.0f;
+		lastY = WIN_HEIGHT / 2.0f;
 		firstMouse = true;
 		lastX = 0.0f;
 		lastY = 0.0f;

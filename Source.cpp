@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
 			glClearColor(0.05f, 0.05f, 0.2f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			for (auto& object : Wonderland::scene_objects) {
+			for (auto& object : Wonderland::simple_scene_objects) {
 				if (last_shader != object->shader) {
 					Wonderland::setViewAndProjection(object->shader);
 					last_shader = object->shader;
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
 		glClearColor(0.05f, 0.05f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-		for (auto& object : Wonderland::scene_objects) {
+		for (auto& object : Wonderland::simple_scene_objects) {
 			if (last_shader != object->shader) {
 				Wonderland::setViewAndProjection(object->shader);
 				last_shader = object->shader;
