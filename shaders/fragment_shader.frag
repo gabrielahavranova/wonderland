@@ -162,7 +162,7 @@ void main () {
 		//FragColor = texture2D(texture0, tex_coord) * 
 		vec4 tex_color = texture(texture0, tex_coord);
 		if (tex_color.a < 0.1) discard;
-		vec3 cursor = {0.0, 0.0, 0.0};
+		vec3 cursor = vec3(0.0, 0.0, 0.0);
 		//if (picking_on && frag_pos 
 		if (picking.on) {
 			cursor = applyPicking();
