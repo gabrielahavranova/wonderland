@@ -74,7 +74,8 @@ public:
 
 		stbi_image_free(data);
 		shader->use();
-		std::string texture_name = std::string("texture") + std::to_string(texture_cnt);
+		//std::string texture_name = std::string("texture") + std::to_string(texture_cnt);
+		std::string texture_name = "texture_diffuse1";
 		shader->setInt(texture_name.c_str(), texture_cnt++);
 		textures.push_back(std::move(texture));
 		return 1;

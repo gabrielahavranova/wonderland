@@ -23,7 +23,7 @@ public:
 			model = glm::translate(model, glm::vec3(1.0f, 1.0f, 1.0f));
 			float angle = 20.0f;
 			model = glm::rotate(model, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			
 			
 			setModelMatrices(model);
 			setMeshMaterial(glm::vec3(0.9f, 0.9f, 0.0f), 0.5f);
@@ -40,20 +40,20 @@ public:
 	Plane(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
 		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {
 			for (auto & mesh : meshes) {
-				mesh.createTexture("grass.png", false);
+				mesh.createTexture("grass.png", false, true);
 				//mesh.createTexture("awesomeface.png", false);
 			}
 	}
 
 	void DrawObject() override {
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 12.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 		float angle = -90.0f;
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		//model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
 
 		setModelMatrices(model);
-		setMeshMaterial(glm::vec3(0.01f, 0.01f, 0.01f), 0.0f);
+		setMeshMaterial(glm::vec3(0.1f, 0.1f, 0.1f), 0.0f);
 		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		for (const auto & mesh: meshes) mesh.Draw();
@@ -139,35 +139,36 @@ public:
 	Lava(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
 		std::shared_ptr <Shader> shader, char color_id) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader, color_id) {
 			for (auto& mesh : meshes) mesh.createTexture(".\\objects\\lava_diffuse.jpg", false);
-
+			speed = 2.0f;
 		//mesh.createTexture("awesomeface.png", false);
 	}
 
 	void applyClick() {
 		lava_sped_up = !lava_sped_up;
-		std::cout << "clicked on lava!!!! FUCK YEAH!!!!! sped: " << 5.0f * lava_sped_up + 1.0f << std::endl;
+		speed = ((int)(getTimeSeed() * 1000) % 100 / 20.0f) + 1.5f;
+		std::cout << "clicked on lava!!!! FUCK YEAH!!!!! sped: " << speed << std::endl;
 	}
 
 	void DrawObject() override {
 		shader->setBool("is_lava", true);
-		shader->setFloat("lava_sped", 3.0f * lava_sped_up + 1.0f);
+		shader->setFloat("lava_sped", speed);
 		shader->setVec3("click_test.object_color", glm::vec3(1.0f, 0.0f, 0.0f));
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(-20.0f, -5.5f, -39.0f));
 		//model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 		float angle = -90.0f;
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
-
+		model = glm::scale(model, glm::vec3(5.5, 5.5, 5.5));
 		setModelMatrices(model);
 		setMeshMaterial(ones3f, 0.0f);
 		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		for (const auto& mesh : meshes) mesh.Draw();
 		shader->setBool("is_lava", false);
 		shader->setVec3("click_test.object_color", glm::vec3(0.0f, 0.0f, 0.0f));
 	}
 private:
 	bool lava_sped_up = false;
+	float speed;
 };
 
 class Flame : public ObjectBase {

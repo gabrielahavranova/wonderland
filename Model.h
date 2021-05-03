@@ -19,6 +19,13 @@
 
 unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
 
+struct Material {
+    glm::vec3 Diffuse;
+    glm::vec3 Specular;
+    glm::vec3 Ambient;
+    float Shininess;
+};
+
 class Model {
 public:
     // model data 
@@ -57,6 +64,7 @@ private:
         //directory = path.substr(0, path.find_last_of('/'));
         directory = "objects";
         stbi_set_flip_vertically_on_load(true);
+        
 
         // process ASSIMP's root node recursively
         processNode(scene->mRootNode, scene);
@@ -198,6 +206,27 @@ private:
         return textures;
     }
 };
+
+Material loadMaterial(aiMaterial* mat) {
+    Material material;
+    aiColor3D color(0.f, 0.f, 0.f);
+    float shininess;
+
+    mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
+    material.Diffuse = glm::vec3(color.r, color.b, color.g);
+
+    mat->Get(AI_MATKEY_COLOR_AMBIENT, color);
+    material.Ambient = glm::vec3(color.r, color.b, color.g);
+
+    mat->Get(AI_MATKEY_COLOR_SPECULAR, color);
+    material.Specular = glm::vec3(color.r, color.b, color.g);
+
+    mat->Get(AI_MATKEY_SHININESS, shininess);
+    material.Shininess = shininess;
+
+    return material;
+
+}
 
 
 unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma)

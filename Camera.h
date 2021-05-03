@@ -130,7 +130,7 @@ public:
             Position = glm::vec3(66.6536f, 37.5282f, 30.5252f);
             updateCameraVectors();
         }
-        //Position.y = 10.0f;
+        Position.y = 10.0f;
            // Front = glm::vec3(-0.317231f, - 0.020943f, - 0.948117f);
     }
 
@@ -168,6 +168,8 @@ public:
 
 private:
     bool collides(const glm::vec3& new_position, const std::vector<glm::vec3> &colliders) {
+        const float plane_p[] = { 100.858f, 90.6364f, -94.5102f, -92.7731f };
+        if (new_position.x > plane_p[0] || new_position.x < plane_p[2] || new_position.z> plane_p[1] || new_position.z < plane_p[3]) return true;
         for (size_t i = 0; i < colliders.size(); i++) {
             if (glm::distance(glm::vec2(new_position.x, new_position.z), glm::vec2(colliders[i].x, colliders[i].y)) < colliders[i].z) return true;
         }

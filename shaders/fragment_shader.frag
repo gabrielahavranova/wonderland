@@ -6,7 +6,7 @@ in vec2 tex_coord;
 in vec3 normal;
 in vec3 frag_pos;
 
-uniform sampler2D texture0;
+uniform sampler2D texture_diffuse1;
 
 uniform vec3 view_pos;
 uniform int fog;
@@ -159,8 +159,8 @@ void main () {
 	if (!click_test.perform) {
 		vec3 view_direction = normalize(view_pos - frag_pos);
 
-		//FragColor = texture2D(texture0, tex_coord) * 
-		vec4 tex_color = texture(texture0, tex_coord);
+		//FragColor = texture2D(texture_diffuse1, tex_coord) * 
+		vec4 tex_color = texture(texture_diffuse1, tex_coord);
 		if (tex_color.a < 0.1) discard;
 		vec3 cursor = vec3(0.0, 0.0, 0.0);
 		//if (picking_on && frag_pos 
