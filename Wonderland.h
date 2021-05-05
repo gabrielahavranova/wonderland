@@ -56,7 +56,6 @@ namespace Wonderland {
 		//simple_scene_objects.emplace_back(std::make_shared <LightBlueBox>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["basic"]));
 		simple_scene_objects.emplace_back(std::make_shared <Stars>(starVertices, starNVertices * 8, starTriangles, starNTriangles, shaders["light"]));
 		simple_scene_objects.emplace_back(std::make_shared <LightSource>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["light"], shaders["basic"]));
-		//simple_scene_objects.emplace_back(std::make_shared <Flame>(flameVertices, flameNVertices * 8, flameTriangles, flameNTriangles, shaders["basic"]));
 
 		
 		// uniforms
@@ -66,8 +65,11 @@ namespace Wonderland {
 		std::vector <std::string> skybox_faces { ".\\skybox\\right.png", ".\\skybox\\left.png", ".\\skybox\\top.png",
 										  ".\\skybox\\bottom.png", ".\\skybox\\front.png", ".\\skybox\\back.png"};
 		skybox = std::make_unique<Skybox>(skybox_faces, skyboxVertices, 108, shaders["skybox"]);
+		simple_scene_objects.emplace_back(std::make_shared <Flame>(flameVertices, flameNVertices * 8, flameTriangles, flameNTriangles, shaders["basic"]));
+		shaders["basic"]->use();
 		shaders["basic"]->setBool("is_lava", false);
 		shaders["basic"]->setBool("is_flame", false);
+		shaders["basic"]->setBool("is_flame_frag", false);
 		mm_scene_objects.emplace("moon", std::make_shared<Model>(".\\objects\\moon.obj"));
 		mm_scene_objects.emplace("plane", std::make_shared<Model>(".\\objects\\plane5.obj"));
 		//uniq_model = std::make_unique <Model> (".\\objects\\backpack.obj");

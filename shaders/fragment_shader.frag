@@ -10,6 +10,7 @@ uniform sampler2D texture_diffuse1;
 
 uniform vec3 view_pos;
 uniform int fog;
+uniform bool is_flame_frag;
 
 struct Material {
 	vec3 ambient;
@@ -162,6 +163,10 @@ void main () {
 		//FragColor = texture2D(texture_diffuse1, tex_coord) * 
 		vec4 tex_color = texture(texture_diffuse1, tex_coord);
 		if (tex_color.a < 0.1) discard;
+		if (is_flame_frag) {
+			FragColor = tex_color * 1.2;
+			return;
+		}
 		vec3 cursor = vec3(0.0, 0.0, 0.0);
 		//if (picking_on && frag_pos 
 		if (picking.on) {

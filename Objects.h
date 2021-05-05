@@ -181,8 +181,10 @@ public:
 
 	void DrawObject() override {
 		shader->setBool("is_flame", true);
+		shader->setBool("is_flame_frag", true);
+
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-33.3198f, 20.0f, -56.7827f));
+		model = glm::translate(model, glm::vec3(-33.3198f, -5.0f, -60.7827f));
 		//model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 		//float angle = -90.0f;
 		//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -193,7 +195,37 @@ public:
 		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		for (const auto& mesh : meshes) mesh.Draw();
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-43.3198f, -4.0f, -56.7827f));
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		setModelMatrices(model);
+		setMeshMaterial(ones3f, 0.0f);
+		for (const auto& mesh : meshes) mesh.Draw();
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-53.3198f, -4.3f, -46.7827f));
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		setModelMatrices(model);
+		setMeshMaterial(ones3f, 0.0f);
+		for (const auto& mesh : meshes) mesh.Draw();
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-38.3198f, -4.7f, -50.7827f));
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		setModelMatrices(model);
+		setMeshMaterial(ones3f, 0.0f);
+		for (const auto& mesh : meshes) mesh.Draw();
+
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(-47.3198f, -4.1f, -53.7827f));
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		setModelMatrices(model);
+		setMeshMaterial(ones3f, 0.0f);
+		for (const auto& mesh : meshes) mesh.Draw();
+
 		shader->setBool("is_flame", false);
+		shader->setBool("is_flame_frag", false);
+
 
 	}
 };
