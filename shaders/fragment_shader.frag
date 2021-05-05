@@ -173,7 +173,7 @@ void main () {
 		} else {
 			FragColor = tex_color * 
 						//vec4(getFlashlightComponents() + getDirLightComponents(view_direction), 1.0);
-						vec4(getPointLightComponents(view_direction) + getFlashlightComponents() + getDirLightComponents(view_direction) + cursor, 1.0);
+						vec4(getPointLightComponents(view_direction) + getFlashlightComponents() + /*getDirLightComponents(view_direction)*/ + cursor, 1.0);
 						//vec4(getPointLightComponents(view_direction) + getFlashlightComponents(), 1.0);
 			if (fog == 1) {
 				FragColor = applyFog(FragColor);

@@ -146,7 +146,7 @@ public:
 	void applyClick() {
 		lava_sped_up = !lava_sped_up;
 		speed = ((int)(getTimeSeed() * 1000) % 100 / 20.0f) + 1.5f;
-		std::cout << "clicked on lava!!!! FUCK YEAH!!!!! sped: " << speed << std::endl;
+		std::cout << "clicked on lava!!! !!! sped: " << speed << std::endl;
 	}
 
 	void DrawObject() override {
@@ -182,7 +182,7 @@ public:
 	void DrawObject() override {
 		shader->setBool("is_flame", true);
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(13.788f, -7.98867f, -4.28517f));
+		model = glm::translate(model, glm::vec3(-33.3198f, 20.0f, -56.7827f));
 		//model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 		//float angle = -90.0f;
 		//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -276,7 +276,7 @@ class LightSource : public ObjectBase {
 public:
 	LightSource(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
 		std::shared_ptr <Shader> own_shader, std::shared_ptr <Shader> object_shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, own_shader) {
-		this->position = glm::vec3(13.5f, -14.7f, -4.6f);
+		this->position = glm::vec3(-33.3198f, 5.0f, -56.7827f);
 		object_shader->use();
 		object_shader->setVec3("pointlight.ambient",  glm::vec3(0.1f, 0.1f, 0.1f));
 		object_shader->setVec3("pointlight.diffuse",  glm::vec3(0.5f, 0.5f, 0.5f)); // darken diffuse light a bit
@@ -285,11 +285,11 @@ public:
 
 		// constants used for point light attenuation
 		object_shader->setFloat("pointlight.constant",  1.0f);
-		object_shader->setFloat("pointlight.linear",    0.014);
-		object_shader->setFloat("pointlight.quadratic", 0.0019f);
+		object_shader->setFloat("pointlight.linear",    0.0014);
+		object_shader->setFloat("pointlight.quadratic", 0.000007f);
 
 		// direction is set with moon position
-		
+		object_shader->setVec3("dir_light.direction", glm::vec3(140.43f, 100.0f, 60.7283f));
 		object_shader->setVec3("dir_light.ambient",   glm::vec3(0.15f, 0.15f, 0.15f));
 		object_shader->setVec3("dir_light.diffuse",   glm::vec3(0.15f, 0.15f, 0.15f));
 		object_shader->setVec3("dir_light.specular",  glm::vec3(0.3f, 0.3f, 0.3f));
@@ -308,7 +308,7 @@ public:
 		shader->setVec3("col", glm::vec3(0.7f, 0.9f, 0.0f));
 		
 		for (const auto& mesh : meshes) {
-			mesh.Draw();
+			//mesh.Draw();
 		}
 		/*model = glm::translate(model, glm::vec3(5.0f, 20.0f, -4.0f));
 		shader->setMat4("model", model);

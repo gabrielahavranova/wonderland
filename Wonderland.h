@@ -51,13 +51,13 @@ namespace Wonderland {
 		//simple_scene_objects.emplace_back(std::make_shared <Plane>(newplane2Vertices, newplane2NVertices * 8, newplane2Triangles, newplane2NTriangles, shaders["basic"]));
 		simple_scene_objects.emplace_back(std::make_shared <Lava>(newlavaVertices, newlavaNVertices * 8, newlavaTriangles, newlavaNTriangles, shaders["basic"], 0xFF));
 		clickable_objects.emplace(0xFF, simple_scene_objects.back());
-		simple_scene_objects.emplace_back(std::make_shared <Flame>(flameVertices, flameNVertices * 8, flameTriangles, flameNTriangles, shaders["basic"]));
 		//simple_scene_objects.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic"], colliders));
 		//simple_scene_objects.emplace_back(std::make_shared <God>(torus_001Vertices, torus_001NVertices * 8, torus_001Triangles, torus_001NTriangles, shaders["basic"]));
-		simple_scene_objects.emplace_back(std::make_shared <LightBlueBox>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["basic"]));
+		//simple_scene_objects.emplace_back(std::make_shared <LightBlueBox>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["basic"]));
 		simple_scene_objects.emplace_back(std::make_shared <Stars>(starVertices, starNVertices * 8, starTriangles, starNTriangles, shaders["light"]));
 		simple_scene_objects.emplace_back(std::make_shared <LightSource>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["light"], shaders["basic"]));
-		
+		//simple_scene_objects.emplace_back(std::make_shared <Flame>(flameVertices, flameNVertices * 8, flameTriangles, flameNTriangles, shaders["basic"]));
+
 		
 		// uniforms
 		unsigned int texture1, texture2;
@@ -73,8 +73,9 @@ namespace Wonderland {
 		//uniq_model = std::make_unique <Model> (".\\objects\\backpack.obj");
 		//objects[index].createTexture("container.jpg", texture1);
 		//objects[index].createTexture("awesomeface.png", texture2, true);
-		
-		colliders.emplace_back(30.0f, 11.0f, 8.0f);
+		std::cout << " distance is: " << glm::distance(glm::vec3(-27.9156f, 10.0f, -56.3888f), glm::vec3(6.36411f, 10.0f, -15.9944f)) << std::endl;
+	
+		colliders.emplace_back(-27.9f, -56.38, 59.0f);
 	}
 
 	void createShaders() {
@@ -98,7 +99,7 @@ namespace Wonderland {
 		shaders["basic"]->setFloat("color_intensity", 0.2f);
 		//setModelMatrices(model);
 		//setMeshMaterial(glm::vec3(0.01f, 0.01f, 0.01f), 0.0f);
-		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
+		// --------------------------v  = indices !!!! CNT !!!! FKING HELL!!!!!! 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		plane->Draw(shaders["basic"]);
 	} 
@@ -117,8 +118,9 @@ namespace Wonderland {
 		float an = 0.02f;
 		glm::vec3 moon_pos(12.0f + glm::cos(an * time_seed) * 140.0f, 500.0f, 5.0f + glm::sin(an * time_seed) * 140.0f);
 		model = glm::translate(model, moon_pos);
-		shaders["basic"]->use();
-		shaders["basic"]->setVec3("dir_light.direction", moon_pos);
+		//shaders["basic"]->use();
+		//shaders["basic"]->setVec3("dir_light.direction", moon_pos);
+		//std::cout << "moon position is: " << moon_pos.x << " " << moon_pos.y << " " << moon_pos.z << std::endl;
 		shader->use();
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, -an * time_seed, glm::vec3(0.0f, 1.0f, 0.0f));
