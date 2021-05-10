@@ -48,7 +48,7 @@ void main () {
 
 	}
 	else {
-		tex_coord = aTexCoord;
+		tex_coord = vec2(aTexCoord.x, aTexCoord.y);
 	}
 	frag_pos = vec3(model * vec4(aPos, 1.0));
 	//tex_coord = aTexCoord ;

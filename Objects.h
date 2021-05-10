@@ -13,16 +13,23 @@
 const glm::vec3 ones3f = glm::vec3(1.0f, 1.0f, 1.0f);
 const glm::vec3 zeroes3f = glm::vec3(0.0f, 0.0f, 0.0f);
 
-class YellowBox : public ObjectBase { 
+class Mush : public ObjectBase { 
 public: 
-	YellowBox(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {}
+	Mush(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {
+			for (auto& mesh : meshes) {
+				mesh.createTexture("mushtex.png", true, true);
+				//mesh.createTexture("awesomeface.png", false);
+			}
+		}
+
 		void DrawObject () override {
-			float s = (float)getTimeSeed();
+			
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, glm::vec3(1.0f, 1.0f, 1.0f));
-			float angle = 20.0f;
-			model = glm::rotate(model, s * glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			//float angle = 20.0f;
+			model = glm::rotate(model, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(3.0f));
 			
 			
 			setModelMatrices(model);
@@ -107,30 +114,36 @@ public:
 class God : public ObjectBase {
 public:
 	God(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {}
-
+		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {
+		for (auto& mesh : meshes) {
+			mesh.createTexture("monke.png", true, true);
+			//mesh.createTexture("awesomeface.png", false);
+		}
+	}
 	void DrawObject() override {
 
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(35.0f, 30.0f, 18.0f));
-		model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+		model = glm::translate(model, glm::vec3(89.9542f, 35.0f, -66.1225f));
+		//model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 		float angle = -90.0f;
-		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.3f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 0.0f, 0.5f));
+		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(25.0f), glm::vec3(0.0f, 1.0f, 0.2f));
+		//model = glm::rotate(model, glm::radians(angle), glm::vec3(0.0f, 0.0f, 0.5f));
+		model = glm::scale(model, glm::vec3(30.0f));
 
 		setModelMatrices(model);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		setMeshMaterial(zeroes3f, 0.0f);
+		setMeshMaterial(ones3f, 0.0f);
 		for (const auto& mesh : meshes) {
 			mesh.Draw();
 		}
-		double x = (int)(getTimeSeed() * 1000) / 1000.0;
-		float color = std::abs(std::sin(x));
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		setMeshMaterial(glm::vec3(1.0f - color, color, 0.2f + color / 4.0f), 0.3f);
-		for (const auto& mesh : meshes) {
-			mesh.Draw();
-		}
+		//double x = (int)(getTimeSeed() * 1000) / 1000.0;
+		//float color = std::abs(std::sin(x));
+	//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//	setMeshMaterial(glm::vec3(1.0f - color, color, 0.2f + color / 4.0f), 0.3f);
+	//	for (const auto& mesh : meshes) {
+	//		mesh.Draw();
+	//	}
 	}
 };
 
