@@ -118,6 +118,15 @@ public:
 		this->rotations = { x_axis, y_axis + z_axis, z_axis, x_axis + z_axis * 0.5f,  z_axis,  z_axis, };
 		const float diameters[6] = { 12.0f, 10.0f, 6.0f, 10.0f, 8.0f, 13.0f };
 		for (int i = 0; i < this->mushroom_cnt; i++) colliders.emplace_back(positions[i].x, positions[i].z, diameters[i]);
+		is_clickable = true;
+		for (int i = 10; i < 17; i++) click_test_obj_colors.emplace_back(0.0f, (float)i / 255.0f, 0.0f);
+	}
+
+	void applyClick(int object_id) override {
+		if (object_id-10 > rotations.size()) return;
+		float random = ((int)(getTimeSeed() * 1000) % 100 / 20.0f) + 1.5f;
+		this->angles[object_id - 10] = random * 90.0f;
+		this->rotations[object_id - 10] = glm::vec3(z_axis);
 	}
 
 };
