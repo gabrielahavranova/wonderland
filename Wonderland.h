@@ -1,3 +1,10 @@
+/*!
+ *  @file Wonderland.h
+ *  @author Gabriela Havranova
+ *  @date 2021-05-12
+ *
+ *  Declares the main Wonderland namespace.
+ */
 #pragma once
 #include <glad/glad.h>
 #include <glfw3.h>
@@ -31,18 +38,30 @@ namespace Wonderland {
 	std::vector <glm::vec3> colliders;
 	std::map <std::string, std::shared_ptr<Model>> mm_scene_objects;
 
+	/*!
+	 *  Toggles the flashlight.
+	 */
 	void toggleFlashlight() {
 		flashlight_on = !flashlight_on;
 	}
-
+    
+    /*!
+     *  Toggles the fog.
+     */
 	void toggleFog() {
 		fog = !fog;
 	}
 
+	/*!
+	 *  Toggles the picking.
+	 */
 	void togglePicking() {
 		picking_on = !picking_on;
 	}
 
+	/*!
+	 *  Creates the scene objects.
+	 */
 	void createObjects() {
 		size_t index = simple_scene_objects.size();
 
@@ -72,6 +91,9 @@ namespace Wonderland {
 		colliders.emplace_back(-27.9f, -56.38, 59.0f);
 	}
 
+	/*!
+	 *  Creates the shaders.
+	 */
 	void createShaders() {
 		shaders.emplace("basic", std::make_shared<Shader>(".\\shaders\\vertex_shader.vert", ".\\shaders\\fragment_shader.frag"));
 		shaders.emplace("light", std::make_shared<Shader>(".\\shaders\\vs_light.vert", ".\\shaders\\fs_light.frag"));
@@ -79,7 +101,12 @@ namespace Wonderland {
 		shaders.emplace("multimesh", std::make_shared<Shader>(".\\shaders\\multimesh_obj.vert", ".\\shaders\\multimesh_obj.frag"));
 	}
 
-
+	/*!
+	 *  Draws the plane.
+	 *
+	 *      @param [in] plane - a plane to draw
+	 *      @param [in] shader - shader to use
+	 */
 	void drawPlane(std::shared_ptr<Model> plane, std::shared_ptr<Shader>shader) {
 		glm::mat4 model = glm::mat4(1.0f);
 		shader->use();
@@ -91,6 +118,12 @@ namespace Wonderland {
 		plane->Draw(shaders["basic"]);
 	} 
 
+	/*!
+	 *  Draws the moon.
+	 *
+	 *      @param [in] moon - model to draw
+	 *      @param [in] shader - shader to use
+	 */
 	void drawMoon(std::shared_ptr <Model> moon, std::shared_ptr<Shader> shader) {
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)WIN_WIDTH / (float)WIN_HEIGHT, NEAR_P, FAR_P * 3);
 		glm::mat4 view = camera.GetViewMatrix();
@@ -111,7 +144,9 @@ namespace Wonderland {
 		moon->Draw(shader);
 	}
 
-
+	/*!
+	 *  Function which calls drawing functions of objects loaded with assimp.
+	 */
 	void drawMultimesh() {
 		std::shared_ptr <Shader> shader = shaders["multimesh"];
 		shader->use();
@@ -122,7 +157,9 @@ namespace Wonderland {
 		}
 	}
 
-
+	/*!
+	 *  Sets the skybox matrices.
+	 */
 	void setSkyboxMatrices() {
 		std::shared_ptr <Shader> shader = shaders["skybox"];
 		shader->use();
@@ -135,7 +172,11 @@ namespace Wonderland {
 		shader->setMat4("projection", projection);
 	}
 
-
+	/*!
+	 *  Sets the view and projection matrices.
+	 *
+	 *      @param [in] shader - Shader to set the matrices to.
+	 */
 	void setViewAndProjection(std::shared_ptr <Shader> shader) {
 		std::shared_ptr <Shader> current_shader = shaders["basic"];
 		current_shader->use();
@@ -175,7 +216,11 @@ namespace Wonderland {
 		shader->setInt("flame.y_offset", time_i / 4);
 	}
 
-
+	/*!
+	 *  Performs the click action.
+	 *
+	 *      @param [in] color - color read from stencil buffer
+	 */
 	void makeClickAction(unsigned char color[4]) {
 		int object_id = 0;
 		if (color && color[2]) object_id = (int)color[2];
@@ -189,7 +234,13 @@ namespace Wonderland {
 		}
 	}
 
-
+	/*!
+	 *  Mouse callback for camera.
+	 *
+	 *      @param [in,out] window 
+	 *      @param [in]     xpos   
+	 *      @param [in]     ypos   
+	 */
 	void mouseCallback(GLFWwindow* window, double xpos, double ypos) {
 		if (firstMouse)
 		{
@@ -207,12 +258,25 @@ namespace Wonderland {
 		camera.ProcessMouseMovement(xoffset, yoffset);
 	}
 
-
+	/*!
+	 *  Scroll callback.
+	 *
+	 *      @param [in,out] window  
+	 *      @param [in]     xoffset 
+	 *      @param [in]     yoffset 
+	 */
 	void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
 		camera.ProcessMouseScroll(yoffset);
 	}
 
-
+	/*!
+	 *  Mouses button callback.
+	 *
+	 *      @param [in,out] window 
+	 *      @param [in]     button - button pressed
+	 *      @param [in]     action - press or release
+	 *      @param [in]     mods   
+	 */
 	void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && !key_pressed[GLFW_MOUSE_BUTTON_LEFT]) {
 			key_pressed[GLFW_MOUSE_BUTTON_LEFT] = true;
@@ -227,13 +291,23 @@ namespace Wonderland {
 		}
 	}
 
-
+	/*!
+	 *  Window resize callback.
+	 *
+	 *      @param [in,out] win    
+	 *      @param [in]     width  
+	 *      @param [in]     height 
+	 */*/
 	void windowResizeCallback(GLFWwindow* win, int width, int height) {
 		glViewport(0, 0, width, height);
 	}
 
-
-	int initEnviroment() {
+	 /*!
+	  *  Inits the enviroment.
+	  *
+	  *      @return false if something failed when initializing, true otherwise
+	  */
+	bool initEnviroment() {
 		camera = Camera(glm::vec3(98.1605f, 10.001f, -47.9002f));
 		lastX = WIN_WIDTH / 2.0f;
 		lastY = WIN_HEIGHT / 2.0f;
@@ -250,7 +324,7 @@ namespace Wonderland {
 		if (!win) {
 			std::cout << "failed to create GLFW window!" << std::endl;
 			glfwTerminate();
-			return -1;
+			return false;
 		}
 
 		glfwMakeContextCurrent(win);
@@ -264,7 +338,7 @@ namespace Wonderland {
 		//initialize GLAD 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 			std::cout << "Failed to initialize GLAD!" << std::endl;
-			return -1;
+			return false;
 		}
 		glEnable(GL_DEPTH_TEST);
 
@@ -275,8 +349,12 @@ namespace Wonderland {
 		key_pressed.emplace(GLFW_KEY_P, false);
 		key_pressed.emplace(GLFW_MOUSE_BUTTON_LEFT, false);
 		key_pressed.emplace(GLFW_KEY_LEFT_CONTROL, false);
+			return true;
 	}
 
+	/*!
+	 *  Handles the key input.
+	 */
 	void processInput() {
 		if (glfwGetKey(win, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(win, true);
