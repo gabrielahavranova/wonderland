@@ -31,13 +31,19 @@ class MushroomBase : public ObjectBase {
 			model = glm::scale(model, scales[i]);
 			setModelMatrices(model);
 
-			if (is_clickable) shader->setVec3("click_test.object_color", click_test_obj_colors[i]);
+			if (is_clickable) {
+				shader->setVec3("click_test.object_color", click_test_obj_colors[i]);
+				shader->setBool("is_clickable", true);
+			}
 			
 			setMeshMaterial(ones3f, 0.0f);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			for (const auto& mesh : meshes) mesh.Draw();
 
-			if (is_clickable) shader->setVec3("click_test.object_color", zeroes3f);
+			if (is_clickable) {
+				shader->setVec3("click_test.object_color", zeroes3f);
+				shader->setBool("is_clickable", false);
+			}
 		}
 	}
 
@@ -168,6 +174,7 @@ public:
 
 	void DrawObject() override {
 		shader->setBool("is_lava", true);
+		shader->setBool("is_clickable", true);
 		shader->setFloat("lava_sped", speed);
 		shader->setVec3("click_test.object_color", glm::vec3(1.0f, 0.0f, 0.0f));
 		glm::mat4 model = glm::mat4(1.0f);
@@ -181,6 +188,7 @@ public:
 		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
 		for (const auto& mesh : meshes) mesh.Draw();
 		shader->setBool("is_lava", false);
+		shader->setBool("is_clickable", false);
 		shader->setVec3("click_test.object_color", glm::vec3(0.0f, 0.0f, 0.0f));
 	}
 private:

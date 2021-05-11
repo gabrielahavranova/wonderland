@@ -11,6 +11,7 @@ uniform sampler2D texture_diffuse1;
 uniform vec3 view_pos;
 uniform int fog;
 uniform bool is_flame_frag;
+uniform bool is_clickable = false;
 
 struct Material {
 	vec3 ambient;
@@ -169,7 +170,7 @@ void main () {
 		}
 		vec3 cursor = vec3(0.0, 0.0, 0.0);
 		//if (picking_on && frag_pos 
-		if (picking.on) {
+		if (picking.on && is_clickable) {
 			cursor = applyPicking();
 		}
 		
