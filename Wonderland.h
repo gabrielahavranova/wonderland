@@ -48,9 +48,10 @@ namespace Wonderland {
 		size_t index = simple_scene_objects.size();
 
 		simple_scene_objects.emplace_back(std::make_shared <Mush>(mushroomVertices, mushroomNVertices* 8, mushroomTriangles, mushroomNTriangles, shaders["basic"]));
-		//simple_scene_objects.emplace_back(std::make_shared <Plane>(newplane2Vertices, newplane2NVertices * 8, newplane2Triangles, newplane2NTriangles, shaders["basic"]));
+		simple_scene_objects.emplace_back(std::make_shared <Plane>(mushroom1Vertices, mushroom1NVertices * 8, mushroom1Triangles, mushroom1NTriangles, shaders["basic"]));
 		simple_scene_objects.emplace_back(std::make_shared <Lava>(newlavaVertices, newlavaNVertices * 8, newlavaTriangles, newlavaNTriangles, shaders["basic"], 0xFF));
 		clickable_objects.emplace(0xFF, simple_scene_objects.back());
+		//simple_scene_objects.emplace_back(std::make_shared <Mushrooms>(mushroom2Vertices, mushroom2NVertices * 8, mushroom2Triangles, mushroom2NTriangles, shaders["basic"]));
 		//simple_scene_objects.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic"], colliders));
 		simple_scene_objects.emplace_back(std::make_shared <God>(suzanneVertices, suzanneNVertices * 8, suzanneTriangles, suzanneNTriangles, shaders["basic"]));
 		//simple_scene_objects.emplace_back(std::make_shared <LightBlueBox>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["basic"]));

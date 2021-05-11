@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include "VerticesLib.h"
 #include <vector>
+#include "ConstsAndTypes.h"
 //#include "../glm/glm/glm.hpp"
 //#include "../glm/glm/gtc/matrix_transform.hpp"
 
@@ -41,29 +42,35 @@ public:
 		}
 };
 
-class Plane : public ObjectBase {
+class BlueShrooms : public ObjectBase {
 public:
 
-	Plane(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
+	BlueShrooms(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
 		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {
 			for (auto & mesh : meshes) {
-				mesh.createTexture("grass.png", false, true);
-				//mesh.createTexture("awesomeface.png", false);
+				mesh.createTexture("Mtex.png", true, true);
 			}
 	}
 
-	void DrawObject() override {
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-		float angle = -90.0f;
-		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
-		//model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+	const glm::vec3 positions[4] = { glm::vec3(96.768f, 35.0f, 33.276f), glm::vec3(-2.11738f, 35.0f, 80.3774f), 
+									 glm::vec3(-63.5439f, 35.0f, 41.4656f), glm::vec3(31.0f, 20.0f, -15.0f) };
+	const glm::vec3 scales[4] = { glm::vec3(4.0f), glm::vec3(3.5f), glm::vec3(5.5f), glm::vec3(2.0f) };
+	const float angles[4] = { 10.0f, 15.0f, 25.0f, 17.0f };
+	const glm::vec3 rotations[4] = { x_axis, y_axis + z_axis, z_axis, x_axis + z_axis * 0.5f };
 
-		setModelMatrices(model);
-		setMeshMaterial(glm::vec3(0.1f, 0.1f, 0.1f), 0.0f);
-		// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		for (const auto & mesh: meshes) mesh.Draw();
+	void DrawObject() override {
+		for (int i = 0; i < 4; i++) {
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, this->positions[i]);
+			model = glm::rotate(model, glm::radians(-90.0f), x_axis);
+			model = glm::rotate(model, glm::radians(angles[i]), rotations[i]);
+			model = glm::scale(model, scales[i]);
+
+			setModelMatrices(model);
+			setMeshMaterial(ones3f, 0.0f);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			for (const auto& mesh : meshes) mesh.Draw();
+		}
 	}
 };
 
@@ -123,7 +130,7 @@ public:
 	void DrawObject() override {
 
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(89.9542f, 35.0f, -66.1225f));
+		model = glm::translate(model, glm::vec3(89.9542f, 45.0f, -66.1225f));
 		//model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 		float angle = -90.0f;
 		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -133,7 +140,7 @@ public:
 
 		setModelMatrices(model);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		setMeshMaterial(ones3f, 0.0f);
+		setMeshMaterial(ones3f, ones3f , 1.0f);
 		for (const auto& mesh : meshes) {
 			mesh.Draw();
 		}
