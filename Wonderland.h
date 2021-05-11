@@ -30,7 +30,6 @@ namespace Wonderland {
 	std::unique_ptr <Skybox> skybox;
 	std::vector <glm::vec3> colliders;
 	std::map <std::string, std::shared_ptr<Model>> mm_scene_objects;
-	//std::vector <Model> multimesh_scene_objects;
 
 	void toggleFlashlight() {
 		flashlight_on = !flashlight_on;
@@ -54,16 +53,9 @@ namespace Wonderland {
 		clickable_objects.emplace(0xFF, simple_scene_objects.back());
 		simple_scene_objects.emplace_back(std::make_shared <Mushrooms>(mushroom2Vertices, mushroom2NVertices * 8, mushroom2Triangles, mushroom2NTriangles, shaders["basic"], "mushroom2tex.png", colliders));
 		for (int i = 10; i < 17; i++) clickable_objects.emplace(i, simple_scene_objects.back());
-		//simple_scene_objects.emplace_back(std::make_shared <Mushrooms>(cylinderVertices, cylinderNVertices * 8, cylinderTriangles, cylinderNTriangles, shaders["basic"], colliders));
 		simple_scene_objects.emplace_back(std::make_shared <God>(suzanneVertices, suzanneNVertices * 8, suzanneTriangles, suzanneNTriangles, shaders["basic"]));
-		//simple_scene_objects.emplace_back(std::make_shared <LightBlueBox>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["basic"]));
 		simple_scene_objects.emplace_back(std::make_shared <Stars>(starVertices, starNVertices * 8, starTriangles, starNTriangles, shaders["light"]));
 		simple_scene_objects.emplace_back(std::make_shared <LightSource>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["light"], shaders["basic"]));
-
-		
-		// uniforms
-		unsigned int texture1, texture2;
-
 
 		std::vector <std::string> skybox_faces { ".\\skybox\\right.png", ".\\skybox\\left.png", ".\\skybox\\top.png",
 										  ".\\skybox\\bottom.png", ".\\skybox\\front.png", ".\\skybox\\back.png"};
@@ -92,39 +84,15 @@ namespace Wonderland {
 		
 	}
 
-	void drawEyeball(std::shared_ptr<Model> eyeball, std::shared_ptr<Shader>shader) {
-		glm::mat4 model = glm::mat4(1.0f);
-		shaders["multimesh"]->use();
-
-		model = glm::translate(model, glm::vec3(0.0f, 5.5f, 0.0f));
-		//float angle = -90.0f;
-		//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(1.0f));
-		shaders["multimesh"]->setMat4("model", model);
-		shaders["multimesh"]->setFloat("color_intensity", 0.8f);
-		//setModelMatrices(model);
-		//setMeshMaterial(glm::vec3(0.01f, 0.01f, 0.01f), 0.0f);
-		// --------------------------v  = indices !!!! CNT !!!! FKING HELL!!!!!! 
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		eyeball->Draw(shaders["multimesh"]);
-	
-	}
 
 	void drawPlane(std::shared_ptr<Model> plane, std::shared_ptr<Shader>shader) {
 		glm::mat4 model = glm::mat4(1.0f);
-		shaders["basic"]->use();
+		shader->use();
 		model = glm::scale(model, glm::vec3(0.3, 0.3, 0.3));
-		
 		model = glm::translate(model, glm::vec3(0.0f, -2.5f, 0.0f));
-		//float angle = -90.0f;
-		//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(8.5f, 8.5f, 8.5f));
-		shaders["basic"]->setMat4("model", model);
-		shaders["basic"]->setFloat("color_intensity", 0.2f);
-		//setModelMatrices(model);
-		//setMeshMaterial(glm::vec3(0.01f, 0.01f, 0.01f), 0.0f);
-		// --------------------------v  = indices !!!! CNT !!!! FKING HELL!!!!!! 
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		shader->setMat4("model", model);
+		shader->setFloat("color_intensity", 0.2f);
 		plane->Draw(shaders["basic"]);
 	} 
 
@@ -134,18 +102,13 @@ namespace Wonderland {
 		shader->setMat4("projection", projection);
 		shader->setMat4("view", view);
 		shader->setFloat("color_intensity", 2.0f);
-		// render the loaded model
 		glm::mat4 model = glm::mat4(1.0f);
-		//model = glm::translate(model, glm::vec3(12.0f, 80.0f, 5.0f));
+
 		double time = glfwGetTime();
 		float time_seed = (int)(time * 100) / 100.0f;
 		float an = 0.02f;
 		glm::vec3 moon_pos(12.0f + glm::cos(an * time_seed) * 140.0f, 500.0f, 5.0f + glm::sin(an * time_seed) * 140.0f);
 		model = glm::translate(model, moon_pos);
-		//shaders["basic"]->use();
-		//shaders["basic"]->setVec3("dir_light.direction", moon_pos);
-		//std::cout << "moon position is: " << moon_pos.x << " " << moon_pos.y << " " << moon_pos.z << std::endl;
-		shader->use();
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, -an * time_seed, glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(100.0f, 100.0f, 100.0f));
@@ -153,16 +116,14 @@ namespace Wonderland {
 		moon->Draw(shader);
 	}
 
+
 	void drawMultimesh() {
 		std::shared_ptr <Shader> shader = shaders["multimesh"];
 		shader->use();
 
 		for (auto it = mm_scene_objects.begin(); it != mm_scene_objects.end(); it++) {
-			if (it->first == "moon") drawMoon(it->second, shader);
-			else if (it->first == "plane") drawPlane(it->second, shader);
-			else if (it->first == "eyeball") drawEyeball(it->second, shader);
-			else {}
-
+			if (it->first == "moon") drawMoon(it->second, shaders["multimesh"]);
+			else if (it->first == "plane") drawPlane(it->second, shaders["basic"]);
 		}
 	}
 
@@ -174,28 +135,24 @@ namespace Wonderland {
 		glm::mat4 view = camera.GetViewMatrix();
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float) WIN_WIDTH / (float) WIN_HEIGHT, 0.1f, 100.0f);
 
-		view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
+		view = glm::mat4(glm::mat3(camera.GetViewMatrix())); 
 		shader->setMat4("view", view);
 		shader->setMat4("projection", projection);
 	}
+
 
 	void setViewAndProjection(std::shared_ptr <Shader> shader) {
 		std::shared_ptr <Shader> current_shader = shaders["basic"];
 		current_shader->use();
 		// setup flashlight
 		current_shader->setVec3("flashlight.position", camera.Position);
-		//shaders["basic"]->setVec3("light_pos_unif", camera.Position);
-		//shaders["basic"]->setVec3("flashlight.position", glm::vec3(0.0f, 0.0f, 0.0f));
 		current_shader->setVec3("flashlight.direction", camera.Front);
 		current_shader->setVec3("flashlight.strength", glm::vec3(0.3f, 0.3f, 0.3f));
 		current_shader->setFloat("flashlight.cut_off", glm::cos(glm::radians(10.0f)));
 		float epsilon = flashlight_on ? 17.0f : 0.0f;
 		current_shader->setFloat("flashlight.outer_cut_off", glm::cos(glm::radians(epsilon)));
 
-
 		current_shader->setVec3("picking.position", camera.Position);
-		//shaders["basic"]->setVepickingpos_unif", camera.Position);
-		//shaders["basic"]->setVepickingight.position", glm::vec3(0.0f, 0.0f, 0.0f));
 		current_shader->setVec3("picking.direction", camera.Front);
 		current_shader->setFloat("picking.cut_off", glm::cos(glm::radians(0.2f)));
 		epsilon = 0.5f;
@@ -204,8 +161,6 @@ namespace Wonderland {
 		current_shader->setFloat("lava_sped", 1.0f);
 		current_shader->setInt("fog", fog);
 		
-
-
 		if (current_shader != shader) shader->use();
 		shader->setVec3("view_pos", camera.Position);
 		glm::mat4 projection = glm::perspective(glm::radians(Wonderland::camera.Zoom), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.05f, FAR_P*3);
@@ -223,11 +178,8 @@ namespace Wonderland {
 		shader->setFloat("time_seed", time / 20.0);
 		shader->setInt("flame.x_offset", time_i % 4);
 		shader->setInt("flame.y_offset", time_i / 4);
-		//std::cout << "glfw time seed x: " << time;
-		//std::cout << "time x 100 double:" << time * 100;
-		//std::cout << "time x 100 int:" << (int)(time * 100) / 10 << std::endl;
-		
 	}
+
 
 	void makeClickAction(unsigned char color[4]) {
 		int object_id = 0;
@@ -259,9 +211,12 @@ namespace Wonderland {
 
 		camera.ProcessMouseMovement(xoffset, yoffset);
 	}
+
+
 	void scrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
 		camera.ProcessMouseScroll(yoffset);
 	}
+
 
 	void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS && !key_pressed[GLFW_MOUSE_BUTTON_LEFT]) {
@@ -269,19 +224,19 @@ namespace Wonderland {
 			shaders["basic"]->use();
 			shaders["basic"]->setBool("click_test.perform", true);
 			getClickLocation = true;
-			std::cout << "down" << std::endl;
 		}
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 			key_pressed[GLFW_MOUSE_BUTTON_LEFT] = false;
 			shaders["basic"]->use();
 			shaders["basic"]->setBool("click_test.perform", false);
-			std::cout << "mouse up " << std::endl;
 		}
 	}
+
 
 	void windowResizeCallback(GLFWwindow* win, int width, int height) {
 		glViewport(0, 0, width, height);
 	}
+
 
 	int initEnviroment() {
 		camera = Camera(glm::vec3(98.1605f, 10.001f, -47.9002f));
@@ -296,7 +251,7 @@ namespace Wonderland {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		win = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, "first win", NULL, NULL);
+		win = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, "Wonderland", NULL, NULL);
 		if (!win) {
 			std::cout << "failed to create GLFW window!" << std::endl;
 			glfwTerminate();
@@ -324,6 +279,7 @@ namespace Wonderland {
 		key_pressed.emplace(GLFW_KEY_F, false);
 		key_pressed.emplace(GLFW_KEY_P, false);
 		key_pressed.emplace(GLFW_MOUSE_BUTTON_LEFT, false);
+		key_pressed.emplace(GLFW_KEY_LEFT_CONTROL, false);
 	}
 
 	void processInput() {
@@ -352,6 +308,12 @@ namespace Wonderland {
 		if (glfwGetKey(win, GLFW_KEY_P) == GLFW_RELEASE)
 			key_pressed[GLFW_KEY_P] = false;
 
+		if (glfwGetKey(win, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+			key_pressed[GLFW_KEY_LEFT_CONTROL] = true;
+
+		if (glfwGetKey(win, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE)
+			key_pressed[GLFW_KEY_LEFT_CONTROL] = false;
+
 		if (glfwGetKey(win, GLFW_KEY_F1) == GLFW_PRESS && !key_pressed[GLFW_KEY_F1]) {
 			camera.ProcessKeyboard(STATIC1, delta_time, colliders);
 			key_pressed[GLFW_KEY_F1] = true;
@@ -364,7 +326,7 @@ namespace Wonderland {
 			toggleFlashlight();
 			key_pressed[GLFW_KEY_L] = true;
 		}
-		if (glfwGetKey(win, GLFW_KEY_F) == GLFW_PRESS && !key_pressed[GLFW_KEY_F]) {
+		if (glfwGetKey(win, GLFW_KEY_F) == GLFW_PRESS && !key_pressed[GLFW_KEY_F] && key_pressed[GLFW_KEY_LEFT_CONTROL]) {
 			toggleFog();
 			key_pressed[GLFW_KEY_F] = true;
 		}
