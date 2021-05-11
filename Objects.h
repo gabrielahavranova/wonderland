@@ -29,18 +29,27 @@ class MushroomBase : public ObjectBase {
 			model = glm::rotate(model, glm::radians(-90.0f), x_axis);
 			model = glm::rotate(model, glm::radians(angles[i]), rotations[i]);
 			model = glm::scale(model, scales[i]);
-
 			setModelMatrices(model);
+
+			if (is_clickable) shader->setVec3("click_test.object_color", click_test_obj_colors[i]);
+			
 			setMeshMaterial(ones3f, 0.0f);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			for (const auto& mesh : meshes) mesh.Draw();
+
+			if (is_clickable) shader->setVec3("click_test.object_color", zeroes3f);
 		}
 	}
 
+	virtual void beforeDraw() {}
+	virtual void afterDraw() {}
+
 	int mushroom_cnt;
+	bool is_clickable = false;
 	std::vector <glm::vec3> positions; 
 	std::vector <glm::vec3> scales; 
 	std::vector <glm::vec3> rotations; 
+	std::vector <glm::vec3> click_test_obj_colors;
 	std::vector <float> angles;
 };
 
@@ -77,6 +86,14 @@ public:
 		colliders.emplace_back(95.4057f,  19.5499f, diameter);
 		colliders.emplace_back(-11.4088f, 86.2395f, diameter+1.5f);
 		colliders.emplace_back(-66.6502f, 33.1402f, diameter+5.5f);
+		is_clickable = true;
+		for (int i = 1; i < 5; i++) click_test_obj_colors.emplace_back(0.0f, 0.0f, (float)i/255.0f);
+	}
+
+	void applyClick(int object_id) override {
+		if (object_id > scales.size()) return;
+		float random = ((int)(getTimeSeed() * 1000) % 100 / 20.0f) + 1.5f;
+		this->scales[object_id - 1] = glm::vec3(random);
 	}
 };
 
@@ -96,6 +113,7 @@ public:
 		const float diameters[6] = { 12.0f, 10.0f, 6.0f, 10.0f, 8.0f, 13.0f };
 		for (int i = 0; i < this->mushroom_cnt; i++) colliders.emplace_back(positions[i].x, positions[i].z, diameters[i]);
 	}
+
 };
 
 class God : public ObjectBase {
@@ -104,7 +122,6 @@ public:
 		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {
 		for (auto& mesh : meshes) {
 			mesh.createTexture("monke.png", true, true);
-			//mesh.createTexture("awesomeface.png", false);
 		}
 	}
 	void DrawObject() override {
@@ -143,7 +160,7 @@ public:
 		//mesh.createTexture("awesomeface.png", false);
 	}
 
-	void applyClick() {
+	void applyClick(int object_id) override{
 		lava_sped_up = !lava_sped_up;
 		speed = ((int)(getTimeSeed() * 1000) % 100 / 20.0f) + 1.5f;
 		std::cout << "clicked on lava!!! !!! sped: " << speed << std::endl;

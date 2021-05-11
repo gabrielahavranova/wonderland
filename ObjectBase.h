@@ -134,7 +134,7 @@ public:
 		DrawObject();
 	}
 
-	virtual void applyClick() {
+	virtual void applyClick(int object_id) {
 		std::cout << "applying click!" << std::endl;
 	}
 

@@ -49,6 +49,7 @@ namespace Wonderland {
 
 		simple_scene_objects.emplace_back(std::make_shared <Mush>(mushroomVertices, mushroomNVertices* 8, mushroomTriangles, mushroomNTriangles, shaders["basic"], "mushtex.png", colliders));
 		simple_scene_objects.emplace_back(std::make_shared <BlueShrooms>(mushroom1Vertices, mushroom1NVertices * 8, mushroom1Triangles, mushroom1NTriangles, shaders["basic"], "Mtex.png", colliders));
+		for (int i = 1; i < 5; i++) clickable_objects.emplace(i, simple_scene_objects.back());
 		simple_scene_objects.emplace_back(std::make_shared <Lava>(newlavaVertices, newlavaNVertices * 8, newlavaTriangles, newlavaNTriangles, shaders["basic"], 0xFF));
 		clickable_objects.emplace(0xFF, simple_scene_objects.back());
 		simple_scene_objects.emplace_back(std::make_shared <Mushrooms>(mushroom2Vertices, mushroom2NVertices * 8, mushroom2Triangles, mushroom2NTriangles, shaders["basic"], "mushroom2tex.png", colliders));
@@ -227,10 +228,15 @@ namespace Wonderland {
 		
 	}
 
-	void makeClickAction(int object_id) {
+	void makeClickAction(unsigned char color[4]) {
+		int object_id = 0;
+		if (color && color[2]) object_id = (int)color[2];
+		else if (color && color[0]) object_id = (int)color[0];
+		else return;
+
 		auto it = clickable_objects.find(object_id);
 		if (it != clickable_objects.end()) {
-			it->second->applyClick();
+			it->second->applyClick(object_id);
 		}
 	}
 
