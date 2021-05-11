@@ -44,37 +44,24 @@ class MushroomBase : public ObjectBase {
 	std::vector <float> angles;
 };
 
-class Mush : public ObjectBase { 
+class Mush : public MushroomBase { 
 public: 
 	Mush(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {
-			for (auto& mesh : meshes) {
-				mesh.createTexture("mushtex.png", true, true);
-				//mesh.createTexture("awesomeface.png", false);
-			}
-		}
+		std::shared_ptr <Shader> shader, const std::string& tex_name, std::vector <glm::vec3>& colliders)
+		: MushroomBase(vertices, vertices_cnt, indices, indices_cnt, shader, tex_name, colliders) {
 
-		void DrawObject () override {
-			
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(1.0f, 1.0f, 1.0f));
-			//float angle = 20.0f;
-			model = glm::rotate(model, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(3.0f));
-			
-			
-			setModelMatrices(model);
-			setMeshMaterial(glm::vec3(0.9f, 0.9f, 0.0f), 0.5f);
-			// --------------------------v  = indices !!!! CNT !!!! FUCKING HELL!!!!!! 
-			for (const auto & mesh: meshes) {
-				mesh.Draw();
-			}
-		}
+		this->mushroom_cnt = 1;
+		this->positions = { glm::vec3(1.0f, 1.0f, 1.0f) };
+		this->scales = { glm::vec3(3.0f) };
+		this->angles = { 10.0f };
+		this->rotations = { z_axis };
+		float diameter = 4.0f;
+		colliders.emplace_back( 1.0f, 1.0f, diameter);
+	}
 };
 
 class BlueShrooms : public MushroomBase {
 public:
-
 	BlueShrooms(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
 		std::shared_ptr <Shader> shader, const std::string& tex_name, std::vector <glm::vec3>& colliders)
 		: MushroomBase(vertices, vertices_cnt, indices, indices_cnt, shader, tex_name, colliders) {
@@ -89,41 +76,26 @@ public:
 		colliders.emplace_back(29.4098f, -22.5141f, diameter); 
 		colliders.emplace_back(95.4057f,  19.5499f, diameter);
 		colliders.emplace_back(-11.4088f, 86.2395f, diameter+1.5f);
-		colliders.emplace_back(-66.6502f, 33.1402f, diameter+2.5f);
+		colliders.emplace_back(-66.6502f, 33.1402f, diameter+5.5f);
 	}
 };
 
-class Mushrooms : public ObjectBase {
+class Mushrooms : public MushroomBase {
 public:
 	Mushrooms(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader) : ObjectBase(vertices, vertices_cnt, indices, indices_cnt, shader) {
-		for (auto& mesh : meshes) {
-			mesh.createTexture("mushroom2tex.png", true, true);
-		}
+		std::shared_ptr <Shader> shader, const std::string& tex_name, std::vector <glm::vec3>& colliders)
+		: MushroomBase(vertices, vertices_cnt, indices, indices_cnt, shader, tex_name, colliders) {
+
+		this->mushroom_cnt = 6;
+		this->positions = { glm::vec3(-94.3434f, 50.001f, -10.4867f), glm::vec3(-71.5002f, 35.001f, 53.5723f),
+							glm::vec3(-36.0634f, 5.01f, 65.7154f),    glm::vec3(17.6295f,  17.0f, 76.5066f),
+							glm::vec3(58.6476f,  10.001f, 90.6306f),  glm::vec3(59.3222f, 50.001f, 3.98706f) };
+		this->scales = { glm::vec3(4.0f), glm::vec3(2.2f), glm::vec3(0.5f), glm::vec3(2.0f),  glm::vec3(1.2f),  glm::vec3(4.0f) };
+		this->angles = { 10.0f, 15.0f, 25.0f, 17.0f, 180.0f, 160.0f };
+		this->rotations = { x_axis, y_axis + z_axis, z_axis, x_axis + z_axis * 0.5f,  z_axis,  z_axis, };
+		const float diameters[6] = { 12.0f, 10.0f, 6.0f, 10.0f, 8.0f, 13.0f };
+		for (int i = 0; i < this->mushroom_cnt; i++) colliders.emplace_back(positions[i].x, positions[i].z, diameters[i]);
 	}
-	const glm::vec3 positions[18] = { glm::vec3(-94.3434f, 50.001f, -10.4867f/*gud*/), glm::vec3(-71.5002f, 35.001f, 53.5723f/*edited*/),
-									  glm::vec3(-36.0634f, 5.01f, 65.7154f/*edited*/),  glm::vec3(17.6295f,  17.0f, 76.5066f),
-									  glm::vec3(58.6476f,  10.001f, 90.6306f/*gud*/),    glm::vec3(59.3222f, 50.001f, 3.98706f) /*edited*/};
-
-	const glm::vec3 scales[6] = { glm::vec3(4.0f), glm::vec3(2.2f), glm::vec3(0.5f), glm::vec3(2.0f),  glm::vec3(1.2f),  glm::vec3(4.0f) };
-	const float angles[6] = { 10.0f, 15.0f, 25.0f, 17.0f, 180.0f, 160.0f };
-	const glm::vec3 rotations[6] = { x_axis, y_axis + z_axis, z_axis, x_axis + z_axis * 0.5f,  z_axis,  z_axis, };
-
-	void DrawObject() override {
-		for (int i = 0; i < 6; i++) {
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, this->positions[i]);
-			model = glm::rotate(model, glm::radians(-90.0f), x_axis);
-			model = glm::rotate(model, glm::radians(angles[i]), rotations[i]);
-			model = glm::scale(model, scales[i]);
-
-			setModelMatrices(model);
-			setMeshMaterial(ones3f, 0.0f);
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			for (const auto& mesh : meshes) mesh.Draw();
-		}
-	}
-
 };
 
 class God : public ObjectBase {
