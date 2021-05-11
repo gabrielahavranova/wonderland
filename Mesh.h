@@ -1,3 +1,11 @@
+/*!
+ *  @file Mesh.h
+ *  @author Gabriela Havranova
+ *  @date 2021-05-12
+ *  @project hopeful_semestralka
+ *
+ *  Declares the mesh class.*/
+ 
 #pragma once
 
 #include <glad/glad.h> 
@@ -8,15 +16,10 @@
 #include <vector>
 
 struct Vertex {
-    // position
     glm::vec3 Position;
-    // normal
     glm::vec3 Normal;
-    // texCoords
     glm::vec2 TexCoords;
-    // tangent
     glm::vec3 Tangent;
-    // bitangent
     glm::vec3 Bitangent;
 };
 

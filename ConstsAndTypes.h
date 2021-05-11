@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-//#include "../glm/glm/glm.hpp"
 #include "glm/glm/glm.hpp"
 
 const float NEAR_P = 0.1f;

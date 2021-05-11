@@ -1,3 +1,12 @@
+/*!
+ *  @file Objects.h
+ *  @author Gabriela Havranova
+ *  @date 2021-05-12
+ *  @project hopeful_semestralka
+ *
+ *  This file contains definitions of all classes inheriting from ObjectBase class - all the scene objects
+ */
+ 
 #pragma once
 #include <vector>
 
@@ -335,14 +344,13 @@ public:
 	LightSource (const float* vertices, const int vertices_cnt,
 		const unsigned int* indices, const int indices_cnt,
 		std::shared_ptr<Shader> own_shader,
-		std::shared_ptr<Shader> object_shader)
-		/*: ObjectBase (vertices, vertices_cnt, indices, indices_cnt, own_shader)*/ {
+		std::shared_ptr<Shader> object_shader) {
 		this->position = glm::vec3 (-33.3198f, 5.0f, -56.7827f);
 		object_shader->use ();
 		object_shader->setVec3 ("pointlight.ambient", glm::vec3 (0.1f, 0.1f, 0.1f));
 		object_shader->setVec3 (
 			"pointlight.diffuse",
-			glm::vec3 (0.5f, 0.5f, 0.5f));  // darken diffuse light a bit
+		glm::vec3 (0.5f, 0.5f, 0.5f));  // darken diffuse light a bit
 		object_shader->setVec3 ("pointlight.specular", glm::vec3 (1.0f, 1.0f, 1.0f));
 		object_shader->setVec3 ("pointlight.position", this->position);
 
@@ -353,34 +361,11 @@ public:
 
 		// direction is set with moon position
 		object_shader->setVec3 ("dir_light.direction",
-			glm::vec3 (140.43f, 100.0f, 60.7283f));
+		glm::vec3 (140.43f, 100.0f, 60.7283f));
 		object_shader->setVec3 ("dir_light.ambient", glm::vec3 (0.15f, 0.15f, 0.15f));
 		object_shader->setVec3 ("dir_light.diffuse", glm::vec3 (0.15f, 0.15f, 0.15f));
 		object_shader->setVec3 ("dir_light.specular", glm::vec3 (0.3f, 0.3f, 0.3f));
 	}
-
-	//void DrawObject () override {
-	//	glm::mat4 model = glm::mat4 (1.0f);
-	//	model = glm::translate (model, this->position);
-	//	float angle = 30.0f;
-	//	model =
-	//		glm::rotate (model, glm::radians (angle), glm::vec3 (1.0f, 0.3f, 0.5f));
-	//	model = glm::scale (model, glm::vec3 (4.0f, 4.0f, 4.0f));
-	//
-	//	shader->setMat4 ("model", model);
-	//	glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
-	//	shader->setVec3 ("col", glm::vec3 (0.7f, 0.9f, 0.0f));
-	//
-	//	for (const auto& mesh : meshes) {
-	//		// mesh.Draw();
-	//	}
-	//	/*model = glm::translate(model, glm::vec3(5.0f, 20.0f, -4.0f));
-	//	shader->setMat4("model", model);
-	//	shader->setVec3("col", glm::vec3(0.7f, 0.3f, 0.0f));
-	//	for (const auto& mesh : meshes) {
-	//			mesh.Draw();
-	//	}*/
-	//}
 
 private:
 	glm::vec3 position;
