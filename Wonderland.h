@@ -58,7 +58,7 @@ namespace Wonderland {
 		simple_scene_objects.emplace_back(std::make_shared <LightSource>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["light"], shaders["basic"]));
 
 		std::vector <std::string> skybox_faces { ".\\skybox\\right.png", ".\\skybox\\left.png", ".\\skybox\\top.png",
-										  ".\\skybox\\bottom.png", ".\\skybox\\front.png", ".\\skybox\\back.png"};
+												 ".\\skybox\\bottom.png", ".\\skybox\\front.png", ".\\skybox\\back.png"};
 		skybox = std::make_unique<Skybox>(skybox_faces, skyboxVertices, 108, shaders["skybox"]);
 		simple_scene_objects.emplace_back(std::make_shared <Flame>(flameVertices, flameNVertices * 8, flameTriangles, flameNTriangles, shaders["basic"]));
 		shaders["basic"]->use();
@@ -67,12 +67,8 @@ namespace Wonderland {
 		shaders["basic"]->setBool("is_flame_frag", false);
 		mm_scene_objects.emplace("moon", std::make_shared<Model>(".\\objects\\moon.obj"));
 		mm_scene_objects.emplace("plane", std::make_shared<Model>(".\\objects\\plane5.obj"));
-		//mm_scene_objects.emplace("eyeball", std::make_shared<Model>(".\\objects\\eyeball.obj"));
-		//uniq_model = std::make_unique <Model> (".\\objects\\backpack.obj");
-		//objects[index].createTexture("container.jpg", texture1);
-		//objects[index].createTexture("awesomeface.png", texture2, true);
-		std::cout << " distance is: " << glm::distance(glm::vec3(-27.9156f, 10.0f, -56.3888f), glm::vec3(6.36411f, 10.0f, -15.9944f)) << std::endl;
 	
+		// add lava collider
 		colliders.emplace_back(-27.9f, -56.38, 59.0f);
 	}
 
@@ -81,7 +77,6 @@ namespace Wonderland {
 		shaders.emplace("light", std::make_shared<Shader>(".\\shaders\\vs_light.vert", ".\\shaders\\fs_light.frag"));
 		shaders.emplace("skybox", std::make_shared<Shader>(".\\shaders\\skybox.vert", ".\\shaders\\skybox.frag"));
 		shaders.emplace("multimesh", std::make_shared<Shader>(".\\shaders\\multimesh_obj.vert", ".\\shaders\\multimesh_obj.frag"));
-		
 	}
 
 

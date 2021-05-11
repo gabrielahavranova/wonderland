@@ -4,10 +4,6 @@
 #include "Shader.h"
 #include "VerticesLib.h"
 #include <vector>
-
-//#include "../glm/glm/glm.hpp"
-//#include "../glm/glm/gtc/matrix_transform.hpp"
-
 #include "glm/glm/glm.hpp"
 #include "glm/glm/gtc/matrix_transform.hpp"
 
@@ -23,7 +19,7 @@ public:
 		glBindVertexArray(VAO);
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices_cnt, vertices, GL_STATIC_DRAW); //puts vertices data into our vertex buffer object
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices_cnt, vertices, GL_STATIC_DRAW);
 
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -47,8 +43,6 @@ public:
 
 	int createTexture(const char* tex_path, bool flip_texture_on_load = false, bool is_png = false) {
 		unsigned int texture;
-		//textures.emplace_back(texture);
-		//exture = textures.back();
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -74,7 +68,6 @@ public:
 
 		stbi_image_free(data);
 		shader->use();
-		//std::string texture_name = std::string("texture") + std::to_string(texture_cnt);
 		std::string texture_name = "texture_diffuse1";
 		shader->setInt(texture_name.c_str(), texture_cnt++);
 		textures.push_back(std::move(texture));
@@ -83,7 +76,6 @@ public:
 
 	void Draw() const {
 		glBindVertexArray(VAO);
-		
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textures.back());
@@ -92,6 +84,7 @@ public:
 		glDrawElements(GL_TRIANGLES, indices_cnt, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
+
 	~Mesh() {
 		glDeleteVertexArrays(1, &VAO);
 		glDeleteBuffers(1, &VBO);
@@ -106,8 +99,6 @@ private:
 	unsigned int VAO, VBO, EBO;
 	std::vector <unsigned int> textures;
 	std::shared_ptr <Shader> shader;
-
-
 };
 
 class ObjectBase {
@@ -121,10 +112,11 @@ public:
 		return res;
 	}
 
-	ObjectBase(const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader, char color_id = 0x0) : shader(shader), vertices(vertices), vertices_cnt(vertices_cnt), indices_cnt(indices_cnt), indices(indices), color_id(color_id) {
+	ObjectBase(const float* vertices, const int vertices_cnt, const unsigned int* indices,
+			   const int indices_cnt, std::shared_ptr <Shader> shader, char color_id = 0x0)
+				: shader(shader), vertices(vertices), vertices_cnt(vertices_cnt), indices_cnt(indices_cnt),
+				  indices(indices), color_id(color_id) {
 		meshes.emplace_back(vertices, vertices_cnt, indices, indices_cnt, shader);
-		
 	}
 
 	virtual void DrawObject() = 0; 
@@ -135,7 +127,7 @@ public:
 	}
 
 	virtual void applyClick(int object_id) {
-		std::cout << "applying click!" << std::endl;
+		std::cout << "click!" << std::endl;
 	}
 
 	void setModelMatrices(const glm::mat4& model_mat) {
@@ -171,14 +163,10 @@ public:
 	std::shared_ptr<Shader> shader;
 	std::vector <Mesh> meshes;
 	char color_id;
-	//unsigned int VBO, VAO, EBO;
-	//int texture_cnt = 0;
-	//std::string name;
-
 	
 	protected: 
-	const float *vertices;
+	const float* vertices;
 	int vertices_cnt, indices_cnt;
-	const unsigned int * indices;
+	const unsigned int* indices;
 };
 

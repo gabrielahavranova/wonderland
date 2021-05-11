@@ -30,7 +30,7 @@ class Model {
 public:
     // model data 
     std::vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
-    std::vector<MeshA>    meshes;
+    std::vector<MeshAssimp>    meshes;
     std::string directory;
     bool gammaCorrection;
 
@@ -89,7 +89,7 @@ private:
 
     }
 
-    MeshA processMesh(aiMesh* mesh, const aiScene* scene)
+    MeshAssimp processMesh(aiMesh* mesh, const aiScene* scene)
     {
         // data to fill
         std::vector<Vertex> vertices;
@@ -170,7 +170,7 @@ private:
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
         // return a mesh object created from the extracted mesh data
-        return MeshA(vertices, indices, textures);
+        return MeshAssimp(vertices, indices, textures);
     }
 
     // checks all material textures of a given type and loads the textures if they're not loaded yet.

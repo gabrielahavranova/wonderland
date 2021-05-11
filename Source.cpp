@@ -2,19 +2,11 @@
 #include <iostream>
 #include "Shader.h"
 #include "stb_image.h"
-// WORK NTB:
-// #include "../glm/glm/glm.hpp"
-// #include "../glm/glm/gtc/matrix_transform.hpp"
-// #include "../glm/glm/gtc/type_ptr.hpp"
-
-// private ntb: 
 #include "glm/glm/glm.hpp"
 #include "glm/glm/gtc/matrix_transform.hpp"
 #include "glm/glm/gtc/type_ptr.hpp"
-
 #include "Camera.h"
 #include "ConstsAndTypes.h"
-//#include "assimp/BaseImporter.h"
 
 int main(int argc, char** argv) {
 	Wonderland::initEnviroment();
@@ -41,11 +33,10 @@ int main(int argc, char** argv) {
 				}
 				object->Draw();
 			}
+
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			unsigned char color[4];
 			glReadPixels(WIN_WIDTH / 2, WIN_HEIGHT / 2, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
-			std::cout << "clicked color is: " << color[0] << " " << color[1] << " " << color[2] << " " << color[3] << std::endl;
-			std::cout << "clicked color is: " << (int)color[0] << " " << (int)color[1] << " " <<(int) color[2] << " " << (int)color[3] << std::endl;
 			Wonderland::getClickLocation = false;
 			Wonderland::shaders["basic"]->use();
 			Wonderland::shaders["basic"]->setBool("click_test.perform", false);
