@@ -8,6 +8,9 @@
 #include "Camera.h"
 #include "ConstsAndTypes.h"
 
+/*!	
+ *		Main program loop and main drawing loop as well. 
+ */
 int main(int argc, char** argv) {
 	Wonderland::initEnviroment();
 	Wonderland::createShaders();

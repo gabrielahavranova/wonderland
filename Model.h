@@ -1,3 +1,9 @@
+/*!
+ *  @file Model.h
+ *
+ *  Model class used to load and store models loaded from .obj using assimp
+ */
+ 
 #pragma once
 #include <glad/glad.h> 
 
@@ -88,7 +94,14 @@ private:
         }
 
     }
-
+    /*!
+     *  Processes the mesh.
+     *
+     *      @param [in,out] mesh  
+     *      @param [in]     scene 
+     *
+     *      @return 
+     */
     MeshAssimp processMesh(aiMesh* mesh, const aiScene* scene)
     {
         // data to fill
@@ -149,25 +162,12 @@ private:
         }
         // process materials
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        // we assume a convention for sampler names in the shaders. Each diffuse texture should be named
-        // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
-        // Same applies to other texture as the following list summarizes:
-        // diffuse: texture_diffuseN
-        // specular: texture_specularN
-        // normal: texture_normalN
+        
 
         // 1. diffuse maps
         std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-        // 2. specular maps
-        std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-        // 3. normal maps
-        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-        // 4. height maps
-        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-        textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+       
 
         // return a mesh object created from the extracted mesh data
         return MeshAssimp(vertices, indices, textures);
@@ -207,6 +207,13 @@ private:
     }
 };
 
+/*!
+ *  Loads the material.
+ *
+ *      @param [in,out] mat 
+ *
+ *      @return 
+ */
 Material loadMaterial(aiMaterial* mat) {
     Material material;
     aiColor3D color(0.f, 0.f, 0.f);
@@ -225,15 +232,20 @@ Material loadMaterial(aiMaterial* mat) {
     material.Shininess = shininess;
 
     return material;
-
 }
 
-
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma)
-{
+/*!
+ *  Loads texture from the file.
+ *
+ *      @param [in] path      
+ *      @param [in] directory 
+ *      @param [in] gamma     
+ *
+ *      @return texture ID
+ */
+unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma) {
     std::string filename = std::string(path);
     filename = directory + '/' + filename;
-    std::cout << "directory is: " << directory << ", and filename is: " << filename << std::endl;
 
     unsigned int textureID;
     glGenTextures(1, &textureID);

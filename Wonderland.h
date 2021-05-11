@@ -37,6 +37,7 @@ namespace Wonderland {
 	std::unique_ptr <Skybox> skybox;
 	std::vector <glm::vec3> colliders;
 	std::map <std::string, std::shared_ptr<Model>> mm_scene_objects;
+	std::unique_ptr<LightSource> light_source;
 
 	/*!
 	 *  Toggles the flashlight.
@@ -65,16 +66,16 @@ namespace Wonderland {
 	void createObjects() {
 		size_t index = simple_scene_objects.size();
 
-		simple_scene_objects.emplace_back(std::make_shared <Mush>(mushroomVertices, mushroomNVertices* 8, mushroomTriangles, mushroomNTriangles, shaders["basic"], "mushtex.png", colliders));
+		simple_scene_objects.emplace_back(std::make_shared <RedMushroom>(mushroomVertices, mushroomNVertices* 8, mushroomTriangles, mushroomNTriangles, shaders["basic"], "mushtex.png", colliders));
 		simple_scene_objects.emplace_back(std::make_shared <BlueShrooms>(mushroom1Vertices, mushroom1NVertices * 8, mushroom1Triangles, mushroom1NTriangles, shaders["basic"], "Mtex.png", colliders));
 		for (int i = 1; i < 5; i++) clickable_objects.emplace(i, simple_scene_objects.back());
 		simple_scene_objects.emplace_back(std::make_shared <Lava>(newlavaVertices, newlavaNVertices * 8, newlavaTriangles, newlavaNTriangles, shaders["basic"], 0xFF));
 		clickable_objects.emplace(0xFF, simple_scene_objects.back());
-		simple_scene_objects.emplace_back(std::make_shared <Mushrooms>(mushroom2Vertices, mushroom2NVertices * 8, mushroom2Triangles, mushroom2NTriangles, shaders["basic"], "mushroom2tex.png", colliders));
+		simple_scene_objects.emplace_back(std::make_shared <DoubleMushrooms>(mushroom2Vertices, mushroom2NVertices * 8, mushroom2Triangles, mushroom2NTriangles, shaders["basic"], "mushroom2tex.png", colliders));
 		for (int i = 10; i < 17; i++) clickable_objects.emplace(i, simple_scene_objects.back());
 		simple_scene_objects.emplace_back(std::make_shared <God>(suzanneVertices, suzanneNVertices * 8, suzanneTriangles, suzanneNTriangles, shaders["basic"]));
 		simple_scene_objects.emplace_back(std::make_shared <Stars>(starVertices, starNVertices * 8, starTriangles, starNTriangles, shaders["light"]));
-		simple_scene_objects.emplace_back(std::make_shared <LightSource>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["light"], shaders["basic"]));
+		light_source = std::make_unique<LightSource>(cubeVertices, cubeNVertices * 8, cubeTriangles, cubeNTriangles, shaders["light"], shaders["basic"]);
 
 		std::vector <std::string> skybox_faces { ".\\skybox\\right.png", ".\\skybox\\left.png", ".\\skybox\\top.png",
 												 ".\\skybox\\bottom.png", ".\\skybox\\front.png", ".\\skybox\\back.png"};
@@ -297,7 +298,7 @@ namespace Wonderland {
 	 *      @param [in,out] win    
 	 *      @param [in]     width  
 	 *      @param [in]     height 
-	 */*/
+	 */
 	void windowResizeCallback(GLFWwindow* win, int width, int height) {
 		glViewport(0, 0, width, height);
 	}
