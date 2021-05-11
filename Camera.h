@@ -107,7 +107,7 @@ public:
 
 
             //std::cout << "Position = glm::vec3(" << Position[0] << "f, " << Position[1] << "f, " << Position[2] << "f);" << std::endl;
-            std::cout << Position[0] << "f, " << Position[1] << "f, " << Position[2] << "f, ";
+            std::cout << "glm::vec3(" << Position[0] << "f, " << Position[1] << "f, " << Position[2] << "f), ";
             //std::cout << "Front = glm::vec3(" << Front.x << "f, " << Front.y << "f, " << Front.z << "f);" << std::endl;
             //std::cout << "Right = glm::vec3(" << Right.x << "f, " << Right.y << "f, " << Right.z << "f);" << std::endl;
             //std::cout << "Up = glm::vec3(" << Up.x << "f, " << Up.y << "f, " << Up.z << "f);" << std::endl;
@@ -130,7 +130,7 @@ public:
             Position = glm::vec3(66.6536f, 37.5282f, 30.5252f);
             updateCameraVectors();
         }
-        Position.y = 10.0f;
+        Position.y = 10.001f;
            // Front = glm::vec3(-0.317231f, - 0.020943f, - 0.948117f);
     }
 
