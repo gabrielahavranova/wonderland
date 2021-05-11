@@ -12,22 +12,6 @@ public:
 	std::shared_ptr <Shader> shader;
 	Skybox(std::vector <std::string> faces, const float * skybox_vertices, unsigned int skybox_vert_cnt, 
 		std::shared_ptr <Shader> shader): faces(faces), shader(shader) {
-		/*glGenVertexArrays(1, &cubeVAO);
-		glGenBuffers(1, &cubeVBO);
-		
-		glBindVertexArray(cubeVAO);
-		glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-
-		glBufferData(GL_ARRAY_BUFFER, cube_vert_cnt * sizeof(float), cube_vertices, GL_STATIC_DRAW);
-
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)3);*/
-		//----------------------------------------------------------------------------
-		
-		//-----skybox-----------------------------------------------------------------
 		glGenVertexArrays(1, &skyboxVAO);
 		glGenBuffers(1, &skyboxVBO);
 
@@ -40,12 +24,11 @@ public:
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
 		this->texture = loadTextures();
-		
 	}
 
 	void draw() {
-		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
-		// skybox cube
+		// change depth function so depth test passes when values are equal to depth buffer's content
+		glDepthFunc(GL_LEQUAL);  
 		glBindVertexArray(skyboxVAO);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, this->texture);
@@ -56,7 +39,6 @@ public:
 
 private:
 	unsigned int cubeVAO, cubeVBO, skyboxVAO, skyboxVBO;
-	//const float* vertices;
 	std::vector <std::string> faces;
 	unsigned int texture;
 
@@ -91,6 +73,4 @@ private:
 
 		return textureID;
 	}
-
-	
 };

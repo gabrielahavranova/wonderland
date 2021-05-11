@@ -1,25 +1,12 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 
 #include <glad/glad.h>
-//#include "../glm/glm/glm.hpp"
-#include "glm/glm/glm.hpp"
-//#include "../glm/glm/gtc/matrix_transform.hpp"
-#include "glm/glm/gtc/matrix_transform.hpp"
 #include <cmath>
-
 #include <vector>
+#include "glm/glm/glm.hpp"
+#include "glm/glm/gtc/matrix_transform.hpp"
 
-// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
-enum Camera_Movement {
-    FORWARD,
-    BACKWARD,
-    LEFT,
-    RIGHT,
-    STATIC1,
-    STATIC2
-};
-
+enum CameraMovement { FORWARD, BACKWARD, LEFT, RIGHT, STATIC1, STATIC2 };
 
 // Default camera values
 const float YAW = -90.0f;
@@ -28,167 +15,149 @@ const float SPEED = 25.0f;
 const float SENSITIVITY = 0.1f;
 const float ZOOM = 45.0f;
 
+class Camera {
+ public:
+  glm::vec3 Position;
+  glm::vec3 Front;
+  glm::vec3 Up;
+  glm::vec3 Right;
+  glm::vec3 WorldUp;
+  float Yaw;
+  float Pitch;
+  float MovementSpeed;
+  float MouseSensitivity;
+  float Zoom;
 
-// An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
-class Camera
-{
-public:
-    // camera Attributes
-    glm::vec3 Position;
-    glm::vec3 Front;
-    glm::vec3 Up;
-    glm::vec3 Right;
-    glm::vec3 WorldUp;
-    // euler Angles
-    float Yaw;
-    float Pitch;
-    // camera options
-    float MovementSpeed;
-    float MouseSensitivity;
-    float Zoom;
+  Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
+         glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW,
+         float pitch = PITCH)
+      : Front(glm::vec3(0.0f, 0.0f, -1.0f)),
+        MovementSpeed(SPEED),
+        MouseSensitivity(SENSITIVITY),
+        Zoom(ZOOM) {
+    Position = position;
+    WorldUp = up;
+    Yaw = yaw;
+    Pitch = pitch;
+    updateCameraVectors();
+  }
 
-    // constructor with vectors
-    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
-    {
-        Position = position;
-        WorldUp = up;
-        Yaw = yaw;
-        Pitch = pitch;
-        updateCameraVectors();
+  Camera(float posX, float posY, float posZ, float upX, float upY, float upZ,
+         float yaw, float pitch)
+      : Front(glm::vec3(0.0f, 0.0f, -1.0f)),
+        MovementSpeed(SPEED),
+        MouseSensitivity(SENSITIVITY),
+        Zoom(ZOOM) {
+    Position = glm::vec3(posX, posY, posZ);
+    WorldUp = glm::vec3(upX, upY, upZ);
+    Yaw = yaw;
+    Pitch = pitch;
+    updateCameraVectors();
+  }
+
+  glm::mat4 GetViewMatrix() {
+    return glm::lookAt(Position, Position + Front, Up);
+  }
+
+  void processKeyInput(CameraMovement direction, float deltaTime,
+                       const std::vector<glm::vec3>& colliders) {
+    float velocity = MovementSpeed * deltaTime;
+    if (direction == FORWARD) {
+      glm::vec3 new_pos = Position + Front * velocity;
+      if (!collides(new_pos, colliders)) Position = new_pos;
     }
-    // constructor with scalar values
-    Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
-    {
-        Position = glm::vec3(posX, posY, posZ);
-        WorldUp = glm::vec3(upX, upY, upZ);
-        Yaw = yaw;
-        Pitch = pitch;
-        updateCameraVectors();
+    if (direction == BACKWARD) {
+      glm::vec3 new_pos = Position - Front * velocity;
+      if (!collides(new_pos, colliders)) Position = new_pos;
     }
-
-    // returns the view matrix calculated using Euler Angles and the LookAt Matrix
-    glm::mat4 GetViewMatrix()
-    {
-        return glm::lookAt(Position, Position + Front, Up);
+    if (direction == LEFT) {
+      glm::vec3 new_pos = Position - Right * velocity;
+      if (!collides(new_pos, colliders)) Position = new_pos;
     }
+    if (direction == RIGHT) {
+      glm::vec3 new_pos = Position + Right * velocity;
+      if (!collides(new_pos, colliders)) Position = new_pos;
+    }
+    if (direction == STATIC1) {
+      //std::cout << "glm::vec3(" << Position[0] << "f, " << Position[1] << "f,"
+      //          << Position[2] << "f), ";
+      //std::cout << "Front = glm::vec3(" << Front.x << "f, " << Front.y << "f,"
+      //          << Front.z << "f);" << std::endl;
+      //std::cout << "Right = glm::vec3(" << Right.x << "f, " << Right.y << "f, "
+      //          << Right.z << "f);" << std::endl;
+      //std::cout << "Up = glm::vec3(" << Up.x << "f, " << Up.y << "f, " << Up.z
+      //          << "f);" << std::endl;
+      //std::cout << "Pitch = " << Pitch << "f;" << std::endl;
+      //std::cout << "Yaw = " << Yaw << "f;" << std::endl;
 
-    // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
-    void ProcessKeyboard(Camera_Movement direction, float deltaTime, const std::vector<glm::vec3>& colliders)
-    {
-        float velocity = MovementSpeed * deltaTime;
-        if (direction == FORWARD) {
-            glm::vec3 new_pos = Position + Front * velocity;
-            if (!collides(new_pos, colliders)) Position = new_pos;
-        }
-        if (direction == BACKWARD) {
-            //Position -= Front * velocity;
-            glm::vec3 new_pos = Position - Front * velocity;
-            if (!collides(new_pos, colliders)) Position = new_pos;
-        }
-        if (direction == LEFT) {
-            //Position -= Right * velocity;
-            glm::vec3 new_pos = Position - Right * velocity;
-            if (!collides(new_pos, colliders)) Position = new_pos;
-        }
-        if (direction == RIGHT) {
-            //Position += Right * velocity;
-            glm::vec3 new_pos = Position + Right * velocity;
-            if (!collides(new_pos, colliders)) Position = new_pos;
-        }
-        if (direction == STATIC1) {
-           // glm::vec3 front;
-            //front.x = cos(glm::radians(20.0f)) * cos(glm::radians(20.0f));
-            //front.y = sin(glm::radians(20.0f));
-          //  front.z = sin(glm::radians(20.0f)) * cos(glm::radians(20.0f));
-            //Front = glm::normalize(front);
-            //Position = glm::vec3(-24.3f, -0.22f, 18.0f);
-            //Front = glm::vec3(0.696716f, 0.0697564f, -0.713947f);
-            //Pitch = std::asin(0.0697564f);
-
-
-            //std::cout << "Position = glm::vec3(" << Position[0] << "f, " << Position[1] << "f, " << Position[2] << "f);" << std::endl;
-            std::cout << "glm::vec3(" << Position[0] << "f, " << Position[1] << "f, " << Position[2] << "f), ";
-            //std::cout << "Front = glm::vec3(" << Front.x << "f, " << Front.y << "f, " << Front.z << "f);" << std::endl;
-            //std::cout << "Right = glm::vec3(" << Right.x << "f, " << Right.y << "f, " << Right.z << "f);" << std::endl;
-            //std::cout << "Up = glm::vec3(" << Up.x << "f, " << Up.y << "f, " << Up.z << "f);" << std::endl;
-            //std::cout << "Pitch = " << Pitch << "f;" << std::endl;
-            //std::cout << "Yaw = " << Yaw << "f;" << std::endl;
-
-            //Pitch = 0.400004f;
-            //Yaw = 318.3f;
-            //Position = glm::vec3(-25.051f, -0.572113f, 18.8281f);
-            //Zoom = 45.0f;
-            //updateCameraVectors();
-            //Front = glm::vec3(0.620842f, -0.0314108f, -0.783306f);
-           // Right = glm::vec3(0.209618f, 0.0f, -0.977783f);
-            //Up = glm::vec3(-0.430165f, 0.898028f, -0.0922193f);
-            
-        }
-        if (direction == STATIC2) {
-            Pitch = -25.3f;
-            Yaw = 216.1f;
-            Position = glm::vec3(66.6536f, 37.5282f, 30.5252f);
-            updateCameraVectors();
-        }
-        Position.y = 10.001f;
-           // Front = glm::vec3(-0.317231f, - 0.020943f, - 0.948117f);
+      Position = glm::vec3(80.6795f, 10.001f, -92.7574f),
+      Front = glm::vec3(-0.641968f, 0.137444f, 0.754312f);
+      Right = glm::vec3(-0.761539f, 0.0f, -0.648119f);
+      Up = glm::vec3(0.0890802f, 0.99051f, -0.104669f);
+      Pitch = 7.89999f;
+      Yaw = -229.6f;
     }
 
-    // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-    void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)
-    {
-        xoffset *= MouseSensitivity;
-        yoffset *= MouseSensitivity;
-
-        Yaw += xoffset;
-        Pitch += yoffset;
-
-        // make sure that when pitch is out of bounds, screen doesn't get flipped
-        if (constrainPitch)
-        {
-            if (Pitch > 89.0f)
-                Pitch = 89.0f;
-            if (Pitch < -89.0f)
-                Pitch = -89.0f;
-        }
-
-        // update Front, Right and Up Vectors using the updated Euler angles
-        updateCameraVectors();
+    if (direction == STATIC2) {
+      Position = glm::vec3(-88.0046f, 10.001f, 90.4846f),
+      Front = glm::vec3(0.551006f, 0.785857f, -0.280752f);
+      Right = glm::vec3(0.453992f, -0.0f, 0.891006f);
+      Up = glm::vec3(-0.700203f, 0.618409f, 0.356773f);
+      Pitch = 51.8f;
+      Yaw = -27.0001f;
+      updateCameraVectors();
     }
 
-    // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
-    void ProcessMouseScroll(float yoffset)
-    {
-        Zoom -= (float)yoffset;
-        if (Zoom < 1.0f)
-            Zoom = 1.0f;
-        if (Zoom > 45.0f)
-            Zoom = 45.0f;
+    Position.y = 10.001f;
+  }
+
+  void ProcessMouseMovement(float xoffset, float yoffset,
+                            GLboolean constrainPitch = true) {
+    xoffset *= MouseSensitivity;
+    yoffset *= MouseSensitivity;
+
+    Yaw += xoffset;
+    Pitch += yoffset;
+
+    // make sure that when pitch is out of bounds, screen doesn't get flipped
+    if (constrainPitch) {
+      if (Pitch > 89.0f) Pitch = 89.0f;
+      if (Pitch < -89.0f) Pitch = -89.0f;
     }
 
-private:
-    bool collides(const glm::vec3& new_position, const std::vector<glm::vec3> &colliders) {
-        const float plane_p[] = { 100.858f, 90.6364f, -94.5102f, -92.7731f };
-        if (new_position.x > plane_p[0] || new_position.x < plane_p[2] || new_position.z> plane_p[1] || new_position.z < plane_p[3]) return true;
-        for (size_t i = 0; i < colliders.size(); i++) {
-            if (glm::distance(glm::vec2(new_position.x, new_position.z), glm::vec2(colliders[i].x, colliders[i].y)) < colliders[i].z) return true;
-        }
-        return false;
-    }
+    updateCameraVectors();
+  }
 
+  void ProcessMouseScroll(float yoffset) {
+    Zoom -= (float)yoffset;
+    if (Zoom < 1.0f) Zoom = 1.0f;
+    if (Zoom > 45.0f) Zoom = 45.0f;
+  }
 
-    void updateCameraVectors()
-    {
-        // calculate the new Front vector
-        glm::vec3 front;
-        front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-        front.y = sin(glm::radians(Pitch));
-        front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-        Front = glm::normalize(front);
-        // also re-calculate the Right and Up vector
-        Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-        Up = glm::normalize(glm::cross(Right, Front));
+ private:
+  bool collides(const glm::vec3& new_position,
+                const std::vector<glm::vec3>& colliders) {
+    const float plane_p[] = {100.858f, 90.6364f, -94.5102f, -92.7731f};
+    if (new_position.x > plane_p[0] || new_position.x < plane_p[2] ||
+        new_position.z > plane_p[1] || new_position.z < plane_p[3])
+      return true;
+    for (size_t i = 0; i < colliders.size(); i++) {
+      if (glm::distance(glm::vec2(new_position.x, new_position.z),
+                        glm::vec2(colliders[i].x, colliders[i].y)) <
+          colliders[i].z)
+        return true;
     }
+    return false;
+  }
+
+  void updateCameraVectors() {
+    glm::vec3 front;
+    front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+    front.y = sin(glm::radians(Pitch));
+    front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+    Front = glm::normalize(front);
+    Right = glm::normalize(glm::cross(
+        Front, WorldUp));  
+    Up = glm::normalize(glm::cross(Right, Front));
+  }
 };
-#endif
-

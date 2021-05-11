@@ -281,13 +281,13 @@ namespace Wonderland {
 		if (glfwGetKey(win, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(win, true);
 		if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
-			camera.ProcessKeyboard(FORWARD, delta_time, colliders);
+			camera.processKeyInput(FORWARD, delta_time, colliders);
 		if (glfwGetKey(win, GLFW_KEY_S) == GLFW_PRESS)
-			camera.ProcessKeyboard(BACKWARD, delta_time, colliders);
+			camera.processKeyInput(BACKWARD, delta_time, colliders);
 		if (glfwGetKey(win, GLFW_KEY_A) == GLFW_PRESS)
-			camera.ProcessKeyboard(LEFT, delta_time, colliders);
+			camera.processKeyInput(LEFT, delta_time, colliders);
 		if (glfwGetKey(win, GLFW_KEY_D) == GLFW_PRESS)
-			camera.ProcessKeyboard(RIGHT, delta_time, colliders);
+			camera.processKeyInput(RIGHT, delta_time, colliders);
 		if (glfwGetKey(win, GLFW_KEY_F1) == GLFW_RELEASE)
 			key_pressed[GLFW_KEY_F1] = false;
 		if (glfwGetKey(win, GLFW_KEY_F2) == GLFW_RELEASE)
@@ -310,11 +310,11 @@ namespace Wonderland {
 			key_pressed[GLFW_KEY_LEFT_CONTROL] = false;
 
 		if (glfwGetKey(win, GLFW_KEY_F1) == GLFW_PRESS && !key_pressed[GLFW_KEY_F1]) {
-			camera.ProcessKeyboard(STATIC1, delta_time, colliders);
+			camera.processKeyInput(STATIC1, delta_time, colliders);
 			key_pressed[GLFW_KEY_F1] = true;
 		}
 		if (glfwGetKey(win, GLFW_KEY_F2) == GLFW_PRESS && !key_pressed[GLFW_KEY_F2]) {
-			camera.ProcessKeyboard(STATIC2, delta_time, colliders);
+			camera.processKeyInput(STATIC2, delta_time, colliders);
 			key_pressed[GLFW_KEY_F2] = true;
 		}
 		if (glfwGetKey(win, GLFW_KEY_L) == GLFW_PRESS && !key_pressed[GLFW_KEY_L]) {
