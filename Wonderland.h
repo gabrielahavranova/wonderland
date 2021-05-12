@@ -79,6 +79,10 @@ namespace Wonderland {
 		for (int i = 10; i < 17; i++) clickable_objects.emplace (i, simple_scene_objects.back ());
 		simple_scene_objects.emplace_back (std::make_shared <God> (suzanneVertices, suzanneNVertices * 8, 
 			suzanneTriangles, suzanneNTriangles, shaders["basic"]));
+		simple_scene_objects.emplace_back (std::make_shared <Pine> (treeVertices, treeNVertices * 8,
+			treeTriangles, treeNTriangles, shaders["basic"], ".\\objects\\textures\\treetex.png", colliders));
+		simple_scene_objects.emplace_back (std::make_shared <RoundTree> (tree2Vertices, tree2NVertices * 8,
+			tree2Triangles, tree2NTriangles, shaders["basic"], ".\\objects\\textures\\treemat.png", colliders));
 		simple_scene_objects.emplace_back (std::make_shared <Stars> (starVertices, starNVertices * 8, 
 			starTriangles, starNTriangles, shaders["light"]));
 		light_source = std::make_unique<LightSource> (cubeVertices, cubeNVertices * 8, cubeTriangles, 

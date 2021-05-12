@@ -176,6 +176,49 @@ public:
 	}
 };
 
+/*!
+ *	Represents small Pine.
+ */
+class Pine : public MushroomBase {
+public:
+	Pine (const float* vertices, const int vertices_cnt,
+		const unsigned int* indices, const int indices_cnt,
+		std::shared_ptr<Shader> shader, const std::string& tex_name,
+		std::vector<glm::vec3>& colliders)
+		: MushroomBase (vertices, vertices_cnt, indices, indices_cnt, shader,
+			tex_name, colliders) {
+		this->mushroom_cnt = 3;
+		this->positions = { glm::vec3 (-40.0f, 17.0f, 1.0f), glm::vec3 (-60.0f, 17.0f, 10.0f), glm::vec3 (-20.0f, 17.0f, 2.0f) };
+		this->scales = { glm::vec3 (3.0f),  glm::vec3 (3.5f),  glm::vec3 (3.0f) };
+		this->angles = { 10.0f, 40.0f, 80.0f };
+		this->rotations = { z_axis };
+		float diameter = 4.0f;
+		colliders.emplace_back (-40.0f, 1.0f, diameter);
+		colliders.emplace_back (-60.0f, 10.0f, diameter);
+		colliders.emplace_back (-20.0f, 2.0f, diameter);
+	}
+};
+
+/*!
+ *	Represents small RoundTree.
+ */
+class RoundTree : public MushroomBase {
+public:
+	RoundTree (const float* vertices, const int vertices_cnt,
+		const unsigned int* indices, const int indices_cnt,
+		std::shared_ptr<Shader> shader, const std::string& tex_name,
+		std::vector<glm::vec3>& colliders)
+		: MushroomBase (vertices, vertices_cnt, indices, indices_cnt, shader,
+			tex_name, colliders) {
+		this->mushroom_cnt = 1;
+		this->positions = { glm::vec3 (-80.0f, 15.0f, -100.0f) };
+		this->scales = { glm::vec3 (0.5f, 0.5f, 4.0f) };
+		this->angles = { 10.0f };
+		this->rotations = { z_axis };
+		float diameter = 4.0f;
+		colliders.emplace_back (1.0f, 1.0f, diameter);
+	}
+};
 
 /*!
  *  Respresents the monkey.
