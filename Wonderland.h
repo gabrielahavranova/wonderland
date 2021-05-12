@@ -66,12 +66,12 @@ namespace Wonderland {
 	void createObjects() {
 		size_t index = simple_scene_objects.size();
 
-		simple_scene_objects.emplace_back(std::make_shared <RedMushroom>(mushroomVertices, mushroomNVertices* 8, mushroomTriangles, mushroomNTriangles, shaders["basic"], "mushtex.png", colliders));
-		simple_scene_objects.emplace_back(std::make_shared <BlueShrooms>(mushroom1Vertices, mushroom1NVertices * 8, mushroom1Triangles, mushroom1NTriangles, shaders["basic"], "Mtex.png", colliders));
+		simple_scene_objects.emplace_back(std::make_shared <RedMushroom>(mushroomVertices, mushroomNVertices* 8, mushroomTriangles, mushroomNTriangles, shaders["basic"], ".\\objects\\textures\\mushtex.png", colliders));
+		simple_scene_objects.emplace_back(std::make_shared <BlueShrooms>(mushroom1Vertices, mushroom1NVertices * 8, mushroom1Triangles, mushroom1NTriangles, shaders["basic"], ".\\objects\\textures\\Mtex.png", colliders));
 		for (int i = 1; i < 5; i++) clickable_objects.emplace(i, simple_scene_objects.back());
 		simple_scene_objects.emplace_back(std::make_shared <Lava>(newlavaVertices, newlavaNVertices * 8, newlavaTriangles, newlavaNTriangles, shaders["basic"], 0xFF));
 		clickable_objects.emplace(0xFF, simple_scene_objects.back());
-		simple_scene_objects.emplace_back(std::make_shared <DoubleMushrooms>(mushroom2Vertices, mushroom2NVertices * 8, mushroom2Triangles, mushroom2NTriangles, shaders["basic"], "mushroom2tex.png", colliders));
+		simple_scene_objects.emplace_back(std::make_shared <DoubleMushrooms>(mushroom2Vertices, mushroom2NVertices * 8, mushroom2Triangles, mushroom2NTriangles, shaders["basic"], ".\\objects\\textures\\mushroom2tex.png", colliders));
 		for (int i = 10; i < 17; i++) clickable_objects.emplace(i, simple_scene_objects.back());
 		simple_scene_objects.emplace_back(std::make_shared <God>(suzanneVertices, suzanneNVertices * 8, suzanneTriangles, suzanneNTriangles, shaders["basic"]));
 		simple_scene_objects.emplace_back(std::make_shared <Stars>(starVertices, starNVertices * 8, starTriangles, starNTriangles, shaders["light"]));

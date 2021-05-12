@@ -2,7 +2,7 @@
  *  @file Objects.h
  *  @author Gabriela Havranova
  *  @date 2021-05-12
- *  @project hopeful_semestralka
+ *  @project Wonderland
  *
  *  This file contains definitions of all classes inheriting from ObjectBase class - all the scene objects
  */
@@ -187,7 +187,7 @@ public:
 		std::shared_ptr<Shader> shader)
 		: ObjectBase (vertices, vertices_cnt, indices, indices_cnt, shader) {
 		for (auto& mesh : meshes) {
-			mesh.createTexture ("monke.png", true, true);
+			mesh.createTexture (".\\objects\\textures\\monke.png", true, true);
 		}
 	}
 	/*!
@@ -219,7 +219,7 @@ public:
 		: ObjectBase (vertices, vertices_cnt, indices, indices_cnt, shader,
 			color_id) {
 		for (auto& mesh : meshes)
-			mesh.createTexture (".\\objects\\lava_diffuse.jpg", false);
+			mesh.createTexture (".\\objects\\textures\\lava_diffuse.jpg", false);
 		speed = 2.0f;
 	}
 
@@ -258,7 +258,7 @@ public:
 		std::shared_ptr<Shader> shader)
 		: ObjectBase (vertices, vertices_cnt, indices, indices_cnt, shader) {
 		for (auto& mesh : meshes)
-			mesh.createTexture (".\\objects\\flame_spritesheet.png", true, true);
+			mesh.createTexture (".\\objects\\textures\\flame_spritesheet.png", true, true);
 		positions = { glm::vec3 (-33.3198f, -5.0f, -60.7827f), glm::vec3 (-43.3198f, -4.0f, -56.7827f),
 					  glm::vec3 (-53.3198f, -4.3f, -46.7827f), glm::vec3 (-38.3198f, -4.7f, -50.7827f),
 					  glm::vec3 (-47.3198f, -4.1f, -53.7827f) };

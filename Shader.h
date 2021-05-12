@@ -2,7 +2,7 @@
  *  @file Shader.h
  *  @author Gabriela Havranova
  *  @date 2021-05-12
- *  @project hopeful_semestralka
+ *  @project Wonderland
  *
  *  Shader class used for encapsulating shader programs.
  */

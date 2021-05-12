@@ -2,7 +2,7 @@
  *  @file Skybox.h
  *  @author Admin
  *  @date 2021-05-12
- *  @project hopeful_semestralka
+ *  @project Wonderland
  *
  *  Defines the skybox.
  */

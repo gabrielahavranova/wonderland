@@ -23,6 +23,7 @@
     <ProjectGuid>{5E7A1ADB-AC44-494D-83A8-34E9597857D1}</ProjectGuid>
     <RootNamespace>hopefulsemestralka</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Wonderland</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -162,6 +163,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ObjectBase.h" />
     <ClInclude Include="Objects.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="stb_image.h" />
