@@ -11,6 +11,7 @@ uniform sampler2D texture_diffuse1;
 uniform vec3 view_pos;
 uniform int fog;
 uniform bool is_flame_frag;
+uniform bool is_lava_frag;
 uniform bool is_clickable = false;
 
 struct Material {
@@ -68,51 +69,49 @@ uniform ClickTest click_test;
 
 uniform Material material;
 
+// height fog = lower the fragment is - the more intense the fog would be
 vec4 applyFog(vec4 res_color) {
-	vec4 fog_color = vec4(0.7);
+	vec4 fog_color = vec4(0.2);
 	float intensity = 0.01f;
 	
-	float dist = length(view_pos - frag_pos);
+	float dist = length(frag_pos - vec3 (frag_pos.x, -2.0, frag_pos.z));
+	dist = dist * 10;
 	float fog_intensity = clamp(exp(-dist * dist * intensity * intensity), 0.0f, 1.0f);
-	res_color = res_color * fog_intensity + (1 - fog_intensity) * fog_color;
+	res_color = res_color * (1- fog_intensity) + ( fog_intensity) * fog_color;
 
 	return res_color;
 }
 
 
 vec3 getDirLightComponents(vec3 view_direction) {
+	vec3 ambient = dir_light.ambient * material.ambient;
 	vec3 light_direction = normalize(dir_light.direction);
 	vec3 norm = normalize(normal);
-
 	float diff = max(dot(norm, light_direction), 0.0);
+	vec3 diffuse = dir_light.diffuse * diff * material.diffuse;
 
 	vec3 reflect_dir = reflect(-light_direction, norm);
 	float spec = pow(max(dot(view_direction, reflect_dir), 0.0), material.shininess);
 
-	vec3 ambient  = dir_light.ambient  * material.ambient;
-	vec3 diffuse  =	dir_light.diffuse  * diff * material.diffuse;
-	vec3 specular =	dir_light.specular * spec * material.specular;
+	vec3 specular = dir_light.specular * spec * material.specular;
 
 	return vec3(ambient + diffuse + specular);
 }
 
-
+// point light is simulated as lava with flame
 vec3 getPointLightComponents(vec3 view_direction) {
 	// compute attenuation
 	float dist = length(pointlight.position - frag_pos);
 	float attenuation = 1.0 / (pointlight.constant + pointlight.linear * dist + 
 						pointlight.quadratic * dist * dist);
-	// ambient
 	vec3 ambient = material.ambient * pointlight.ambient;
 
-	//diffuse
 	vec3 norm = normalize(normal);
 	vec3 light_direction = normalize(pointlight.position - frag_pos);
 	float diff = max(dot(norm, light_direction), 0.0);
 	vec3 diffuse = pointlight.diffuse * (diff * material.diffuse);
 	
-	// specular
-	//vec3 view_direction = normalize(view_pos - frag_pos);
+	
 	vec3 reflect_direction = reflect(-light_direction, norm);
 	float spec = pow(max(dot(view_direction, reflect_direction), 0.0), 32);
 	vec3 specular = pointlight.specular * spec * material.specular;
@@ -161,7 +160,6 @@ void main () {
 	if (!click_test.perform) {
 		vec3 view_direction = normalize(view_pos - frag_pos);
 
-		//FragColor = texture2D(texture_diffuse1, tex_coord) * 
 		vec4 tex_color = texture(texture_diffuse1, tex_coord);
 		if (tex_color.a < 0.1) discard;
 		if (is_flame_frag) {
@@ -169,7 +167,6 @@ void main () {
 			return;
 		}
 		vec3 cursor = vec3(0.0, 0.0, 0.0);
-		//if (picking_on && frag_pos 
 		if (picking.on && is_clickable) {
 			cursor = applyPicking();
 		}
@@ -177,10 +174,18 @@ void main () {
 		if (cursor.x > 0.99) {
 			FragColor = vec4(cursor, 1.0);
 		} else {
+		// lava and flame are not affected by directional light and they simulate pointlight position
+			if (is_lava_frag || is_flame_frag) { 
 			FragColor = tex_color * 
-						//vec4(getFlashlightComponents() + getDirLightComponents(view_direction), 1.0);
-						vec4(getPointLightComponents(view_direction) + getFlashlightComponents() + /*getDirLightComponents(view_direction)*/ + cursor, 1.0);
-						//vec4(getPointLightComponents(view_direction) + getFlashlightComponents(), 1.0);
+						vec4(getFlashlightComponents() + 
+							 vec3(0.8,0.8,0.8), 1.0);
+			} else	{
+				FragColor = tex_color * 
+							vec4(getPointLightComponents(view_direction) + 
+								 getFlashlightComponents() + 
+								 getDirLightComponents(view_direction) + 
+								 cursor, 1.0);
+			}
 			if (fog == 1) {
 				FragColor = applyFog(FragColor);
 			}

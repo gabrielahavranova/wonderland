@@ -48,7 +48,7 @@ public:
 				shader->setBool ("is_clickable", true);
 			}
 
-			setMeshMaterial (ones3f, 0.0f);
+			setMeshMaterial (ones3f, 2.0f);
 			glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
 			for (const auto& mesh : meshes) mesh.Draw ();
 
@@ -203,7 +203,7 @@ public:
 
 		setModelMatrices (model);
 		glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
-		setMeshMaterial (ones3f, ones3f, 1.0f);
+		setMeshMaterial (ones3f, ones3f, 2.0f);
 		for (const auto& mesh : meshes) {
 			mesh.Draw ();
 		}
@@ -230,6 +230,7 @@ public:
 
 	void DrawObject () override {
 		shader->setBool ("is_lava", true);
+		shader->setBool ("is_lava_frag", true);
 		shader->setBool ("is_clickable", true);
 		shader->setFloat ("lava_sped", speed);
 		shader->setVec3 ("click_test.object_color", glm::vec3 (1.0f, 0.0f, 0.0f));
@@ -239,9 +240,10 @@ public:
 		model = glm::rotate (model, glm::radians (angle), glm::vec3 (1.0f, 0.0f, 0.0f));
 		model = glm::scale (model, glm::vec3 (5.5, 5.5, 5.5));
 		setModelMatrices (model);
-		setMeshMaterial (ones3f, 0.0f);
+		setMeshMaterial (ones3f, 2.0f);
 		for (const auto& mesh : meshes) mesh.Draw ();
 		shader->setBool ("is_lava", false);
+		shader->setBool ("is_lava_frag", false);
 		shader->setBool ("is_clickable", false);
 		shader->setVec3 ("click_test.object_color", glm::vec3 (0.0f, 0.0f, 0.0f));
 	}
@@ -273,7 +275,7 @@ public:
 			model = glm::translate (model, positions[i]);
 			model = glm::scale (model, glm::vec3 (2.0f, 2.0f, 2.0f));
 			setModelMatrices (model);
-			setMeshMaterial (ones3f, 0.0f);
+			setMeshMaterial (ones3f, 2.0f);
 			glPolygonMode (GL_FRONT_AND_BACK, GL_FILL);
 			for (const auto& mesh : meshes) mesh.Draw ();
 		}
@@ -345,26 +347,24 @@ public:
 		const unsigned int* indices, const int indices_cnt,
 		std::shared_ptr<Shader> own_shader,
 		std::shared_ptr<Shader> object_shader) {
-		this->position = glm::vec3 (-33.3198f, 5.0f, -56.7827f);
+		this->position = glm::vec3 (-33.3198f, 30.0f, -56.7827f);
 		object_shader->use ();
-		object_shader->setVec3 ("pointlight.ambient", glm::vec3 (0.1f, 0.1f, 0.1f));
-		object_shader->setVec3 (
-			"pointlight.diffuse",
-		glm::vec3 (0.5f, 0.5f, 0.5f));  // darken diffuse light a bit
+		object_shader->setVec3 ("pointlight.ambient", glm::vec3 (0.2f, 0.15f, 0.05f));
+		object_shader->setVec3 ("pointlight.diffuse", glm::vec3 (0.5f, 0.5f, 0.5f));  
 		object_shader->setVec3 ("pointlight.specular", glm::vec3 (1.0f, 1.0f, 1.0f));
 		object_shader->setVec3 ("pointlight.position", this->position);
 
 		// constants used for point light attenuation
-		object_shader->setFloat ("pointlight.constant", 1.0f);
-		object_shader->setFloat ("pointlight.linear", 0.0014);
-		object_shader->setFloat ("pointlight.quadratic", 0.000007f);
+		object_shader->setFloat ("pointlight.constant", 0.5f);
+		object_shader->setFloat ("pointlight.linear", 0.007);
+		object_shader->setFloat ("pointlight.quadratic", 0.0002f);
 
 		// direction is set with moon position
-		object_shader->setVec3 ("dir_light.direction",
-		glm::vec3 (140.43f, 100.0f, 60.7283f));
-		object_shader->setVec3 ("dir_light.ambient", glm::vec3 (0.15f, 0.15f, 0.15f));
-		object_shader->setVec3 ("dir_light.diffuse", glm::vec3 (0.15f, 0.15f, 0.15f));
-		object_shader->setVec3 ("dir_light.specular", glm::vec3 (0.3f, 0.3f, 0.3f));
+		object_shader->setVec3 ("dir_light.direction", glm::vec3 (12.0f + 0.5f * 140.0f, 500.0f, 5.0f +0.5f * 140.0f));
+		float dir_intensity = 0.04f;
+		object_shader->setVec3 ("dir_light.ambient", glm::vec3 (dir_intensity, dir_intensity, dir_intensity));
+		object_shader->setVec3 ("dir_light.diffuse", glm::vec3 (dir_intensity, dir_intensity, dir_intensity));
+		object_shader->setVec3 ("dir_light.specular", glm::vec3 (0.05f, 0.05f, 0.05f));
 	}
 
 private:

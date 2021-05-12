@@ -207,32 +207,6 @@ private:
     }
 };
 
-/*!
- *  Loads the material.
- *
- *      @param [in,out] mat 
- *
- *      @return 
- */
-Material loadMaterial(aiMaterial* mat) {
-    Material material;
-    aiColor3D color(0.f, 0.f, 0.f);
-    float shininess;
-
-    mat->Get(AI_MATKEY_COLOR_DIFFUSE, color);
-    material.Diffuse = glm::vec3(color.r, color.b, color.g);
-
-    mat->Get(AI_MATKEY_COLOR_AMBIENT, color);
-    material.Ambient = glm::vec3(color.r, color.b, color.g);
-
-    mat->Get(AI_MATKEY_COLOR_SPECULAR, color);
-    material.Specular = glm::vec3(color.r, color.b, color.g);
-
-    mat->Get(AI_MATKEY_SHININESS, shininess);
-    material.Shininess = shininess;
-
-    return material;
-}
 
 /*!
  *  Loads texture from the file.

@@ -36,6 +36,7 @@ int main(int argc, char** argv) {
 				}
 				object->Draw();
 			}
+			Wonderland::drawMultimesh ();
 
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			unsigned char color[4];
