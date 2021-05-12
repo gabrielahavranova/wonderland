@@ -1,6 +1,6 @@
 /*!
  *  @file Shader.h
- *  @author Admin
+ *  @author Gabriela Havranova
  *  @date 2021-05-12
  *  @project hopeful_semestralka
  *

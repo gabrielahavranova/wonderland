@@ -153,7 +153,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\GLFW\glad.c" />
-    <ClCompile Include="Object.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="image.cpp" />
   </ItemGroup>
@@ -169,11 +168,6 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="VerticesLib.h" />
     <ClInclude Include="Wonderland.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="assets\grass.png" />
-    <Image Include="container.jpg" />
-    <Image Include="wall.jpg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\fragment_shader.frag" />

@@ -24,9 +24,6 @@
     <ClCompile Include="image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -62,17 +59,6 @@
     <ClInclude Include="Skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="wall.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="container.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="assets\grass.png">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\fragment_shader.frag">
