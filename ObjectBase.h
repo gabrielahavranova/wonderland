@@ -1,3 +1,12 @@
+/*!
+ *  @file ObjectBase.h
+ *  @author Gabriela Havranova
+ *  @date 2021-05-12
+ *  @project Wonderland
+ *
+ *  Defines the object base class and Mesh class for scene objects to inherit from.
+ */
+ 
 #pragma once
 
 #include "stb_image.h"
@@ -7,11 +16,14 @@
 #include "glm/glm/glm.hpp"
 #include "glm/glm/gtc/matrix_transform.hpp"
 
-
+/*!
+ *  Mesh class used to store textures amd initialize OpenGL drawing buffers
+ */
 class Mesh {
 public:
 	Mesh (const float* vertices, const int vertices_cnt, const unsigned int* indices, const int indices_cnt,
-		std::shared_ptr <Shader> shader) : shader (shader), vertices (vertices), vertices_cnt (vertices_cnt), indices_cnt (indices_cnt), indices (indices) {
+		std::shared_ptr <Shader> shader) : shader (shader), vertices (vertices), vertices_cnt (vertices_cnt), 
+		indices_cnt (indices_cnt), indices (indices) {
 		glGenVertexArrays (1, &VAO);
 		glGenBuffers (1, &VBO);
 		glGenBuffers (1, &EBO);
@@ -40,7 +52,15 @@ public:
 		glBindVertexArray (0);
 	}
 
-
+	/*!
+	 *  Creates the texture from image.
+	 *
+	 *      @param [in] tex_path             
+	 *      @param [in] flip_texture_on_load 
+	 *      @param [in] is_png               
+	 *
+	 *      @return 
+	 */
 	int createTexture (const char* tex_path, bool flip_texture_on_load = false, bool is_png = false) {
 		unsigned int texture;
 		glGenTextures (1, &texture);
@@ -63,21 +83,25 @@ public:
 			glGenerateMipmap (GL_TEXTURE_2D);
 		} else {
 			std::cout << "failed loading textures!" << std::endl;
+			return 0;
 		}
 
-		stbi_image_free (data);
-		shader->use ();
+		stbi_image_free(data);
+		shader->use();
 		std::string texture_name = "texture_diffuse1";
 		shader->setInt (texture_name.c_str (), texture_cnt++);
 		textures.push_back (std::move (texture));
 		return 1;
 	}
 
+	/*!
+	 *  Draws the mesh. If the mesh does not have own texture, uses default transparent one. 
+	 */
 	void Draw () const {
 		glBindVertexArray (VAO);
 
 		glActiveTexture (GL_TEXTURE0);
-		glBindTexture (GL_TEXTURE_2D, textures.back ());
+		glBindTexture (GL_TEXTURE_2D, textures.back());
 		shader->setInt ("texture0", 0);
 
 		glDrawElements (GL_TRIANGLES, indices_cnt, GL_UNSIGNED_INT, 0);
@@ -100,6 +124,9 @@ private:
 	std::shared_ptr <Shader> shader;
 };
 
+/*!
+ *  Virtual base class for all the scene objects.
+ */
 class ObjectBase {
 public:
 	double getTimeSeed () {
@@ -155,7 +182,6 @@ public:
 		shader->setVec3 ("material.specular", glm::vec3 (1.0f, 1.0f, 1.0f));
 		shader->setFloat ("material.shininess", shininess);
 	}
-
 
 	virtual ~ObjectBase () = default;
 
