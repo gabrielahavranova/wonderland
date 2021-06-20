@@ -1,7 +1,7 @@
 /*!
  *  @file Wonderland.h
  *  @author Gabriela Havranova
- *  @date 2021-05-12
+ *  @ date 2021-05-12
  *
  *  Declares the main Wonderland namespace.
  */
